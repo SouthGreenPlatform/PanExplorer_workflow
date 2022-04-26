@@ -1,0 +1,25 @@
+A	RNA processing and modification	0
+B	Chromatin structure and dynamics	0
+C	Energy production and conversion	52
+D	Cell cycle control, cell division, chromosome partitioning	19
+E	Amino acid transport and metabolism	81
+F	Nucleotide transport and metabolism	21
+G	Carbohydrate transport and metabolism	33
+H	Coenzyme transport and metabolism	38
+I	Lipid transport and metabolism	9
+J	Translation, ribosomal structure and biogenesis	54
+K	Transcription	35
+L	Replication, recombination and repair	44
+M	Cell wall/membrane/envelope biogenesis	41
+N	Cell motility	7
+O	Posttranslational modification, protein turnover, chaperones	47
+P	Inorganic ion transport and metabolism	86
+Q	Secondary metabolites biosynthesis, transport and catabolism	15
+R	General function prediction only	133
+S	Function unknown	13
+T	Signal transduction mechanisms	44
+U	Intracellular trafficking, secretion, and vesicular transport	8
+V	Defense mechanisms	18
+W	Extracellular structures	0
+Y	Nuclear structure	0
+Z	Cytoskeleton	0

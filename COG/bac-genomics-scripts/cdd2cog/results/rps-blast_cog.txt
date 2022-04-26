@@ -1,0 +1,727 @@
+query id	subject id	% identity	alignment length	mismatches	gap opens	q. start	q. end	s. start	s. end	evalue	bit score	COG#	functional categories					COG protein description
+ACM48901.1	gnl|CDD|226883	18.846	260	165	9	254	501	201	426	0.002	38.5	39	COG4477	D					Negative regulator of septation ring formation
+ACM48901.1	gnl|CDD|224117	16.176	204	161	4	191	389	766	964	0.002	38.5	31	COG1196	D					Chromosome segregation ATPases
+ACM48901.1	gnl|CDD|227434	20.408	147	102	4	237	379	950	1085	0.005	36.9	23	COG5103	D	K				Cell division control protein, negative regulator of transcription
+ACM48902.1	gnl|CDD|223119	54.037	161	72	1	6	166	3	161	1.49e-72	212	97	COG0041	F					Phosphoribosylcarboxyaminoimidazole (NCAIR) mutase
+ACM48902.1	gnl|CDD|224605	34.043	94	54	2	2	91	114	203	6.83e-11	55.9	54	COG1691	R					NCAIR mutase (PurE)-related proteins
+ACM48904.1	gnl|CDD|223843	38.824	340	203	3	22	357	37	375	2.55e-87	265	94	COG0772	D					Bacterial cell division membrane protein
+ACM48905.1	gnl|CDD|223847	34.409	93	61	0	4	96	1	93	5.11e-23	82.2	95	COG0776	L					Bacterial nucleoid DNA-binding protein
+ACM48906.1	gnl|CDD|223860	27.184	103	65	4	21	121	2	96	2.67e-09	48.6	81	COG0789	K					Predicted transcriptional regulators
+ACM48909.1	gnl|CDD|223844	44.690	452	239	7	22	467	11	457	2.96e-161	461	93	COG0773	M					UDP-N-acetylmuramate-alanine ligase
+ACM48909.1	gnl|CDD|223842	24.017	458	262	18	24	448	13	417	3.26e-26	107	88	COG0771	M					UDP-N-acetylmuramoylalanine-D-glutamate ligase
+ACM48909.1	gnl|CDD|223841	23.543	429	230	17	69	448	52	431	8.38e-23	97.8	79	COG0770	M					UDP-N-acetylmuramyl pentapeptide synthase
+ACM48909.1	gnl|CDD|223840	25.945	397	201	17	116	456	89	448	4.02e-14	71.2	71	COG0769	M					UDP-N-acetylmuramyl tripeptide synthase
+ACM48909.1	gnl|CDD|223362	36.170	47	26	1	102	144	24	70	0.007	35.7	9	COG0285	H					Folylpolyglutamate synthase
+ACM48910.1	gnl|CDD|223258	46.945	311	152	11	2	306	8	311	3.96e-128	366	93	COG0180	J					Tryptophanyl-tRNA synthetase
+ACM48911.1	gnl|CDD|223649	38.816	152	89	1	58	205	40	191	1.41e-44	144	70	COG0576	O					Molecular chaperone GrpE (heat shock protein)
+ACM48912.1	gnl|CDD|223195	55.714	140	61	1	3	142	5	143	1.48e-66	204	38	COG0117	H					Pyrimidine deaminase
+ACM48912.1	gnl|CDD|224896	38.889	180	104	3	148	322	3	181	8.98e-50	164	47	COG1985	H					Pyrimidine reductase, riboflavin biosynthesis
+ACM48912.1	gnl|CDD|223663	33.974	156	78	8	1	141	5	150	3.43e-26	99.7	38	COG0590	F	J				Cytosine/adenosine deaminases
+ACM48912.1	gnl|CDD|225042	29.412	153	63	6	4	124	9	148	4.82e-11	57.8	33	COG2131	F					Deoxycytidylate deaminase
+ACM48913.1	gnl|CDD|223578	56.660	533	224	4	11	539	3	532	0.0	807	94	COG0504	F					CTP synthase (UTP-ammonia lyase)
+ACM48913.1	gnl|CDD|224982	24.476	143	81	7	376	518	107	222	3.66e-08	51.6	26	COG2071	R					Predicted glutamine amidotransferases
+ACM48913.1	gnl|CDD|223196	61.905	21	8	0	368	388	66	86	0.007	35.3	4	COG0118	E					Glutamine amidotransferase
+ACM48914.1	gnl|CDD|224233	28.070	57	37	2	28	83	23	76	0.001	32.6	51	COG1314	U					Preprotein translocase subunit SecG
+ACM48916.1	gnl|CDD|227308	39.934	303	169	7	7	307	9	300	3.14e-97	286	96	COG4974	L					Site-specific recombinase XerD
+ACM48916.1	gnl|CDD|227307	35.082	305	182	6	5	308	8	297	7.93e-61	193	97	COG4973	L					Site-specific recombinase XerC
+ACM48916.1	gnl|CDD|223655	31.579	247	143	9	67	309	84	308	3.97e-18	80.3	78	COG0582	L					Integrase
+ACM48917.1	gnl|CDD|224059	45.495	222	119	2	4	223	1	222	3.99e-89	259	98	COG1136	V					ABC-type antimicrobial peptide transport system, ATPase component
+ACM48917.1	gnl|CDD|225438	38.739	222	125	5	4	221	1	215	1.92e-61	188	97	COG2884	D					Predicted ATPase involved in cell division
+ACM48917.1	gnl|CDD|226164	39.130	230	122	8	2	219	1	224	3.80e-56	176	97	COG3638	P					ABC-type phosphate/phosphonate transport system, ATPase component
+ACM48917.1	gnl|CDD|224051	37.004	227	126	8	3	223	1	216	4.22e-56	175	99	COG1126	E					ABC-type polar amino acid transport system, ATPase component
+ACM48917.1	gnl|CDD|226647	36.771	223	140	1	2	223	4	226	5.54e-55	172	99	COG4181	Q					Predicted ABC-type transport system involved in lysophospholipase L1 biosynthesis, ATPase component
+ACM48917.1	gnl|CDD|224054	31.982	222	139	6	1	219	1	213	3.19e-52	167	98	COG1131	V					ABC-type multidrug transport system, ATPase component
+ACM48917.1	gnl|CDD|224058	37.220	223	136	3	4	223	1	222	2.94e-50	163	98	COG1135	P					ABC-type metal ion transport system, ATPase component
+ACM48917.1	gnl|CDD|224041	37.387	222	120	5	2	219	1	207	2.14e-48	156	97	COG1116	P					ABC-type nitrate/sulfonate/bicarbonate transport system, ATPase component
+ACM48917.1	gnl|CDD|224047	32.432	222	141	5	3	221	2	217	4.95e-46	150	98	COG1122	P					ABC-type cobalt transport system, ATPase component
+ACM48917.1	gnl|CDD|224045	32.735	223	136	7	3	219	1	215	5.92e-45	148	97	COG1120	P	H				ABC-type cobalamin/Fe3+-siderophores transport systems, ATPase components
+ACM48917.1	gnl|CDD|224046	29.386	228	143	7	1	221	1	217	1.66e-42	141	99	COG1121	P					ABC-type Mn/Zn transport systems, ATPase component
+ACM48917.1	gnl|CDD|224049	31.739	230	141	7	2	223	1	222	2.71e-42	140	99	COG1124	E	P				ABC-type dipeptide/oligopeptide/nickel transport system, ATPase component
+ACM48917.1	gnl|CDD|224052	35.000	220	134	7	4	219	8	222	4.51e-42	140	96	COG1127	Q					ABC-type transport system involved in resistance to organic solvents, ATPase component
+ACM48917.1	gnl|CDD|226359	31.982	222	129	7	5	219	4	210	1.77e-41	141	96	COG3839	G					ABC-type sugar transport systems, ATPase components
+ACM48917.1	gnl|CDD|224048	30.342	234	152	4	2	224	278	511	1.13e-40	142	100	COG1123	R					ATPase components of various ABC-type transport systems, contain duplicated ATPase
+ACM48917.1	gnl|CDD|224048	26.923	234	160	7	1	223	2	235	1.06e-36	131	100	COG1123	R					ATPase components of various ABC-type transport systems, contain duplicated ATPase
+ACM48917.1	gnl|CDD|224043	33.937	221	131	5	5	219	3	214	7.66e-40	137	96	COG1118	P					ABC-type sulfate/molybdate transport systems, ATPase component
+ACM48917.1	gnl|CDD|226961	33.333	231	137	6	5	223	7	232	1.45e-38	131	98	COG4598	E					ABC-type histidine transport system, ATPase component
+ACM48917.1	gnl|CDD|226970	34.146	205	126	6	22	224	18	215	1.69e-38	130	91	COG4619	R					ABC-type uncharacterized transport system, ATPase component
+ACM48917.1	gnl|CDD|226361	31.140	228	132	8	1	219	2	213	5.08e-38	132	98	COG3842	E					ABC-type spermidine/putrescine transport systems, ATPase components
+ACM48917.1	gnl|CDD|224050	36.199	221	125	9	5	219	2	212	1.03e-37	130	96	COG1125	E					ABC-type proline/glycine betaine transport systems, ATPase components
+ACM48917.1	gnl|CDD|226635	33.495	206	132	4	22	223	17	221	4.84e-37	127	90	COG4161	E					ABC-type arginine transport system, ATPase component
+ACM48917.1	gnl|CDD|225183	31.579	228	127	8	9	223	476	687	1.03e-35	130	96	COG2274	V					ABC-type bacteriocin/lantibiotic exporters, contain an N-terminal double-glycine peptidase domain
+ACM48917.1	gnl|CDD|223488	27.234	235	146	7	1	219	1	226	1.08e-34	121	98	COG0411	E					ABC-type branched-chain amino acid transport systems, ATPase component
+ACM48917.1	gnl|CDD|223521	27.731	238	150	9	4	223	1	234	1.10e-34	122	98	COG0444	E	P				ABC-type dipeptide/oligopeptide/nickel transport system, ATPase component
+ACM48917.1	gnl|CDD|226643	33.333	198	109	4	1	176	1	197	2.20e-34	123	79	COG4175	E					ABC-type proline/glycine betaine transport system, ATPase component
+ACM48917.1	gnl|CDD|224053	28.846	208	133	6	1	202	5	203	4.73e-34	124	90	COG1129	G					ABC-type sugar transport system, ATPase component
+ACM48917.1	gnl|CDD|224053	22.699	163	106	7	22	171	274	429	1.29e-09	54.4	90	COG1129	G					ABC-type sugar transport system, ATPase component
+ACM48917.1	gnl|CDD|227321	32.075	212	121	6	22	223	336	534	6.50e-34	124	90	COG4988	C	O				ABC-type transport system involved in cytochrome bd biosynthesis, ATPase and permease components
+ACM48917.1	gnl|CDD|227320	31.169	231	136	8	3	223	335	552	7.04e-34	124	99	COG4987	C	O				ABC-type transport system involved in cytochrome bd biosynthesis, fused ATPase and permease components
+ACM48917.1	gnl|CDD|226905	30.198	202	129	3	20	219	18	209	2.37e-31	112	89	COG4525	P					ABC-type taurine transport system, ATPase component
+ACM48917.1	gnl|CDD|226927	29.091	220	141	7	4	219	1	209	3.33e-29	106	96	COG4555	C	P				ABC-type Na+ transport system, ATPase component
+ACM48917.1	gnl|CDD|226364	27.805	205	138	4	1	202	1	198	4.19e-29	110	90	COG3845	R					ABC-type uncharacterized transport systems, ATPase components
+ACM48917.1	gnl|CDD|226364	25.946	185	120	9	3	175	256	435	7.93e-17	75.7	90	COG3845	R					ABC-type uncharacterized transport systems, ATPase components
+ACM48917.1	gnl|CDD|226641	29.832	238	145	9	3	223	275	507	5.00e-29	110	99	COG4172	R					ABC-type uncharacterized transport system, duplicated ATPase component
+ACM48917.1	gnl|CDD|226641	28.333	240	147	8	3	223	5	238	1.49e-23	95.0	99	COG4172	R					ABC-type uncharacterized transport system, duplicated ATPase component
+ACM48917.1	gnl|CDD|226929	32.258	217	129	7	15	222	13	220	1.06e-28	105	93	COG4559	P					ABC-type hemin transport system, ATPase component
+ACM48917.1	gnl|CDD|224055	30.568	229	135	8	5	223	329	543	2.55e-28	108	98	COG1132	V					ABC-type multidrug transport system, ATPase and permease components
+ACM48917.1	gnl|CDD|223562	29.412	238	138	8	4	222	3	229	4.76e-28	107	98	COG0488	R					ATPase components of ABC transporters with duplicated ATPase domains
+ACM48917.1	gnl|CDD|223562	27.149	221	127	8	4	219	321	512	1.23e-23	95.4	98	COG0488	R					ATPase components of ABC transporters with duplicated ATPase domains
+ACM48917.1	gnl|CDD|226360	32.995	197	119	5	27	219	19	206	5.25e-28	103	86	COG3840	H					ABC-type thiamine transport system, ATPase component
+ACM48917.1	gnl|CDD|224060	29.694	229	140	9	4	223	4	220	7.50e-28	103	98	COG1137	R					ABC-type (unclassified) transport system, ATPase component
+ACM48917.1	gnl|CDD|226967	25.000	232	125	4	1	224	1	191	5.26e-27	101	100	COG4608	E					ABC-type oligopeptide transport system, ATPase component
+ACM48917.1	gnl|CDD|224042	31.250	192	103	9	1	176	4	182	9.40e-27	100	79	COG1117	P					ABC-type phosphate transport system, ATPase component
+ACM48917.1	gnl|CDD|224044	27.368	190	111	7	1	176	28	204	1.14e-26	100	79	COG1119	P					ABC-type molybdenum transport system, ATPase component/photorepair protein PhrA
+ACM48917.1	gnl|CDD|227118	31.718	227	144	6	1	217	1	226	8.44e-26	97.5	97	COG4778	P					ABC-type phosphonate transport system, ATPase component
+ACM48917.1	gnl|CDD|223487	28.643	199	112	9	2	188	1	181	1.12e-25	97.2	83	COG0410	E					ABC-type branched-chain amino acid transport systems, ATPase component
+ACM48917.1	gnl|CDD|226620	32.039	206	112	9	21	214	16	205	5.60e-24	92.2	87	COG4136	R					ABC-type uncharacterized transport system, ATPase component
+ACM48917.1	gnl|CDD|226963	28.507	221	146	5	5	221	2	214	1.85e-23	91.6	97	COG4604	P					ABC-type enterochelin transport system, ATPase component
+ACM48917.1	gnl|CDD|224026	30.052	193	117	6	22	202	21	207	2.93e-23	91.6	81	COG1101	R					ABC-type uncharacterized transport system, ATPase component
+ACM48917.1	gnl|CDD|224057	26.389	216	139	6	6	219	26	223	5.24e-23	90.4	96	COG1134	G	M				ABC-type polysaccharide/polyol phosphate transport system, ATPase component
+ACM48917.1	gnl|CDD|226969	29.167	216	120	8	22	221	351	549	3.32e-22	91.2	89	COG4618	R					ABC-type protease/lipase transport system, ATPase and permease components
+ACM48917.1	gnl|CDD|226628	27.273	209	130	4	26	219	4	205	1.19e-20	85.9	87	COG4148	P					ABC-type molybdate transport system, ATPase component
+ACM48917.1	gnl|CDD|226617	28.409	176	111	7	14	186	9	172	2.25e-20	82.7	77	COG4133	O					ABC-type transport system involved in cytochrome c biogenesis, ATPase component
+ACM48917.1	gnl|CDD|226968	28.780	205	123	5	26	224	342	529	8.35e-20	84.5	89	COG4615	Q	P				ABC-type siderophore export system, fused ATPase and permease components
+ACM48917.1	gnl|CDD|226592	29.310	232	147	7	4	223	6	232	1.86e-19	81.3	98	COG4107	P					ABC-type phosphonate transport system, ATPase component
+ACM48917.1	gnl|CDD|226637	28.497	193	114	6	1	178	1	184	1.60e-17	76.0	79	COG4167	V					ABC-type antimicrobial peptide transport system, ATPase component
+ACM48917.1	gnl|CDD|226631	24.885	217	148	7	5	219	3	206	4.20e-17	75.5	96	COG4152	R					ABC-type uncharacterized transport system, ATPase component
+ACM48917.1	gnl|CDD|227590	28.169	213	129	7	22	223	278	477	6.89e-17	75.9	90	COG5265	O					ABC-type transport system involved in Fe-S cluster assembly, permease and ATPase components
+ACM48917.1	gnl|CDD|227019	24.370	238	144	10	1	219	2	222	6.97e-17	73.9	98	COG4674	R					Uncharacterized ABC-type transport system, ATPase component
+ACM48917.1	gnl|CDD|226952	26.108	203	135	6	25	221	42	235	9.01e-17	74.7	88	COG4586	R					ABC-type uncharacterized transport system, ATPase component
+ACM48917.1	gnl|CDD|226622	27.751	209	128	10	23	221	15	210	2.91e-15	69.5	89	COG4138	H					ABC-type cobalamin transport system, ATPase component
+ACM48917.1	gnl|CDD|225265	25.455	220	139	8	6	216	379	582	4.17e-15	70.6	94	COG2401	R					ABC-type ATPase fused to a predicted acetyltransferase domain
+ACM48917.1	gnl|CDD|226646	26.829	205	116	9	23	218	409	588	4.76e-15	70.4	88	COG4178	R					ABC-type uncharacterized transport system, permease and ATPase components
+ACM48917.1	gnl|CDD|226639	23.950	238	131	8	19	223	19	239	3.68e-12	61.4	92	COG4170	V					ABC-type antimicrobial peptide transport system, ATPase component
+ACM48917.1	gnl|CDD|223473	23.318	223	150	10	3	213	2	215	2.82e-11	58.4	94	COG0396	O					ABC-type transport system involved in Fe-S cluster assembly, ATPase component
+ACM48917.1	gnl|CDD|224166	24.084	191	122	6	29	218	363	531	4.40e-08	50.0	85	COG1245	R					Predicted ATPase, RNase L inhibitor (RLI) homolog
+ACM48917.1	gnl|CDD|224166	40.816	49	29	0	127	175	197	245	7.53e-06	43.1	85	COG1245	R					Predicted ATPase, RNase L inhibitor (RLI) homolog
+ACM48917.1	gnl|CDD|223496	24.444	90	56	5	135	214	806	893	3.99e-06	44.0	36	COG0419	L					ATPase involved in DNA repair
+ACM48917.1	gnl|CDD|223256	37.500	56	32	1	142	194	821	876	5.63e-04	37.6	37	COG0178	L					Excinuclease ATPase subunit
+ACM48917.1	gnl|CDD|223256	51.852	27	13	0	23	49	16	42	5.78e-04	37.6	37	COG0178	L					Excinuclease ATPase subunit
+ACM48917.1	gnl|CDD|223256	51.724	29	14	0	23	51	617	645	8.22e-04	37.2	37	COG0178	L					Excinuclease ATPase subunit
+ACM48918.1	gnl|CDD|223358	54.673	428	176	5	4	428	14	426	0.0	585	57	COG0281	C					Malic enzyme
+ACM48918.1	gnl|CDD|223357	38.438	320	190	5	431	744	1	319	1.39e-99	307	42	COG0280	C					Phosphotransacetylase
+ACM48919.1	gnl|CDD|225529	26.923	104	64	4	19	119	16	110	0.001	39.3	11	COG2982	M					Uncharacterized protein involved in outer membrane biogenesis
+ACM48920.1	gnl|CDD|223724	33.466	502	314	9	8	501	3	492	3.57e-74	240	98	COG0651	C	P				Formate hydrogenlyase subunit 3/Multisubunit Na+/H+ antiporter, MnhD subunit
+ACM48920.1	gnl|CDD|223941	27.944	501	335	15	10	499	1	486	6.23e-47	169	97	COG1009	C	P				NADH:ubiquinone oxidoreductase subunit 5 (chain L)/Multisubunit Na+/H+ antiporter, MnhA subunit
+ACM48920.1	gnl|CDD|223940	24.187	492	347	13	14	497	10	483	6.29e-42	153	96	COG1008	C					NADH:ubiquinone oxidoreductase subunit 4 (chain M)
+ACM48920.1	gnl|CDD|223939	27.200	375	264	4	73	445	60	427	2.92e-40	148	74	COG1007	C					NADH:ubiquinone oxidoreductase subunit 2 (chain N)
+ACM48920.1	gnl|CDD|226564	24.762	105	75	1	130	234	84	184	0.005	35.6	21	COG4078	S					Predicted membrane protein
+ACM48925.1	gnl|CDD|225015	29.412	68	47	1	3	69	1	68	7.81e-12	51.9	97	COG2104	H					Sulfur transfer protein involved in thiamine biosynthesis
+ACM48926.1	gnl|CDD|224933	50.980	255	124	1	8	262	8	261	3.52e-125	353	97	COG2022	H					Uncharacterized enzyme of thiazole biosynthesis
+ACM48926.1	gnl|CDD|223292	39.535	43	26	0	191	233	216	258	4.49e-07	46.9	16	COG0214	H					Pyridoxine biosynthesis enzyme
+ACM48926.1	gnl|CDD|223212	31.250	48	33	0	182	229	206	253	2.09e-04	38.7	18	COG0134	E					Indole-3-glycerol phosphate synthase
+ACM48926.1	gnl|CDD|223429	35.294	51	32	1	186	236	161	210	0.003	35.3	19	COG0352	H					Thiamine monophosphate synthase
+ACM48928.1	gnl|CDD|223087	33.406	458	284	10	1	438	10	466	2.92e-121	358	99	COG0008	J					Glutamyl- and glutaminyl-tRNA synthetases
+ACM48928.1	gnl|CDD|223097	20.130	154	96	10	171	306	308	452	0.001	38.0	31	COG0018	J					Arginyl-tRNA synthetase
+ACM48929.1	gnl|CDD|223831	15.686	306	232	10	22	312	23	317	8.38e-05	41.2	73	COG0760	O					Parvulin-like peptidyl-prolyl isomerase
+ACM48930.1	gnl|CDD|223813	30.108	186	120	6	1	179	1	183	1.73e-31	109	97	COG0742	L					N6-adenine-specific methylase
+ACM48930.1	gnl|CDD|225443	26.496	117	77	5	11	122	74	186	4.33e-07	45.8	61	COG2890	J					Methylase of polypeptide chain release factors
+ACM48930.1	gnl|CDD|225172	27.586	87	58	2	36	122	37	118	5.02e-07	45.0	47	COG2263	J					Predicted RNA methylase
+ACM48930.1	gnl|CDD|225136	28.090	89	57	3	44	131	51	133	1.57e-05	41.1	48	COG2226	H					Methylase involved in ubiquinone/menaquinone biosynthesis
+ACM48930.1	gnl|CDD|224017	30.435	92	59	3	35	121	208	299	2.04e-05	41.1	47	COG1092	R					Predicted SAM-dependent methyltransferases
+ACM48930.1	gnl|CDD|223194	21.019	157	75	4	9	124	163	311	3.23e-05	40.4	63	COG0116	L					Predicted N6-adenine-specific DNA methylase
+ACM48930.1	gnl|CDD|226608	21.795	78	58	2	48	122	48	125	3.91e-05	39.9	41	COG4123	R					Predicted O-methyltransferase
+ACM48930.1	gnl|CDD|223971	31.646	79	53	1	44	122	197	274	6.30e-05	39.3	43	COG1041	L					Predicted DNA modification methylase
+ACM48930.1	gnl|CDD|225319	30.159	63	33	1	7	69	108	159	0.002	34.7	34	COG2521	R					Predicted archaeal methyltransferase
+ACM48932.1	gnl|CDD|225180	24.812	133	77	6	312	432	85	206	0.007	35.7	27	COG2271	G					Sugar phosphate permease
+ACM48933.1	gnl|CDD|223306	51.136	88	41	1	2	89	1	86	5.24e-37	116	99	COG0228	J					Ribosomal protein S16
+ACM48934.1	gnl|CDD|224128	36.484	455	259	8	1	427	3	455	1.86e-135	394	99	COG1207	M					N-acetylglucosamine-1-phosphate uridyltransferase (contains nucleotidyltransferase and I-patch acetyltransferase domains)
+ACM48934.1	gnl|CDD|224129	20.913	416	257	14	1	403	2	358	1.88e-26	106	94	COG1208	M	J				Nucleoside-diphosphate-sugar pyrophosphorylase involved in lipopolysaccharide biosynthesis/translation initiation factor 2B, gamma/epsilon subunits (eIF-2Bgamma/eIF-2Bepsilon)
+ACM48934.1	gnl|CDD|223974	23.602	161	100	5	257	408	153	299	1.25e-13	68.5	42	COG1044	M					UDP-3-O-[3-hydroxymyristoyl] glucosamine N-acyltransferase
+ACM48934.1	gnl|CDD|223974	21.667	180	102	5	229	405	40	183	2.39e-06	46.1	42	COG1044	M					UDP-3-O-[3-hydroxymyristoyl] glucosamine N-acyltransferase
+ACM48934.1	gnl|CDD|225082	33.898	118	73	4	295	408	105	221	2.17e-13	66.9	27	COG2171	E					Tetrahydrodipicolinate N-succinyltransferase
+ACM48934.1	gnl|CDD|223975	34.783	69	44	1	344	411	93	161	3.58e-13	65.0	34	COG1045	E					Serine acetyltransferase
+ACM48934.1	gnl|CDD|223975	25.490	102	49	4	266	359	70	152	0.004	35.4	34	COG1045	E					Serine acetyltransferase
+ACM48934.1	gnl|CDD|224979	25.197	127	91	3	2	128	7	129	5.40e-12	61.6	30	COG2068	R					Uncharacterized MobA-related protein
+ACM48934.1	gnl|CDD|223735	23.457	162	74	7	259	411	13	133	1.18e-10	57.2	36	COG0663	R					Carbonic anhydrases/acetyltransferases, isoleucine patch superfamily
+ACM48934.1	gnl|CDD|223188	25.758	132	69	3	294	410	48	165	1.24e-09	54.5	27	COG0110	R					Acetyltransferase (isoleucine patch superfamily)
+ACM48934.1	gnl|CDD|223817	32.090	134	73	5	1	131	5	123	1.42e-07	48.4	31	COG0746	H					Molybdopterin-guanine dinucleotide biosynthesis protein A
+ACM48934.1	gnl|CDD|224132	27.731	119	70	4	4	114	8	118	1.44e-07	49.1	26	COG1211	I					4-diphosphocytidyl-2-methyl-D-erithritol synthase
+ACM48934.1	gnl|CDD|223973	23.000	200	83	11	258	408	4	181	5.16e-06	44.5	35	COG1043	M					Acyl-[acyl carrier protein]--UDP-N-acetylglucosamine O-acyltransferase
+ACM48934.1	gnl|CDD|224134	24.528	106	78	1	1	106	4	107	5.97e-06	44.2	25	COG1213	M					Predicted sugar nucleotidyltransferases
+ACM48934.1	gnl|CDD|224130	23.228	254	151	16	1	230	1	234	3.37e-04	39.1	54	COG1209	M					dTDP-glucose pyrophosphorylase
+ACM48934.1	gnl|CDD|224133	22.472	267	142	16	3	232	5	243	7.82e-04	38.0	54	COG1212	M					CMP-2-keto-3-deoxyoctulosonic acid synthetase
+ACM48934.1	gnl|CDD|223525	20.755	106	73	3	257	359	296	393	0.007	35.3	24	COG0448	G					ADP-glucose pyrophosphorylase
+ACM48935.1	gnl|CDD|223959	29.282	181	122	6	23	199	8	186	3.35e-27	102	70	COG1028	I	Q	R			Dehydrogenases with different specificities (related to short-chain alcohol dehydrogenases)
+ACM48935.1	gnl|CDD|223377	25.000	184	133	5	19	199	5	186	8.76e-15	69.2	72	COG0300	R					Short-chain dehydrogenases of various substrate specificities
+ACM48935.1	gnl|CDD|226674	22.535	142	103	5	16	155	2	138	2.76e-08	50.3	56	COG4221	R					Short-chain alcohol dehydrogenase of unknown specificity
+ACM48935.1	gnl|CDD|226476	27.857	140	84	7	23	155	8	137	3.79e-04	37.8	53	COG3967	M					Short-chain dehydrogenase involved in D-alanine esterification of lipoteichoic acid and wall teichoic acid (D-alanine transfer protein)
+ACM48936.1	gnl|CDD|223095	47.892	332	168	4	11	339	6	335	4.47e-146	413	94	COG0016	J					Phenylalanyl-tRNA synthetase alpha subunit
+ACM48936.1	gnl|CDD|224935	24.645	211	137	7	145	336	149	356	2.65e-12	64.8	55	COG2024	J					Phenylalanyl-tRNA synthetase alpha subunit (archaeal type)
+ACM48937.1	gnl|CDD|223369	61.062	113	44	0	1	113	1	113	1.09e-42	133	88	COG0292	J					Ribosomal protein L20
+ACM48938.1	gnl|CDD|223368	40.625	64	38	0	1	64	1	64	1.80e-13	55.7	97	COG0291	J					Ribosomal protein L35
+ACM48939.1	gnl|CDD|226341	53.191	188	80	2	15	202	5	184	1.59e-85	249	92	COG3820	S					Uncharacterized protein conserved in bacteria
+ACM48940.1	gnl|CDD|224080	62.559	422	154	1	33	454	3	420	0.0	676	93	COG1158	K					Transcription termination factor
+ACM48940.1	gnl|CDD|224079	31.873	251	152	7	196	437	152	392	4.37e-30	118	53	COG1157	N	U				Flagellar biosynthesis/type III secretory pathway ATPase
+ACM48940.1	gnl|CDD|223133	27.119	236	132	12	196	408	136	354	1.18e-08	53.8	47	COG0055	C					F0F1-type ATP synthase, beta subunit
+ACM48940.1	gnl|CDD|223134	26.515	132	72	5	197	313	152	273	6.50e-04	38.7	26	COG0056	C					F0F1-type ATP synthase, alpha subunit
+ACM48943.1	gnl|CDD|224753	27.331	311	204	9	56	356	1	299	4.36e-52	172	85	COG1840	P					ABC-type Fe3+ transport system, periplasmic component
+ACM48943.1	gnl|CDD|226624	23.030	330	211	14	10	324	2	303	6.88e-17	77.8	88	COG4143	H					ABC-type thiamine transport system, periplasmic component
+ACM48943.1	gnl|CDD|223759	17.718	333	211	16	20	318	12	315	9.29e-09	53.2	84	COG0687	E					Spermidine/putrescine-binding periplasmic protein
+ACM48943.1	gnl|CDD|224567	19.710	345	223	14	11	304	2	343	4.75e-04	38.8	83	COG1653	G					ABC-type sugar transport system, periplasmic component
+ACM48944.1	gnl|CDD|225391	46.939	49	26	0	2	50	10	58	1.94e-18	67.3	98	COG2835	S					Uncharacterized conserved protein
+ACM48946.1	gnl|CDD|223880	16.418	134	94	3	456	586	49	167	0.006	37.5	6	COG0810	M					Periplasmic protein TonB, links inner and outer membranes
+ACM48946.1	gnl|CDD|225711	18.405	163	116	5	425	584	263	411	0.010	38.0	8	COG3170	N	U				Tfp pilus assembly protein FimV
+ACM48947.1	gnl|CDD|224246	47.651	149	78	0	1	149	1	149	1.76e-62	186	99	COG1327	K					Predicted transcriptional regulator, consists of a Zn-ribbon and ATP-cone domains
+ACM48948.1	gnl|CDD|226284	42.529	87	41	2	22	99	19	105	4.89e-17	67.7	76	COG3761	C					NADH:ubiquinone oxidoreductase 17.2 kD subunit
+ACM48949.1	gnl|CDD|224380	28.289	152	102	6	1	148	1	149	6.19e-24	92.5	96	COG1463	Q					ABC-type transport system involved in resistance to organic solvents, periplasmic component
+ACM48949.1	gnl|CDD|225553	25.000	96	53	6	45	124	50	142	0.003	34.2	52	COG3008	R					Paraquat-inducible protein B
+ACM48953.1	gnl|CDD|223544	60.211	284	101	6	11	290	4	279	3.60e-119	343	78	COG0468	L					RecA/RadA recombinase
+ACM48953.1	gnl|CDD|223543	34.146	82	51	2	44	123	1	81	3.56e-10	57.1	22	COG0467	T					RecA-superfamily ATPases implicated in signal transduction
+ACM48953.1	gnl|CDD|223993	29.134	127	82	4	30	154	57	177	1.17e-04	40.7	35	COG1066	O					Predicted ATP-dependent serine protease
+ACM48953.1	gnl|CDD|224043	30.000	60	33	4	64	117	25	81	0.003	36.2	15	COG1118	P					ABC-type sulfate/molybdate transport systems, ATPase component
+ACM48953.1	gnl|CDD|225429	26.562	64	46	1	41	104	3	65	0.003	35.4	18	COG2874	N	U				Predicted ATPases involved in biogenesis of archaeal flagella
+ACM48953.1	gnl|CDD|223256	40.625	32	18	1	64	94	23	54	0.007	35.3	9	COG0178	L					Excinuclease ATPase subunit
+ACM48954.1	gnl|CDD|223537	29.208	202	124	5	10	197	4	200	1.14e-39	131	94	COG0461	F					Orotate phosphoribosyltransferase
+ACM48954.1	gnl|CDD|223577	24.742	97	55	2	68	147	51	146	1.96e-10	54.6	40	COG0503	F					Adenine/guanine phosphoribosyltransferases and related PRPP-binding proteins
+ACM48954.1	gnl|CDD|223925	20.745	188	125	7	1	170	14	195	2.85e-05	40.1	85	COG0856	F					Orotate phosphoribosyltransferase homologs
+ACM48954.1	gnl|CDD|223970	44.828	29	14	1	102	130	171	197	0.007	33.1	15	COG1040	R					Predicted amidophosphoribosyltransferases
+ACM48955.1	gnl|CDD|223552	41.224	245	138	5	11	249	10	254	9.93e-72	218	89	COG0476	H					Dinucleotide-utilizing enzymes involved in molybdopterin and thiamine biosynthesis family 2
+ACM48955.1	gnl|CDD|224100	37.069	116	72	1	21	135	20	135	1.21e-26	101	43	COG1179	H					Dinucleotide-utilizing enzymes involved in molybdopterin and thiamine biosynthesis family 1
+ACM48955.1	gnl|CDD|224662	23.009	113	63	3	33	145	3	91	5.69e-07	46.9	42	COG1748	E					Saccharopine dehydrogenase and related proteins
+ACM48956.1	gnl|CDD|226163	18.987	158	107	4	109	258	46	190	4.43e-04	37.4	53	COG3637	M					Opacity protein and related surface antigens
+ACM48957.1	gnl|CDD|223751	25.240	313	219	5	9	311	1	308	5.29e-17	76.9	97	COG0679	R					Predicted permeases
+ACM48959.1	gnl|CDD|224636	40.000	65	39	0	1	65	4	68	6.45e-14	57.3	97	COG1722	L					Exonuclease VII small subunit
+ACM48960.1	gnl|CDD|225660	37.168	113	68	2	2	111	19	131	4.00e-26	95.9	96	COG3118	O					Thioredoxin domain-containing protein
+ACM48960.1	gnl|CDD|223600	41.758	91	47	3	26	110	34	124	4.53e-21	78.8	74	COG0526	O	C				Thiol-disulfide isomerase and thioredoxins
+ACM48961.1	gnl|CDD|226035	31.325	249	148	6	9	257	14	239	9.83e-43	144	92	COG3504	U					Type IV secretory pathway, VirB9 components
+ACM48962.1	gnl|CDD|223997	46.547	333	173	5	43	371	11	342	2.56e-152	430	88	COG1071	C					Pyruvate/2-oxoglutarate dehydrogenase complex, dehydrogenase (E1) component, eukaryotic type, alpha subunit
+ACM48962.1	gnl|CDD|226468	26.549	113	77	2	164	275	122	229	3.97e-08	50.8	30	COG3959	G					Transketolase, N-terminal subunit
+ACM48962.1	gnl|CDD|223641	21.739	207	127	9	173	357	305	498	1.23e-04	41.1	50	COG0567	C					2-oxoglutarate dehydrogenase complex, dehydrogenase (E1) component, and related enzymes
+ACM48963.1	gnl|CDD|223669	20.295	271	194	8	35	293	1	261	6.77e-17	76.6	83	COG0596	R					Predicted hydrolases or acyltransferases (alpha/beta hydrolase superfamily)
+ACM48963.1	gnl|CDD|224561	20.946	148	100	7	53	190	13	153	3.21e-07	47.7	44	COG1647	R					Esterase/lipase
+ACM48964.1	gnl|CDD|223590	30.734	218	103	11	259	476	1	170	7.48e-45	152	61	COG0516	F					IMP dehydrogenase/GMP reductase
+ACM48964.1	gnl|CDD|223590	44.578	83	46	0	10	92	15	97	4.92e-24	95.8	61	COG0516	F					IMP dehydrogenase/GMP reductase
+ACM48964.1	gnl|CDD|223591	36.283	113	63	5	96	202	7	116	4.40e-21	85.6	22	COG0517	R					FOG: CBS domain
+ACM48964.1	gnl|CDD|225321	36.667	120	67	4	86	202	173	286	4.23e-17	78.9	24	COG2524	K					Predicted transcriptional regulator, contains C-terminal CBS domains
+ACM48964.1	gnl|CDD|225457	31.579	114	70	5	94	202	155	265	1.96e-11	63.2	22	COG2905	T					Predicted signal-transduction protein containing cAMP-binding and CBS domains
+ACM48964.1	gnl|CDD|226147	30.508	118	70	6	96	207	73	184	7.46e-11	58.2	23	COG3620	K					Predicted transcriptional regulator with C-terminal CBS domains
+ACM48964.1	gnl|CDD|224981	28.169	142	88	6	234	373	94	223	1.42e-10	59.6	28	COG2070	R					Dioxygenases related to 2-nitropropane dioxygenase
+ACM48964.1	gnl|CDD|225148	27.350	117	79	4	90	202	134	248	5.35e-09	55.0	23	COG2239	P					Mg/Co/Ni transporter MgtE (contains CBS domain)
+ACM48964.1	gnl|CDD|224173	22.857	105	80	1	99	202	219	323	5.74e-09	55.0	21	COG1253	R					Hemolysins and related proteins containing CBS domains
+ACM48964.1	gnl|CDD|225979	28.947	114	69	3	99	202	256	367	3.77e-08	52.1	35	COG3448	T					CBS-domain-containing membrane protein
+ACM48964.1	gnl|CDD|225979	24.638	138	78	5	152	273	248	375	1.47e-07	50.6	35	COG3448	T					CBS-domain-containing membrane protein
+ACM48964.1	gnl|CDD|224223	33.333	90	49	4	283	363	215	302	2.24e-07	49.6	16	COG1304	C					L-lactate dehydrogenase (FMN-dependent) and related alpha-hydroxy acid dehydrogenases
+ACM48964.1	gnl|CDD|223147	25.424	118	73	4	261	366	292	406	1.01e-06	48.0	22	COG0069	E					Glutamate synthase domain 2
+ACM48964.1	gnl|CDD|226594	24.096	166	104	6	40	202	155	301	5.75e-06	45.4	33	COG4109	K					Predicted transcriptional regulator containing CBS domains
+ACM48964.1	gnl|CDD|226910	28.571	112	71	5	96	202	77	184	2.26e-05	43.1	22	COG4535	P					Putative Mg2+ and Co2+ transporter CorC
+ACM48964.1	gnl|CDD|225555	28.986	138	77	8	233	364	88	210	8.67e-05	41.1	27	COG3010	G					Putative N-acetylmannosamine-6-phosphate epimerase
+ACM48964.1	gnl|CDD|223245	27.957	93	53	3	286	364	179	271	0.001	38.0	16	COG0167	F					Dihydroorotate dehydrogenase
+ACM48965.1	gnl|CDD|223139	28.571	245	158	7	33	271	42	275	7.83e-54	173	88	COG0061	G					Predicted sugar kinase
+ACM48966.1	gnl|CDD|223332	25.333	75	49	3	27	99	1	70	1.27e-09	47.3	74	COG0254	J					Ribosomal protein L31
+ACM48967.1	gnl|CDD|223408	41.042	307	178	2	16	322	3	306	1.70e-106	311	91	COG0331	I					(acyl-carrier-protein) S-malonyltransferase
+ACM48967.1	gnl|CDD|225858	31.000	300	193	5	10	305	520	809	3.16e-37	139	87	COG3321	Q					Polyketide synthase modules and related proteins
+ACM48968.1	gnl|CDD|223203	40.094	212	114	5	1	206	4	208	8.48e-62	189	98	COG0125	F					Thymidylate kinase
+ACM48969.1	gnl|CDD|225371	18.692	321	242	10	48	358	38	349	1.22e-05	44.1	74	COG2814	G					Arabinose efflux permease
+ACM48969.1	gnl|CDD|225180	18.939	396	265	16	26	378	32	414	0.007	35.3	84	COG2271	G					Sugar phosphate permease
+ACM48970.1	gnl|CDD|226830	23.554	242	158	5	1	219	42	279	4.53e-25	96.4	100	COG4395	S					Uncharacterized protein conserved in bacteria
+ACM48971.1	gnl|CDD|224863	37.671	146	78	3	13	158	11	143	3.24e-41	133	83	COG1952	U					Preprotein translocase subunit SecB
+ACM48972.1	gnl|CDD|224565	28.902	173	111	5	86	252	76	242	8.13e-23	91.1	61	COG1651	O					Protein-disulfide isomerase
+ACM48972.1	gnl|CDD|224383	19.101	89	64	5	173	258	109	192	0.008	34.3	32	COG1466	L					DNA polymerase III, delta subunit
+ACM48973.1	gnl|CDD|223685	36.986	438	261	7	5	429	3	438	4.31e-101	305	97	COG0612	R					Predicted Zn-dependent peptidases
+ACM48973.1	gnl|CDD|223956	26.549	226	150	7	48	259	52	275	1.98e-14	72.4	49	COG1025	O					Secreted/periplasmic Zn-dependent peptidases, insulinase-like
+ACM48973.1	gnl|CDD|223957	22.442	303	186	14	27	292	29	319	1.45e-07	50.8	61	COG1026	R					Predicted Zn-dependent peptidases, insulinase-like
+ACM48974.1	gnl|CDD|223810	48.993	149	70	4	260	406	117	261	1.45e-43	151	33	COG0739	M					Membrane proteins related to metalloendopeptidases
+ACM48974.1	gnl|CDD|227278	31.034	116	74	2	288	403	306	415	9.74e-16	75.9	26	COG4942	D					Membrane-bound metallopeptidase
+ACM48975.1	gnl|CDD|224981	27.869	122	74	5	188	309	158	265	1.01e-10	60.0	26	COG2070	R					Dioxygenases related to 2-nitropropane dioxygenase
+ACM48976.1	gnl|CDD|223384	39.614	207	116	4	1	204	1	201	1.27e-66	200	99	COG0307	H					Riboflavin synthase alpha chain
+ACM48976.1	gnl|CDD|226951	21.687	83	36	3	21	89	298	365	0.007	33.6	34	COG4585	T					Signal transduction histidine kinase
+ACM48979.1	gnl|CDD|224118	37.037	1134	683	19	36	1150	13	1134	0.0	1021	97	COG1197	L	K				Transcription-repair coupling factor (superfamily II helicase)
+ACM48979.1	gnl|CDD|224121	33.820	411	250	10	604	1000	255	657	6.81e-97	320	34	COG1200	L	K				RecG-like helicase
+ACM48979.1	gnl|CDD|223587	23.148	432	252	23	550	945	5	392	5.81e-15	76.0	34	COG0513	L	K	J			Superfamily II DNA and RNA helicases
+ACM48979.1	gnl|CDD|223989	19.071	409	244	15	616	964	41	422	1.30e-13	71.3	30	COG1061	K	L				DNA or RNA helicases of superfamily II
+ACM48979.1	gnl|CDD|223630	32.692	104	64	4	148	248	158	258	3.40e-13	70.7	9	COG0556	L					Helicase subunit of the DNA excision repair complex
+ACM48979.1	gnl|CDD|226583	23.708	329	202	16	613	918	99	401	2.43e-11	64.4	27	COG4098	L					Superfamily II DNA/RNA helicase required for DNA uptake (late competence protein)
+ACM48979.1	gnl|CDD|224119	21.230	504	260	19	563	944	125	613	4.51e-10	60.8	33	COG1198	L					Primosomal protein N' (replication factor Y) - superfamily II helicase
+ACM48979.1	gnl|CDD|224035	30.841	107	64	4	642	741	107	210	4.59e-08	54.3	9	COG1110	L					Reverse gyrase
+ACM48979.1	gnl|CDD|224036	32.353	68	44	2	864	931	416	481	5.51e-05	44.3	6	COG1111	L					ERCC4-like helicases
+ACM48979.1	gnl|CDD|224248	25.157	159	100	6	493	632	7	165	7.02e-04	38.9	12	COG1329	K					Transcriptional regulators, similar to M. xanthus CarD
+ACM48980.1	gnl|CDD|223405	57.432	148	59	3	24	168	2	148	1.63e-61	184	85	COG0328	L					Ribonuclease HI
+ACM48982.1	gnl|CDD|223602	52.340	235	110	2	61	293	4	238	4.54e-114	326	80	COG0528	F					Uridylate kinase
+ACM48982.1	gnl|CDD|223601	27.564	156	87	7	138	269	121	274	1.39e-06	46.1	45	COG0527	E					Aspartokinases
+ACM48982.1	gnl|CDD|224524	21.138	246	152	9	78	292	17	251	6.09e-04	37.3	73	COG1608	R					Predicted archaeal kinase
+ACM48983.1	gnl|CDD|223311	46.448	183	97	1	1	182	3	185	5.04e-68	202	99	COG0233	J					Ribosome recycling factor
+ACM48984.1	gnl|CDD|223099	46.552	232	116	2	11	236	15	244	1.49e-101	292	96	COG0020	I					Undecaprenyl pyrophosphate synthase
+ACM48985.1	gnl|CDD|223648	28.346	254	124	3	82	277	1	254	2.48e-39	135	67	COG0575	I					CDP-diglyceride synthetase
+ACM48985.1	gnl|CDD|226955	38.462	156	89	3	137	287	147	300	9.36e-26	100	51	COG4589	R					Predicted CDP-diglyceride synthetase/phosphatidate cytidylyltransferase
+ACM48988.1	gnl|CDD|223230	49.160	238	118	2	2	238	1	236	1.52e-103	297	98	COG0152	F					Phosphoribosylaminoimidazolesuccinocarboxamide (SAICAR) synthase
+ACM48989.1	gnl|CDD|223202	45.327	428	216	6	5	415	3	429	2.18e-161	458	96	COG0124	J					Histidyl-tRNA synthetase
+ACM48989.1	gnl|CDD|226228	27.970	404	252	13	5	387	2	387	7.36e-40	144	89	COG3705	E					ATP phosphoribosyltransferase involved in histidine biosynthesis
+ACM48989.1	gnl|CDD|223518	30.588	85	55	2	324	406	490	572	2.45e-05	43.4	19	COG0441	J					Threonyl-tRNA synthetase
+ACM48989.1	gnl|CDD|223519	34.328	67	38	3	65	125	90	156	0.004	36.1	14	COG0442	J					Prolyl-tRNA synthetase
+ACM48990.1	gnl|CDD|224565	24.597	248	172	5	1	242	4	242	5.20e-29	107	96	COG1651	O					Protein-disulfide isomerase
+ACM48990.1	gnl|CDD|223600	18.889	90	73	0	59	148	1	90	2.14e-05	40.3	36	COG0526	O	C				Thiol-disulfide isomerase and thioredoxins
+ACM48990.1	gnl|CDD|226062	26.087	92	63	3	135	221	89	180	3.21e-05	40.9	35	COG3531	O					Predicted protein-disulfide isomerase
+ACM48991.1	gnl|CDD|224528	33.134	335	194	5	7	332	6	319	1.34e-46	157	96	COG1612	O					Uncharacterized protein required for cytochrome oxidase assembly
+ACM48991.1	gnl|CDD|227858	27.000	100	61	3	151	241	44	140	0.009	34.0	27	COG5571	N					Autotransporter protein or domain, integral membrane beta-barrel involved in protein secretion
+ACM48992.1	gnl|CDD|223490	54.264	258	115	3	8	262	8	265	2.20e-130	367	92	COG0413	H					Ketopantoate hydroxymethyltransferase
+ACM48993.1	gnl|CDD|226617	39.109	202	117	4	7	204	2	201	5.77e-58	179	93	COG4133	O					ABC-type transport system involved in cytochrome c biogenesis, ATPase component
+ACM48993.1	gnl|CDD|224054	29.787	188	125	3	7	187	4	191	1.13e-44	147	85	COG1131	V					ABC-type multidrug transport system, ATPase component
+ACM48993.1	gnl|CDD|224045	30.570	193	123	4	7	188	2	194	3.85e-34	119	85	COG1120	P	H				ABC-type cobalamin/Fe3+-siderophores transport systems, ATPase components
+ACM48993.1	gnl|CDD|224047	29.524	210	133	9	7	202	3	211	6.49e-33	115	92	COG1122	P					ABC-type cobalt transport system, ATPase component
+ACM48993.1	gnl|CDD|224046	28.718	195	127	3	7	190	4	197	1.57e-30	110	86	COG1121	P					ABC-type Mn/Zn transport systems, ATPase component
+ACM48993.1	gnl|CDD|223487	31.250	192	118	4	7	187	3	191	1.65e-30	109	85	COG0410	E					ABC-type branched-chain amino acid transport systems, ATPase component
+ACM48993.1	gnl|CDD|224052	29.612	206	128	6	7	197	8	211	6.54e-28	103	89	COG1127	Q					ABC-type transport system involved in resistance to organic solvents, ATPase component
+ACM48993.1	gnl|CDD|226631	28.042	189	129	2	7	190	2	188	4.68e-27	102	86	COG4152	R					ABC-type uncharacterized transport system, ATPase component
+ACM48993.1	gnl|CDD|226927	30.000	200	115	5	7	190	1	191	9.75e-27	100	86	COG4555	C	P				ABC-type Na+ transport system, ATPase component
+ACM48993.1	gnl|CDD|227321	26.316	190	124	6	18	195	333	518	1.24e-26	103	83	COG4988	C	O				ABC-type transport system involved in cytochrome bd biosynthesis, ATPase and permease components
+ACM48993.1	gnl|CDD|224060	29.648	199	120	7	7	190	4	197	4.93e-26	98.0	86	COG1137	R					ABC-type (unclassified) transport system, ATPase component
+ACM48993.1	gnl|CDD|226359	34.545	165	101	4	7	165	3	166	4.47e-25	97.3	74	COG3839	G					ABC-type sugar transport systems, ATPase components
+ACM48993.1	gnl|CDD|224049	29.231	195	123	7	7	187	3	196	1.15e-24	94.6	85	COG1124	E	P				ABC-type dipeptide/oligopeptide/nickel transport system, ATPase component
+ACM48993.1	gnl|CDD|225183	28.571	210	132	7	8	202	472	678	1.19e-23	95.4	91	COG2274	V					ABC-type bacteriocin/lantibiotic exporters, contain an N-terminal double-glycine peptidase domain
+ACM48993.1	gnl|CDD|223562	28.947	190	119	7	4	190	318	494	6.38e-23	93.1	87	COG0488	R					ATPase components of ABC transporters with duplicated ATPase domains
+ACM48993.1	gnl|CDD|223562	24.272	206	127	6	7	186	3	205	7.92e-21	86.9	87	COG0488	R					ATPase components of ABC transporters with duplicated ATPase domains
+ACM48993.1	gnl|CDD|224041	30.000	190	124	3	7	190	3	189	9.18e-23	89.5	86	COG1116	P					ABC-type nitrate/sulfonate/bicarbonate transport system, ATPase component
+ACM48993.1	gnl|CDD|224050	30.653	199	118	8	7	190	1	194	1.10e-22	90.4	86	COG1125	E					ABC-type proline/glycine betaine transport systems, ATPase components
+ACM48993.1	gnl|CDD|226361	33.696	184	116	1	7	184	5	188	7.94e-22	88.9	83	COG3842	E					ABC-type spermidine/putrescine transport systems, ATPase components
+ACM48993.1	gnl|CDD|224059	29.353	201	125	5	7	190	1	201	1.06e-21	86.0	86	COG1136	V					ABC-type antimicrobial peptide transport system, ATPase component
+ACM48993.1	gnl|CDD|226970	29.545	176	117	4	7	176	3	177	2.89e-21	84.9	79	COG4619	R					ABC-type uncharacterized transport system, ATPase component
+ACM48993.1	gnl|CDD|226164	24.171	211	121	6	7	188	3	203	5.61e-21	85.0	85	COG3638	P					ABC-type phosphate/phosphonate transport system, ATPase component
+ACM48993.1	gnl|CDD|224044	28.108	185	116	5	7	175	31	214	1.21e-20	83.9	79	COG1119	P					ABC-type molybdenum transport system, ATPase component/photorepair protein PhrA
+ACM48993.1	gnl|CDD|226360	28.718	195	118	4	32	208	24	215	2.08e-20	82.8	83	COG3840	H					ABC-type thiamine transport system, ATPase component
+ACM48993.1	gnl|CDD|223488	29.630	189	101	5	25	187	22	204	4.24e-20	82.6	76	COG0411	E					ABC-type branched-chain amino acid transport systems, ATPase component
+ACM48993.1	gnl|CDD|226643	32.237	152	92	2	25	165	46	197	7.32e-20	83.6	66	COG4175	E					ABC-type proline/glycine betaine transport system, ATPase component
+ACM48993.1	gnl|CDD|224043	24.464	233	147	6	6	213	1	229	1.22e-19	82.8	97	COG1118	P					ABC-type sulfate/molybdate transport systems, ATPase component
+ACM48993.1	gnl|CDD|226929	25.500	200	132	5	7	189	1	200	1.26e-19	81.2	86	COG4559	P					ABC-type hemin transport system, ATPase component
+ACM48993.1	gnl|CDD|224051	30.244	205	110	8	7	190	2	194	1.48e-19	80.6	86	COG1126	E					ABC-type polar amino acid transport system, ATPase component
+ACM48993.1	gnl|CDD|224055	27.895	190	123	5	12	188	333	521	1.78e-19	83.2	83	COG1132	V					ABC-type multidrug transport system, ATPase and permease components
+ACM48993.1	gnl|CDD|226969	30.303	198	101	9	18	191	347	531	1.85e-19	83.1	81	COG4618	R					ABC-type protease/lipase transport system, ATPase and permease components
+ACM48993.1	gnl|CDD|224048	30.055	183	103	4	24	187	308	484	7.05e-19	81.5	87	COG1123	R					ATPase components of various ABC-type transport systems, contain duplicated ATPase
+ACM48993.1	gnl|CDD|224048	24.651	215	129	9	5	190	3	213	1.57e-10	56.8	87	COG1123	R					ATPase components of various ABC-type transport systems, contain duplicated ATPase
+ACM48993.1	gnl|CDD|226963	27.136	199	131	6	7	193	1	197	8.82e-19	78.9	87	COG4604	P					ABC-type enterochelin transport system, ATPase component
+ACM48993.1	gnl|CDD|226620	24.762	210	144	5	7	205	2	208	2.46e-18	77.2	93	COG4136	R					ABC-type uncharacterized transport system, ATPase component
+ACM48993.1	gnl|CDD|226628	28.276	145	97	2	26	164	17	160	2.20e-17	76.2	65	COG4148	P					ABC-type molybdate transport system, ATPase component
+ACM48993.1	gnl|CDD|226905	27.746	173	117	2	20	187	18	187	2.67e-17	75.2	79	COG4525	P					ABC-type taurine transport system, ATPase component
+ACM48993.1	gnl|CDD|227320	27.027	185	119	5	19	190	350	531	2.68e-16	73.9	80	COG4987	C	O				ABC-type transport system involved in cytochrome bd biosynthesis, fused ATPase and permease components
+ACM48993.1	gnl|CDD|226967	29.114	158	71	5	25	176	31	153	4.78e-16	71.9	71	COG4608	E					ABC-type oligopeptide transport system, ATPase component
+ACM48993.1	gnl|CDD|226637	25.287	174	115	5	24	184	30	201	5.17e-16	71.8	75	COG4167	V					ABC-type antimicrobial peptide transport system, ATPase component
+ACM48993.1	gnl|CDD|224058	28.500	200	120	4	7	187	1	196	5.31e-16	72.3	85	COG1135	P					ABC-type metal ion transport system, ATPase component
+ACM48993.1	gnl|CDD|225438	25.962	208	123	6	7	193	1	198	8.45e-16	70.3	87	COG2884	D					Predicted ATPase involved in cell division
+ACM48993.1	gnl|CDD|224057	23.464	179	110	6	23	190	43	205	1.20e-15	70.3	79	COG1134	G	M				ABC-type polysaccharide/polyol phosphate transport system, ATPase component
+ACM48993.1	gnl|CDD|226622	24.873	197	134	7	6	193	2	193	3.60e-15	69.1	88	COG4138	H					ABC-type cobalamin transport system, ATPase component
+ACM48993.1	gnl|CDD|226961	27.941	204	126	5	8	190	7	210	7.02e-15	68.2	86	COG4598	E					ABC-type histidine transport system, ATPase component
+ACM48993.1	gnl|CDD|224053	27.473	182	115	5	23	187	275	456	1.57e-13	65.6	77	COG1129	G					ABC-type sugar transport system, ATPase component
+ACM48993.1	gnl|CDD|226647	29.121	182	109	4	25	190	28	205	3.30e-13	63.2	78	COG4181	Q					Predicted ABC-type transport system involved in lysophospholipase L1 biosynthesis, ATPase component
+ACM48993.1	gnl|CDD|227019	25.405	185	116	5	25	190	23	204	1.43e-12	62.0	78	COG4674	R					Uncharacterized ABC-type transport system, ATPase component
+ACM48993.1	gnl|CDD|226952	27.419	186	113	6	25	195	42	220	2.07e-12	62.0	80	COG4586	R					ABC-type uncharacterized transport system, ATPase component
+ACM48993.1	gnl|CDD|223473	26.271	236	120	11	7	202	3	224	2.48e-12	61.1	92	COG0396	O					ABC-type transport system involved in Fe-S cluster assembly, ATPase component
+ACM48993.1	gnl|CDD|224026	28.000	175	84	8	29	174	29	190	3.65e-12	60.8	68	COG1101	R					ABC-type uncharacterized transport system, ATPase component
+ACM48993.1	gnl|CDD|226641	29.032	155	94	6	25	164	305	458	6.70e-12	60.8	65	COG4172	R					ABC-type uncharacterized transport system, duplicated ATPase component
+ACM48993.1	gnl|CDD|224166	22.807	171	100	7	31	190	365	514	1.90e-11	59.6	76	COG1245	R					Predicted ATPase, RNase L inhibitor (RLI) homolog
+ACM48993.1	gnl|CDD|224166	24.731	186	106	7	29	190	96	271	1.37e-06	45.4	76	COG1245	R					Predicted ATPase, RNase L inhibitor (RLI) homolog
+ACM48993.1	gnl|CDD|225265	26.368	201	119	8	17	201	393	580	4.25e-11	58.7	86	COG2401	R					ABC-type ATPase fused to a predicted acetyltransferase domain
+ACM48993.1	gnl|CDD|226646	20.976	205	116	8	3	185	388	568	1.07e-10	57.3	86	COG4178	R					ABC-type uncharacterized transport system, permease and ATPase components
+ACM48993.1	gnl|CDD|226364	24.402	209	129	6	4	187	254	458	1.82e-10	56.8	88	COG3845	R					ABC-type uncharacterized transport systems, ATPase components
+ACM48993.1	gnl|CDD|226364	26.203	187	109	4	25	191	22	199	6.16e-10	55.2	88	COG3845	R					ABC-type uncharacterized transport systems, ATPase components
+ACM48993.1	gnl|CDD|224042	25.238	210	112	8	8	186	8	203	5.40e-10	54.5	84	COG1117	P					ABC-type phosphate transport system, ATPase component
+ACM48993.1	gnl|CDD|226635	27.000	200	118	6	13	191	8	200	1.52e-09	53.3	84	COG4161	E					ABC-type arginine transport system, ATPase component
+ACM48993.1	gnl|CDD|223521	37.037	54	29	1	24	72	22	75	1.65e-08	50.7	23	COG0444	E	P				ABC-type dipeptide/oligopeptide/nickel transport system, ATPase component
+ACM48993.1	gnl|CDD|227590	25.397	189	113	9	18	186	274	454	3.79e-08	49.7	79	COG5265	O					ABC-type transport system involved in Fe-S cluster assembly, permease and ATPase components
+ACM48993.1	gnl|CDD|226592	26.486	185	112	7	2	164	1	183	1.18e-07	47.8	76	COG4107	P					ABC-type phosphonate transport system, ATPase component
+ACM48993.1	gnl|CDD|226968	28.205	156	80	6	25	165	343	481	1.60e-07	47.9	66	COG4615	Q	P				ABC-type siderophore export system, fused ATPase and permease components
+ACM48993.1	gnl|CDD|227118	24.479	192	116	8	18	186	21	206	2.21e-06	44.0	79	COG4778	P					ABC-type phosphonate transport system, ATPase component
+ACM48993.1	gnl|CDD|226425	52.941	34	13	1	20	53	27	57	1.18e-04	39.0	16	COG3910	R					Predicted ATPase
+ACM48993.1	gnl|CDD|226459	34.615	52	33	1	23	73	14	65	1.39e-04	39.1	24	COG3950	R					Predicted ATP-binding protein involved in virulence
+ACM48993.1	gnl|CDD|223496	37.931	29	17	1	23	50	14	42	1.79e-04	39.0	37	COG0419	L					ATPase involved in DNA repair
+ACM48993.1	gnl|CDD|223496	30.189	53	35	1	140	190	829	881	0.002	35.5	37	COG0419	L					ATPase involved in DNA repair
+ACM48994.1	gnl|CDD|223837	48.227	423	212	2	6	428	4	419	0.0	513	99	COG0766	M					UDP-N-acetylglucosamine enolpyruvyl transferase
+ACM48994.1	gnl|CDD|223206	24.645	422	258	20	14	402	12	406	4.16e-15	73.8	96	COG0128	E					5-enolpyruvylshikimate-3-phosphate synthase
+ACM48994.1	gnl|CDD|223206	21.852	270	174	14	180	425	29	285	4.52e-06	45.7	96	COG0128	E					5-enolpyruvylshikimate-3-phosphate synthase
+ACM48995.1	gnl|CDD|223789	34.783	184	108	3	4	182	3	179	2.98e-66	198	97	COG0717	F					Deoxycytidine deaminase
+ACM48996.1	gnl|CDD|223528	19.935	306	193	11	11	271	8	306	1.29e-11	61.1	93	COG0451	M	G				Nucleoside-diphosphate-sugar epimerases
+ACM48996.1	gnl|CDD|224016	23.448	145	90	7	138	271	144	278	0.004	35.0	48	COG1091	M					dTDP-4-dehydrorhamnose reductase
+ACM48997.1	gnl|CDD|224197	39.744	78	34	1	13	90	3	67	2.93e-19	71.4	85	COG1278	K					Cold shock proteins
+ACM48998.1	gnl|CDD|227333	33.435	658	397	16	67	689	61	712	1.35e-127	391	90	COG5000	T					Signal transduction histidine kinase involved in nitrogen fixation and metabolism regulation
+ACM48998.1	gnl|CDD|226370	28.213	319	170	14	387	671	47	340	2.18e-33	129	41	COG3852	T					Signal transduction histidine kinase, nitrogen specific
+ACM48998.1	gnl|CDD|223715	25.600	250	162	8	445	685	93	327	2.37e-33	128	35	COG0642	T					Signal transduction histidine kinase
+ACM48998.1	gnl|CDD|226654	25.758	264	165	7	429	679	349	594	2.40e-27	114	36	COG4191	T					Signal transduction histidine kinase regulating C4-dicarboxylate transport system
+ACM48998.1	gnl|CDD|227335	24.368	435	263	21	285	685	44	446	3.33e-22	97.1	58	COG5002	T					Signal transduction histidine kinase
+ACM48998.1	gnl|CDD|226655	23.629	237	166	6	458	688	442	669	9.48e-16	78.0	33	COG4192	T					Signal transduction histidine kinase regulating phosphoglycerate transport system
+ACM48998.1	gnl|CDD|225115	24.219	256	135	8	459	686	652	876	9.92e-16	78.1	33	COG2205	T					Osmosensitive K+ channel histidine kinase
+ACM48998.1	gnl|CDD|226702	23.629	237	146	11	462	683	519	735	1.70e-15	77.5	32	COG4251	T					Bacteriophytochrome (light-regulated signal transduction histidine kinase)
+ACM48998.1	gnl|CDD|225827	22.663	353	227	17	346	680	201	525	7.73e-13	68.5	48	COG3290	T					Signal transduction histidine kinase regulating citrate/malate metabolism
+ACM48998.1	gnl|CDD|226368	20.299	468	236	26	291	688	171	571	7.66e-09	55.8	57	COG3850	T					Signal transduction histidine kinase, nitrate/nitrite-specific
+ACM48998.1	gnl|CDD|225519	19.910	221	138	11	476	689	268	456	1.69e-06	47.8	31	COG2972	T					Predicted signal transduction protein with a C-terminal ATPase domain
+ACM48998.1	gnl|CDD|223910	17.188	128	103	1	248	375	37	161	2.89e-05	43.8	18	COG0840	N	T				Methyl-accepting chemotaxis protein
+ACM48998.1	gnl|CDD|225814	24.306	144	84	6	548	688	432	553	0.002	38.1	20	COG3275	T					Putative regulator of cell autolysis
+ACM48998.1	gnl|CDD|225083	22.826	92	60	4	600	688	58	141	0.004	35.4	13	COG2172	T					Anti-sigma regulatory factor (Ser/Thr protein kinase)
+ACM48999.1	gnl|CDD|223426	33.065	372	223	12	7	363	1	361	6.53e-64	205	92	COG0349	J					Ribonuclease D
+ACM48999.1	gnl|CDD|223820	21.667	180	125	6	23	191	20	194	2.41e-08	52.7	44	COG0749	L					DNA polymerase I - 3'-5' exonuclease and polymerase domains
+ACM49000.1	gnl|CDD|223350	45.508	679	342	10	3	669	5	667	0.0	798	99	COG0272	L					NAD-dependent DNA ligase (contains BRCT domain type II)
+ACM49000.1	gnl|CDD|227600	37.179	78	48	1	594	670	154	231	7.56e-14	69.4	11	COG5275	R					BRCT domain type II
+ACM49000.1	gnl|CDD|225893	22.078	77	57	1	362	438	23	96	1.27e-04	38.6	11	COG3357	K					Predicted transcriptional regulator containing an HTH domain fused to a Zn-ribbon
+ACM49001.1	gnl|CDD|223355	58.095	105	43	1	3	106	1	105	1.87e-57	170	95	COG0278	O					Glutaredoxin-related protein
+ACM49001.1	gnl|CDD|223767	28.571	84	53	3	17	98	1	79	5.45e-06	38.4	75	COG0695	O					Glutaredoxin and related proteins
+ACM49002.1	gnl|CDD|223349	35.802	81	41	2	1	70	1	81	1.62e-17	67.0	90	COG0271	T					Stress-induced morphogen (activity unknown)
+ACM49002.1	gnl|CDD|227340	38.806	67	34	2	8	70	6	69	3.70e-13	55.8	81	COG5007	K					Predicted transcriptional regulator, BolA superfamily
+ACM49003.1	gnl|CDD|223600	16.667	90	72	2	56	142	35	124	4.85e-07	43.7	54	COG0526	O	C				Thiol-disulfide isomerase and thioredoxins
+ACM49004.1	gnl|CDD|223993	49.220	449	219	4	9	451	4	449	0.0	570	97	COG1066	O					Predicted ATP-dependent serine protease
+ACM49004.1	gnl|CDD|223544	21.074	242	154	9	66	278	34	267	5.06e-13	66.2	47	COG0468	L					RecA/RadA recombinase
+ACM49004.1	gnl|CDD|223543	23.757	181	107	5	81	236	12	186	2.48e-11	60.9	34	COG0467	T					RecA-superfamily ATPases implicated in signal transduction
+ACM49004.1	gnl|CDD|225429	48.214	56	29	0	77	132	13	68	4.92e-09	53.9	12	COG2874	N	U				Predicted ATPases involved in biogenesis of archaeal flagella
+ACM49004.1	gnl|CDD|223679	24.675	154	97	7	310	451	4	150	1.01e-04	41.5	31	COG0606	O					Predicted ATPase with chaperone activity
+ACM49004.1	gnl|CDD|223994	21.805	133	83	5	333	444	464	596	0.004	36.6	25	COG1067	O					Predicted ATP-dependent protease
+ACM49004.1	gnl|CDD|223382	30.952	42	28	1	76	117	181	221	0.005	36.1	9	COG0305	L					Replicative DNA helicase
+ACM49005.1	gnl|CDD|227012	35.983	717	332	9	22	738	27	616	8.06e-149	450	81	COG4666	R					TRAP-type uncharacterized transport system, fused permease components
+ACM49005.1	gnl|CDD|224509	28.188	149	95	2	203	346	15	156	7.16e-12	64.9	16	COG1593	G					TRAP-type C4-dicarboxylate transport system, large permease component
+ACM49006.1	gnl|CDD|224205	20.968	124	98	0	1	124	2	125	1.38e-14	65.8	64	COG1286	R					Uncharacterized membrane protein, required for colicin V production
+ACM49007.1	gnl|CDD|223437	39.623	106	64	0	22	127	3	108	6.43e-27	93.9	83	COG0360	J					Ribosomal protein S6
+ACM49008.1	gnl|CDD|223316	51.471	68	33	0	30	97	8	75	8.28e-26	88.5	68	COG0238	J					Ribosomal protein S18
+ACM49009.1	gnl|CDD|223436	41.667	144	83	1	4	146	3	146	3.93e-41	134	65	COG0359	J					Ribosomal protein L9
+ACM49010.1	gnl|CDD|223190	60.775	413	155	1	9	421	6	411	0.0	680	96	COG0112	E					Glycine/serine hydroxymethyltransferase
+ACM49010.1	gnl|CDD|223476	26.984	189	113	8	82	261	41	213	1.63e-11	62.3	42	COG0399	M					Predicted pyridoxal phosphate-dependent enzyme apparently involved in regulation of cell wall biogenesis
+ACM49010.1	gnl|CDD|223513	19.008	242	149	13	100	313	98	320	1.71e-06	46.9	50	COG0436	E					Aspartate/tyrosine/aromatic aminotransferase
+ACM49010.1	gnl|CDD|223699	27.320	194	106	15	73	254	65	235	7.78e-05	41.4	42	COG0626	E					Cystathionine beta-lyases/cystathionine gamma-synthases
+ACM49010.1	gnl|CDD|223594	19.635	219	146	8	151	344	145	358	8.93e-04	38.1	45	COG0520	E					Selenocysteine lyase
+ACM49011.1	gnl|CDD|224876	25.263	95	67	2	16	109	9	100	1.82e-12	56.2	83	COG1965	P					Protein implicated in iron transport, frataxin homolog
+ACM49012.1	gnl|CDD|224055	37.413	572	348	6	10	579	4	567	2.79e-147	434	98	COG1132	V					ABC-type multidrug transport system, ATPase and permease components
+ACM49012.1	gnl|CDD|225183	31.404	570	379	6	11	576	147	708	9.34e-105	328	97	COG2274	V					ABC-type bacteriocin/lantibiotic exporters, contain an N-terminal double-glycine peptidase domain
+ACM49012.1	gnl|CDD|227590	42.663	368	192	8	213	572	138	494	4.00e-78	252	62	COG5265	O					ABC-type transport system involved in Fe-S cluster assembly, permease and ATPase components
+ACM49012.1	gnl|CDD|227320	26.746	587	394	16	10	575	1	572	1.95e-73	242	97	COG4987	C	O				ABC-type transport system involved in cytochrome bd biosynthesis, fused ATPase and permease components
+ACM49012.1	gnl|CDD|227321	26.690	577	369	18	25	577	10	556	1.21e-69	232	95	COG4988	C	O				ABC-type transport system involved in cytochrome bd biosynthesis, ATPase and permease components
+ACM49012.1	gnl|CDD|226969	36.910	233	144	3	332	563	330	560	1.58e-42	158	40	COG4618	R					ABC-type protease/lipase transport system, ATPase and permease components
+ACM49012.1	gnl|CDD|224047	33.197	244	139	7	336	568	3	233	6.59e-39	140	40	COG1122	P					ABC-type cobalt transport system, ATPase component
+ACM49012.1	gnl|CDD|224058	30.435	253	148	9	337	573	2	242	1.01e-38	142	41	COG1135	P					ABC-type metal ion transport system, ATPase component
+ACM49012.1	gnl|CDD|224054	28.916	249	154	7	336	575	4	238	2.24e-38	140	41	COG1131	V					ABC-type multidrug transport system, ATPase component
+ACM49012.1	gnl|CDD|224045	28.916	249	140	8	336	566	2	231	2.70e-38	138	40	COG1120	P	H				ABC-type cobalamin/Fe3+-siderophores transport systems, ATPase components
+ACM49012.1	gnl|CDD|224051	31.646	237	146	9	337	567	3	229	3.71e-36	132	40	COG1126	E					ABC-type polar amino acid transport system, ATPase component
+ACM49012.1	gnl|CDD|224048	32.308	260	140	12	336	571	280	527	6.36e-36	138	41	COG1123	R					ATPase components of various ABC-type transport systems, contain duplicated ATPase
+ACM49012.1	gnl|CDD|224048	29.457	258	148	10	337	571	6	252	2.07e-35	136	41	COG1123	R					ATPase components of various ABC-type transport systems, contain duplicated ATPase
+ACM49012.1	gnl|CDD|226361	33.471	242	119	9	334	557	3	220	8.12e-35	132	38	COG3842	E					ABC-type spermidine/putrescine transport systems, ATPase components
+ACM49012.1	gnl|CDD|226967	28.000	250	120	8	337	572	5	208	4.01e-34	127	41	COG4608	E					ABC-type oligopeptide transport system, ATPase component
+ACM49012.1	gnl|CDD|224059	31.092	238	131	10	336	555	1	223	4.03e-34	126	38	COG1136	V					ABC-type antimicrobial peptide transport system, ATPase component
+ACM49012.1	gnl|CDD|226359	29.918	244	120	11	336	557	3	217	6.49e-34	128	38	COG3839	G					ABC-type sugar transport systems, ATPase components
+ACM49012.1	gnl|CDD|224046	30.769	247	135	10	336	563	4	233	1.47e-32	123	39	COG1121	P					ABC-type Mn/Zn transport systems, ATPase component
+ACM49012.1	gnl|CDD|224041	28.696	230	128	10	334	550	1	207	7.07e-32	120	37	COG1116	P					ABC-type nitrate/sulfonate/bicarbonate transport system, ATPase component
+ACM49012.1	gnl|CDD|224049	31.381	239	131	8	336	557	3	225	1.53e-31	120	38	COG1124	E	P				ABC-type dipeptide/oligopeptide/nickel transport system, ATPase component
+ACM49012.1	gnl|CDD|226643	32.432	222	126	6	354	562	43	253	1.80e-31	123	36	COG4175	E					ABC-type proline/glycine betaine transport system, ATPase component
+ACM49012.1	gnl|CDD|224050	27.237	257	161	8	337	581	2	244	2.05e-31	121	42	COG1125	E					ABC-type proline/glycine betaine transport systems, ATPase components
+ACM49012.1	gnl|CDD|225438	28.000	225	138	6	337	550	2	213	7.35e-31	117	37	COG2884	D					Predicted ATPase involved in cell division
+ACM49012.1	gnl|CDD|223521	28.352	261	142	11	341	572	8	252	3.19e-30	118	40	COG0444	E	P				ABC-type dipeptide/oligopeptide/nickel transport system, ATPase component
+ACM49012.1	gnl|CDD|224042	30.612	245	139	11	334	561	5	235	3.57e-30	116	39	COG1117	P					ABC-type phosphate transport system, ATPase component
+ACM49012.1	gnl|CDD|226970	30.144	209	136	5	350	555	14	215	1.66e-28	110	35	COG4619	R					ABC-type uncharacterized transport system, ATPase component
+ACM49012.1	gnl|CDD|226164	29.213	267	141	10	336	574	3	249	3.24e-28	110	41	COG3638	P					ABC-type phosphate/phosphonate transport system, ATPase component
+ACM49012.1	gnl|CDD|226641	32.530	249	120	13	354	575	302	529	1.80e-27	113	40	COG4172	R					ABC-type uncharacterized transport system, duplicated ATPase component
+ACM49012.1	gnl|CDD|226641	30.153	262	138	13	345	579	16	259	2.87e-23	100	40	COG4172	R					ABC-type uncharacterized transport system, duplicated ATPase component
+ACM49012.1	gnl|CDD|224052	30.894	246	140	10	336	566	8	238	2.35e-27	108	40	COG1127	Q					ABC-type transport system involved in resistance to organic solvents, ATPase component
+ACM49012.1	gnl|CDD|224053	33.047	233	133	10	337	559	9	228	2.96e-26	109	38	COG1129	G					ABC-type sugar transport system, ATPase component
+ACM49012.1	gnl|CDD|224053	31.222	221	125	11	355	559	275	484	6.29e-14	71.4	38	COG1129	G					ABC-type sugar transport system, ATPase component
+ACM49012.1	gnl|CDD|223488	31.507	219	121	9	354	552	19	228	8.90e-26	103	34	COG0411	E					ABC-type branched-chain amino acid transport systems, ATPase component
+ACM49012.1	gnl|CDD|226927	27.092	251	160	7	337	577	2	239	1.37e-25	102	41	COG4555	C	P				ABC-type Na+ transport system, ATPase component
+ACM49012.1	gnl|CDD|226364	31.667	240	128	12	336	559	4	223	4.22e-24	103	38	COG3845	R					ABC-type uncharacterized transport systems, ATPase components
+ACM49012.1	gnl|CDD|226364	23.789	227	143	8	350	556	269	485	8.81e-18	83.4	38	COG3845	R					ABC-type uncharacterized transport systems, ATPase components
+ACM49012.1	gnl|CDD|224057	23.404	235	147	9	338	563	26	236	4.27e-24	98.8	39	COG1134	G	M				ABC-type polysaccharide/polyol phosphate transport system, ATPase component
+ACM49012.1	gnl|CDD|226360	31.496	254	131	11	336	572	1	228	7.74e-24	97.4	41	COG3840	H					ABC-type thiamine transport system, ATPase component
+ACM49012.1	gnl|CDD|224026	28.571	224	142	8	342	552	9	227	1.34e-22	94.7	36	COG1101	R					ABC-type uncharacterized transport system, ATPase component
+ACM49012.1	gnl|CDD|226905	30.275	218	121	8	353	558	19	217	1.87e-22	94.1	35	COG4525	P					ABC-type taurine transport system, ATPase component
+ACM49012.1	gnl|CDD|224043	30.594	219	135	8	350	559	13	223	4.52e-22	94.7	36	COG1118	P					ABC-type sulfate/molybdate transport systems, ATPase component
+ACM49012.1	gnl|CDD|224044	26.432	227	149	8	337	552	32	251	1.10e-21	92.0	37	COG1119	P					ABC-type molybdenum transport system, ATPase component/photorepair protein PhrA
+ACM49012.1	gnl|CDD|226646	24.812	266	167	11	296	550	347	590	2.37e-21	95.1	44	COG4178	R					ABC-type uncharacterized transport system, permease and ATPase components
+ACM49012.1	gnl|CDD|223487	28.634	227	135	9	352	565	16	228	2.55e-20	87.5	37	COG0410	E					ABC-type branched-chain amino acid transport systems, ATPase component
+ACM49012.1	gnl|CDD|226647	29.167	216	126	6	353	554	24	226	4.56e-20	86.3	35	COG4181	Q					Predicted ABC-type transport system involved in lysophospholipase L1 biosynthesis, ATPase component
+ACM49012.1	gnl|CDD|226961	30.992	242	128	12	355	572	22	248	5.44e-20	87.1	37	COG4598	E					ABC-type histidine transport system, ATPase component
+ACM49012.1	gnl|CDD|226631	26.754	228	131	8	336	550	2	206	2.05e-19	86.3	37	COG4152	R					ABC-type uncharacterized transport system, ATPase component
+ACM49012.1	gnl|CDD|224060	26.697	221	148	7	352	565	17	230	6.09e-19	83.4	37	COG1137	R					ABC-type (unclassified) transport system, ATPase component
+ACM49012.1	gnl|CDD|226635	23.622	254	165	8	336	574	2	241	4.11e-18	81.0	41	COG4161	E					ABC-type arginine transport system, ATPase component
+ACM49012.1	gnl|CDD|226929	29.279	222	140	8	355	565	17	232	6.17e-18	80.9	36	COG4559	P					ABC-type hemin transport system, ATPase component
+ACM49012.1	gnl|CDD|226637	28.205	234	143	9	354	573	28	250	9.90e-18	80.6	38	COG4167	V					ABC-type antimicrobial peptide transport system, ATPase component
+ACM49012.1	gnl|CDD|223473	32.110	218	122	9	351	552	16	223	1.33e-17	79.9	35	COG0396	O					ABC-type transport system involved in Fe-S cluster assembly, ATPase component
+ACM49012.1	gnl|CDD|226963	27.755	245	144	8	337	566	2	228	2.54e-17	78.9	40	COG4604	P					ABC-type enterochelin transport system, ATPase component
+ACM49012.1	gnl|CDD|223562	25.806	248	129	11	338	553	5	229	5.29e-17	81.1	39	COG0488	R					ATPase components of ABC transporters with duplicated ATPase domains
+ACM49012.1	gnl|CDD|223562	25.641	234	139	12	337	564	322	526	1.48e-15	76.5	39	COG0488	R					ATPase components of ABC transporters with duplicated ATPase domains
+ACM49012.1	gnl|CDD|226968	20.930	559	397	17	10	554	1	528	1.39e-16	79.8	94	COG4615	Q	P				ABC-type siderophore export system, fused ATPase and permease components
+ACM49012.1	gnl|CDD|226952	26.639	244	151	7	332	564	21	247	1.79e-15	74.7	40	COG4586	R					ABC-type uncharacterized transport system, ATPase component
+ACM49012.1	gnl|CDD|226592	26.022	269	155	10	337	579	7	257	1.87e-15	73.6	42	COG4107	P					ABC-type phosphonate transport system, ATPase component
+ACM49012.1	gnl|CDD|227019	26.126	222	150	8	354	565	20	237	2.20e-15	73.1	36	COG4674	R					Uncharacterized ABC-type transport system, ATPase component
+ACM49012.1	gnl|CDD|227118	28.571	196	96	9	353	526	25	198	6.66e-14	68.6	30	COG4778	P					ABC-type phosphonate transport system, ATPase component
+ACM49012.1	gnl|CDD|226639	24.900	249	138	9	354	569	22	254	8.41e-13	66.8	37	COG4170	V					ABC-type antimicrobial peptide transport system, ATPase component
+ACM49012.1	gnl|CDD|226620	26.829	164	95	6	355	508	18	166	8.48e-13	64.9	26	COG4136	R					ABC-type uncharacterized transport system, ATPase component
+ACM49012.1	gnl|CDD|226628	27.919	197	120	8	369	556	28	211	2.08e-12	65.8	32	COG4148	P					ABC-type molybdate transport system, ATPase component
+ACM49012.1	gnl|CDD|226617	22.400	250	146	9	336	581	2	207	5.89e-12	62.3	42	COG4133	O					ABC-type transport system involved in cytochrome c biogenesis, ATPase component
+ACM49012.1	gnl|CDD|225265	26.289	194	108	7	353	534	397	567	4.62e-11	62.6	31	COG2401	R					ABC-type ATPase fused to a predicted acetyltransferase domain
+ACM49012.1	gnl|CDD|226622	27.632	228	131	11	355	563	15	227	6.33e-08	51.0	36	COG4138	H					ABC-type cobalamin transport system, ATPase component
+ACM49012.1	gnl|CDD|224166	22.564	195	117	10	361	548	363	530	1.77e-06	47.7	32	COG1245	R					Predicted ATPase, RNase L inhibitor (RLI) homolog
+ACM49013.1	gnl|CDD|223981	55.793	561	221	10	27	580	19	559	0.0	697	92	COG1053	C					Succinate dehydrogenase/fumarate reductase, flavoprotein subunit
+ACM49013.1	gnl|CDD|223108	34.364	550	296	20	30	565	12	510	1.48e-126	379	89	COG0029	H					Aspartate oxidase
+ACM49013.1	gnl|CDD|223522	31.884	69	34	5	157	218	101	163	0.002	37.9	10	COG0445	D					NAD/FAD-utilizing enzyme apparently involved in cell division
+ACM49014.1	gnl|CDD|223555	52.609	230	104	5	31	259	5	230	1.37e-115	328	87	COG0479	C					Succinate dehydrogenase/fumarate reductase, Fe-S protein subunit
+ACM49014.1	gnl|CDD|223325	21.649	97	68	3	166	262	5	93	2.73e-07	48.0	37	COG0247	C					Fe-S oxidoreductase
+ACM49014.1	gnl|CDD|224072	21.698	106	70	3	154	259	23	115	2.34e-05	41.2	40	COG1150	C					Heterodisulfide reductase, subunit C
+ACM49014.1	gnl|CDD|224062	20.619	97	56	3	172	261	310	392	0.001	37.3	34	COG1139	C					Uncharacterized conserved protein containing a ferredoxin-like domain
+ACM49015.1	gnl|CDD|224270	31.752	274	180	5	10	277	1	273	9.29e-68	209	92	COG1351	F					Predicted alternative thymidylate synthase
+ACM49016.1	gnl|CDD|225371	20.307	261	201	4	29	289	36	289	7.22e-16	75.3	66	COG2814	G					Arabinose efflux permease
+ACM49016.1	gnl|CDD|223553	16.617	337	269	4	4	328	2	338	1.86e-06	46.2	83	COG0477	G	E	P	R		Permeases of the major facilitator superfamily
+ACM49016.1	gnl|CDD|225121	13.971	136	117	0	157	292	183	318	1.53e-05	43.8	35	COG2211	G					Na+/melibiose symporter and related transporters
+ACM49016.1	gnl|CDD|225133	18.398	337	257	9	59	384	67	396	0.002	36.9	83	COG2223	P					Nitrate/nitrite transporter
+ACM49017.1	gnl|CDD|225164	58.095	315	129	2	13	325	12	325	1.67e-177	492	95	COG2255	L					Holliday junction resolvasome, helicase subunit
+ACM49017.1	gnl|CDD|225165	25.909	220	118	8	21	222	18	210	1.07e-24	100	61	COG2256	L					ATPase related to the helicase subunit of the Holliday junction resolvase
+ACM49017.1	gnl|CDD|223786	22.066	213	124	8	29	215	26	222	7.93e-11	59.4	56	COG0714	R					MoxR-like ATPases
+ACM49017.1	gnl|CDD|223540	35.514	107	51	5	27	116	242	347	1.75e-06	46.4	50	COG0464	O					ATPases of the AAA+ class
+ACM49017.1	gnl|CDD|223540	27.160	162	92	7	51	193	16	170	5.40e-05	41.7	50	COG0464	O					ATPases of the AAA+ class
+ACM49017.1	gnl|CDD|223541	54.545	33	15	0	55	87	185	217	3.37e-06	45.4	10	COG0465	O					ATP-dependent Zn proteases
+ACM49017.1	gnl|CDD|224143	38.028	71	36	3	51	113	183	253	3.72e-06	44.9	19	COG1222	O					ATP-dependent 26S proteasome regulatory subunit
+ACM49017.1	gnl|CDD|224140	34.266	143	63	7	30	148	64	199	3.31e-05	42.2	36	COG1219	O					ATP-dependent protease Clp, ATPase subunit
+ACM49017.1	gnl|CDD|224401	28.283	99	54	2	29	113	81	176	3.35e-05	41.6	26	COG1484	L					DNA replication protein
+ACM49017.1	gnl|CDD|224144	23.364	214	125	9	26	216	120	317	7.14e-05	41.0	58	COG1223	R					Predicted ATPase (AAA+ superfamily)
+ACM49017.1	gnl|CDD|225369	28.689	122	58	7	22	129	11	117	9.38e-05	40.8	33	COG2812	L					DNA polymerase III, gamma/tau subunits
+ACM49017.1	gnl|CDD|224391	26.923	130	64	5	27	126	17	145	1.69e-04	40.0	30	COG1474	L	O				Cdc6-related protein, AAA superfamily ATPase
+ACM49017.1	gnl|CDD|224160	27.660	94	55	6	107	195	147	232	0.001	37.4	27	COG1239	H					Mg-chelatase subunit ChlI
+ACM49017.1	gnl|CDD|223666	26.389	72	42	1	56	116	116	187	0.001	37.3	18	COG0593	L					ATPase involved in DNA replication initiation
+ACM49017.1	gnl|CDD|224145	36.667	60	36	1	29	86	41	100	0.001	36.9	18	COG1224	K					DNA helicase TIP49, TBP-interacting protein
+ACM49017.1	gnl|CDD|223775	33.333	30	20	0	52	81	1	30	0.003	35.3	9	COG0703	E					Shikimate kinase
+ACM49017.1	gnl|CDD|223542	56.000	25	11	0	57	81	354	378	0.004	36.0	8	COG0466	O					ATP-dependent Lon protease, bacterial type
+ACM49017.1	gnl|CDD|223637	31.579	76	47	2	56	128	3	76	0.008	33.8	22	COG0563	F					Adenylate kinase and related kinases
+ACM49017.1	gnl|CDD|224044	40.741	27	16	0	51	77	55	81	0.008	34.2	8	COG1119	P					ABC-type molybdenum transport system, ATPase component/photorepair protein PhrA
+ACM49019.1	gnl|CDD|223826	39.713	209	124	2	35	241	63	271	9.31e-35	122	83	COG0755	O					ABC-type transport system involved in cytochrome c biogenesis, permease component
+ACM49020.1	gnl|CDD|223272	44.211	190	102	3	40	228	1	187	6.82e-68	205	77	COG0194	F					Guanylate kinase
+ACM49020.1	gnl|CDD|226232	31.395	86	54	3	40	123	2	84	0.002	35.0	34	COG3709	P					Uncharacterized component of phosphonate metabolism
+ACM49021.1	gnl|CDD|223798	29.018	224	121	9	115	326	61	258	5.28e-27	105	57	COG0726	G					Predicted xylanase/chitin deacetylase
+ACM49022.1	gnl|CDD|223268	53.191	282	128	2	4	285	2	279	5.25e-135	381	94	COG0190	H					5,10-methylene-tetrahydrofolate dehydrogenase/Methenyl tetrahydrofolate cyclohydrolase
+ACM49022.1	gnl|CDD|225280	33.333	42	27	1	191	231	184	225	0.004	35.4	14	COG2423	E					Predicted ornithine cyclodeaminase, mu-crystallin homolog
+ACM49026.1	gnl|CDD|223669	18.952	248	155	3	46	250	23	267	9.30e-17	75.0	78	COG0596	R					Predicted hydrolases or acyltransferases (alpha/beta hydrolase superfamily)
+ACM49026.1	gnl|CDD|225176	18.552	221	128	8	63	238	51	264	1.46e-08	51.6	67	COG2267	I					Lysophospholipase
+ACM49026.1	gnl|CDD|224561	22.026	227	138	7	45	248	16	226	1.10e-07	48.5	78	COG1647	R					Esterase/lipase
+ACM49026.1	gnl|CDD|224423	19.898	196	131	7	78	259	426	609	5.78e-06	44.1	69	COG1506	E					Dipeptidyl aminopeptidases/acylaminoacyl-peptidases
+ACM49026.1	gnl|CDD|225496	22.689	119	76	6	39	148	24	135	1.03e-04	39.3	42	COG2945	R					Predicted hydrolase of the alpha/beta superfamily
+ACM49026.1	gnl|CDD|223730	15.183	191	143	6	47	224	82	266	1.98e-04	39.1	68	COG0657	I					Esterase/lipase
+ACM49026.1	gnl|CDD|226075	20.280	143	79	7	95	236	42	150	0.002	35.4	54	COG3545	R					Predicted esterase of the alpha/beta hydrolase fold
+ACM49027.1	gnl|CDD|226005	47.573	103	52	1	74	174	29	131	2.14e-46	145	56	COG3474	C					Cytochrome c2
+ACM49027.1	gnl|CDD|225418	27.778	126	48	9	67	179	11	106	6.14e-05	38.1	63	COG2863	C					Cytochrome c553
+ACM49028.1	gnl|CDD|223724	29.193	483	316	9	21	493	11	477	5.68e-67	221	93	COG0651	C	P				Formate hydrogenlyase subunit 3/Multisubunit Na+/H+ antiporter, MnhD subunit
+ACM49028.1	gnl|CDD|223941	28.893	488	313	11	15	488	1	468	3.33e-57	197	93	COG1009	C	P				NADH:ubiquinone oxidoreductase subunit 5 (chain L)/Multisubunit Na+/H+ antiporter, MnhA subunit
+ACM49028.1	gnl|CDD|223940	25.403	496	320	13	21	497	12	476	6.89e-38	142	94	COG1008	C					NADH:ubiquinone oxidoreductase subunit 4 (chain M)
+ACM49028.1	gnl|CDD|223939	22.518	413	301	8	90	496	68	467	4.11e-36	137	80	COG1007	C					NADH:ubiquinone oxidoreductase subunit 2 (chain N)
+ACM49029.1	gnl|CDD|223647	28.146	874	482	22	6	868	1	739	0.0	622	98	COG0574	G					Phosphoenolpyruvate synthase/pyruvate phosphate dikinase
+ACM49029.1	gnl|CDD|224006	29.303	488	229	20	417	874	149	550	5.67e-59	208	52	COG1080	G					Phosphoenolpyruvate-protein kinase (PTS system EI component in bacteria)
+ACM49029.1	gnl|CDD|226133	26.724	464	235	16	423	862	328	710	9.42e-34	136	50	COG3605	T					Signal transduction protein containing GAF and PtsI domains
+ACM49029.1	gnl|CDD|226367	27.419	124	77	2	392	515	1	111	1.09e-10	56.6	14	COG3848	T					Phosphohistidine swiveling domain
+ACM49030.1	gnl|CDD|224397	24.074	108	74	5	38	141	279	382	0.003	34.3	62	COG1480	R					Predicted membrane-associated HD superfamily hydrolase
+ACM49031.1	gnl|CDD|223620	28.571	189	123	4	1	181	2	186	1.10e-28	104	87	COG0546	R					Predicted phosphatases
+ACM49031.1	gnl|CDD|223710	26.316	190	126	5	8	187	4	189	4.22e-19	79.0	86	COG0637	R					Predicted phosphatase/phosphohexomutase
+ACM49031.1	gnl|CDD|223943	23.316	193	127	6	3	176	1	191	1.16e-16	72.6	83	COG1011	R					Predicted hydrolase (HAD superfamily)
+ACM49031.1	gnl|CDD|223319	18.045	133	83	6	74	183	19	148	1.45e-04	38.0	53	COG0241	E					Histidinol phosphatase and related phosphatases
+ACM49031.1	gnl|CDD|225090	24.211	95	61	3	88	181	51	135	0.003	34.2	45	COG2179	R					Predicted hydrolase of the HAD superfamily
+ACM49032.1	gnl|CDD|223251	47.952	586	299	4	4	587	1	582	0.0	832	99	COG0173	J					Aspartyl-tRNA synthetase
+ACM49032.1	gnl|CDD|223096	25.138	545	272	21	18	559	16	427	1.11e-56	194	92	COG0017	J					Aspartyl/asparaginyl-tRNA synthetases
+ACM49032.1	gnl|CDD|224111	22.241	598	285	28	5	560	38	497	3.26e-32	127	94	COG1190	J					Lysyl-tRNA synthetase (class II)
+ACM49032.1	gnl|CDD|225309	23.358	137	86	5	283	408	259	387	7.78e-05	42.3	21	COG2511	J					Archaeal Glu-tRNAGln amidotransferase subunit E (contains GAD domain)
+ACM49032.1	gnl|CDD|225178	53.333	30	14	0	530	559	289	318	4.59e-04	39.6	30	COG2269	J					Truncated, possibly inactive, lysyl-tRNA synthetase (class II)
+ACM49032.1	gnl|CDD|225178	21.290	155	101	7	143	289	15	156	0.002	37.7	30	COG2269	J					Truncated, possibly inactive, lysyl-tRNA synthetase (class II)
+ACM49033.1	gnl|CDD|225379	32.124	193	125	3	1	189	5	195	2.95e-31	109	97	COG2823	R					Predicted periplasmic or secreted lipoprotein
+ACM49033.1	gnl|CDD|227116	21.990	191	101	9	1	150	1	184	0.001	36.2	77	COG4775	M					Outer membrane protein/protective antigen OMA87
+ACM49034.1	gnl|CDD|223267	30.938	320	194	12	2	301	1	313	2.08e-52	171	97	COG0189	H	J				Glutathione synthase/Ribosomal protein S6 modification enzyme (glutaminyl transferase)
+ACM49035.1	gnl|CDD|224102	34.286	315	186	7	14	309	5	317	9.76e-68	212	89	COG1181	M					D-alanine-D-alanine ligase and related ATP-grasp enzymes
+ACM49035.1	gnl|CDD|223534	20.588	238	165	7	64	287	71	298	1.24e-10	58.9	67	COG0458	E	F				Carbamoylphosphate synthase large subunit (split gene in MJ)
+ACM49035.1	gnl|CDD|223105	22.594	239	155	10	32	250	13	241	4.74e-05	41.5	66	COG0026	F					Phosphoribosylaminoimidazole carboxylase (NCAIR synthetase)
+ACM49035.1	gnl|CDD|226433	21.264	174	117	6	116	278	125	289	1.30e-04	40.3	49	COG3919	R					Predicted ATP-grasp enzyme
+ACM49035.1	gnl|CDD|223516	22.772	101	60	4	105	190	115	212	6.65e-04	38.0	26	COG0439	I					Biotin carboxylase
+ACM49035.1	gnl|CDD|223267	27.586	87	53	4	105	184	119	202	0.003	35.8	24	COG0189	H	J				Glutathione synthase/Ribosomal protein S6 modification enzyme (glutaminyl transferase)
+ACM49036.1	gnl|CDD|224505	25.472	212	144	6	53	255	44	250	7.15e-24	94.4	78	COG1589	M					Cell division septal protein
+ACM49037.1	gnl|CDD|225114	38.675	468	267	9	4	463	1	456	5.72e-158	452	99	COG2204	T					Response regulator containing CheY-like receiver, AAA-type ATPase, and DNA-binding domains
+ACM49037.1	gnl|CDD|226350	33.680	481	258	14	16	463	107	559	8.84e-80	255	96	COG3829	K	T				Transcriptional regulator containing PAS, AAA-type ATPase, and DNA-binding domains
+ACM49037.1	gnl|CDD|226132	34.957	349	211	9	127	463	201	545	5.98e-69	226	72	COG3604	K	T				Transcriptional regulator containing GAF, AAA-type ATPase, and DNA binding domains
+ACM49037.1	gnl|CDD|225822	33.019	318	176	9	153	463	317	604	1.68e-58	199	67	COG3284	Q	K				Transcriptional activator of acetoin/glycerol metabolism
+ACM49037.1	gnl|CDD|224142	28.244	393	241	8	91	463	27	398	3.11e-55	186	80	COG1221	K	T				Transcriptional regulators containing an AAA-type ATPase domain and a DNA-binding domain
+ACM49037.1	gnl|CDD|225821	30.063	316	204	9	151	463	206	507	8.01e-46	163	67	COG3283	K	E				Transcriptional regulator of aromatic amino acids metabolism
+ACM49037.1	gnl|CDD|223855	30.709	127	83	3	12	135	5	129	3.88e-25	97.2	27	COG0784	T					FOG: CheY-like receiver
+ACM49037.1	gnl|CDD|223816	31.148	122	76	4	13	129	1	119	1.88e-23	95.4	25	COG0745	T	K				Response regulators consisting of a CheY-like receiver domain and a winged-helix DNA-binding domain
+ACM49037.1	gnl|CDD|226932	30.000	140	92	2	12	147	4	141	3.57e-21	88.5	29	COG4566	T					Response regulator
+ACM49037.1	gnl|CDD|225971	26.752	157	110	2	15	168	17	171	2.35e-19	86.3	33	COG3437	K	T				Response regulator containing a CheY-like receiver domain and an HD-GYP domain
+ACM49037.1	gnl|CDD|226229	29.630	135	91	2	5	137	125	257	6.76e-18	82.8	29	COG3706	T					Response regulator containing a CheY-like receiver domain and a GGDEF domain
+ACM49037.1	gnl|CDD|226997	25.540	278	188	7	134	399	170	440	1.43e-16	78.8	57	COG4650	K	T				Sigma54-dependent transcription regulator containing an AAA-type ATPase domain and a DNA-binding domain
+ACM49037.1	gnl|CDD|226931	29.710	138	77	5	15	142	3	130	1.61e-16	75.8	27	COG4565	K	T				Response regulator of citrate/malate metabolism
+ACM49037.1	gnl|CDD|226933	29.808	104	71	1	13	116	10	111	8.39e-16	72.5	22	COG4567	T	K				Response regulator consisting of a CheY-like receiver domain and a Fis-type HTH domain
+ACM49037.1	gnl|CDD|225107	34.146	123	77	2	14	134	2	122	1.66e-15	72.3	26	COG2197	T	K				Response regulator containing a CheY-like receiver domain and an HTH DNA-binding domain
+ACM49037.1	gnl|CDD|227095	25.362	138	97	3	15	148	4	139	4.77e-14	70.9	29	COG4753	T					Response regulator containing CheY-like receiver domain and AraC-type DNA-binding domain
+ACM49037.1	gnl|CDD|226456	26.623	154	107	3	13	164	1	150	6.45e-13	66.8	33	COG3947	T					Response regulator containing CheY-like receiver and SARP domains
+ACM49037.1	gnl|CDD|225111	31.884	138	79	6	12	137	1	135	1.52e-12	65.8	27	COG2201	N	T				Chemotaxis response regulator containing a CheY-like receiver domain and a methylesterase domain
+ACM49037.1	gnl|CDD|226230	29.197	137	85	4	15	144	8	139	8.79e-12	61.2	28	COG3707	T					Response regulator with putative antiterminator output domain
+ACM49037.1	gnl|CDD|225818	30.252	119	73	4	14	128	3	115	4.08e-09	54.3	25	COG3279	K	T				Response regulator of the LytR/AlgR family
+ACM49037.1	gnl|CDD|223786	20.800	125	86	4	174	293	45	161	1.19e-04	40.9	26	COG0714	R					MoxR-like ATPases
+ACM49037.1	gnl|CDD|224391	31.148	61	37	2	142	197	7	67	0.002	37.3	12	COG1474	L	O				Cdc6-related protein, AAA superfamily ATPase
+ACM49037.1	gnl|CDD|223994	19.753	81	59	3	220	297	203	280	0.007	35.8	17	COG1067	O					Predicted ATP-dependent protease
+ACM49039.1	gnl|CDD|224169	43.629	463	248	6	7	466	1	453	4.79e-175	496	96	COG1249	C					Pyruvate/2-oxoglutarate dehydrogenase complex, dihydrolipoamide dehydrogenase (E3) component, and related enzymes
+ACM49039.1	gnl|CDD|223523	23.465	456	290	15	14	454	2	413	1.86e-25	104	93	COG0446	R					Uncharacterized NAD(FAD)-dependent dehydrogenases
+ACM49039.1	gnl|CDD|223523	48.649	37	19	0	11	47	137	173	1.38e-04	41.1	93	COG0446	R					Uncharacterized NAD(FAD)-dependent dehydrogenases
+ACM49039.1	gnl|CDD|223566	24.615	325	180	11	12	322	5	278	3.96e-21	90.8	65	COG0492	O					Thioredoxin reductase
+ACM49039.1	gnl|CDD|224171	25.446	224	136	11	112	319	71	279	1.17e-19	89.3	44	COG1251	C					NAD(P)H-nitrite reductase
+ACM49039.1	gnl|CDD|224172	19.771	349	185	14	13	319	6	301	3.24e-13	68.0	64	COG1252	C					NADH dehydrogenase, FAD-containing subunit
+ACM49039.1	gnl|CDD|223717	23.810	168	113	4	8	165	1	163	1.33e-12	66.3	33	COG0644	C					Dehydrogenases (flavoproteins)
+ACM49039.1	gnl|CDD|226160	25.148	338	168	14	12	322	213	492	2.59e-10	59.4	65	COG3634	O					Alkyl hydroperoxide reductase, large subunit
+ACM49039.1	gnl|CDD|224154	42.500	40	23	0	8	47	1	40	9.65e-10	57.4	8	COG1233	Q					Phytoene dehydrogenase and related proteins
+ACM49039.1	gnl|CDD|224992	48.718	39	20	0	8	46	1	39	1.49e-08	53.4	8	COG2081	R					Predicted flavoproteins
+ACM49039.1	gnl|CDD|223567	22.252	373	188	20	15	339	128	446	6.69e-07	48.4	68	COG0493	E	R				NADPH-dependent glutamate synthase beta chain and related oxidoreductases
+ACM49039.1	gnl|CDD|223567	21.818	110	65	6	144	242	97	196	0.003	36.9	68	COG0493	E	R				NADPH-dependent glutamate synthase beta chain and related oxidoreductases
+ACM49039.1	gnl|CDD|223981	36.842	38	24	0	10	47	6	43	6.45e-06	45.4	8	COG1053	C					Succinate dehydrogenase/fumarate reductase, flavoprotein subunit
+ACM49039.1	gnl|CDD|223636	47.368	38	20	0	12	49	3	40	7.77e-06	45.0	8	COG0562	M					UDP-galactopyranose mutase
+ACM49039.1	gnl|CDD|224070	44.444	36	20	0	12	47	126	161	1.40e-05	44.4	39	COG1148	C					Heterodisulfide reductase, subunit A and related polyferredoxins
+ACM49039.1	gnl|CDD|224070	23.494	166	99	5	143	291	99	253	0.003	36.7	39	COG1148	C					Heterodisulfide reductase, subunit A and related polyferredoxins
+ACM49039.1	gnl|CDD|224550	43.902	41	22	1	7	47	28	67	1.29e-04	40.8	9	COG1635	H					Flavoprotein involved in thiazole biosynthesis
+ACM49039.1	gnl|CDD|226103	42.857	42	22	1	8	47	3	44	1.33e-04	41.3	8	COG3573	R					Predicted oxidoreductase
+ACM49039.1	gnl|CDD|224983	19.247	239	151	12	8	225	6	223	2.07e-04	40.5	46	COG2072	P					Predicted flavoprotein involved in K+ transport
+ACM49039.1	gnl|CDD|223727	40.000	30	18	0	12	41	4	33	4.15e-04	39.3	6	COG0654	H	C				2-polyprenyl-6-methoxyphenol hydroxylase and related FAD-dependent oxidoreductases
+ACM49039.1	gnl|CDD|225186	36.364	33	21	0	8	40	5	37	4.40e-04	39.7	7	COG2303	E					Choline dehydrogenase and related flavoproteins
+ACM49039.1	gnl|CDD|224152	34.884	43	28	0	8	50	5	47	4.89e-04	39.3	9	COG1231	E					Monoamine oxidase
+ACM49039.1	gnl|CDD|223737	34.884	43	22	2	8	47	2	41	7.70e-04	38.7	8	COG0665	E					Glycine/D-amino acid oxidases (deaminating)
+ACM49039.1	gnl|CDD|225915	38.889	36	22	0	12	47	3	38	0.002	37.1	8	COG3380	R					Predicted NAD/FAD-dependent oxidoreductase
+ACM49039.1	gnl|CDD|223651	47.059	34	18	0	8	41	10	43	0.004	36.5	7	COG0578	C					Glycerol-3-phosphate dehydrogenase
+ACM49044.1	gnl|CDD|224156	29.091	275	171	9	50	311	4	267	1.62e-40	139	84	COG1235	R					Metal-dependent hydrolases of the beta-lactamase superfamily I
+ACM49044.1	gnl|CDD|224155	20.065	309	185	13	49	313	1	291	2.93e-16	74.8	85	COG1234	R					Metal-dependent hydrolases of the beta-lactamase superfamily III
+ACM49044.1	gnl|CDD|224158	23.711	194	117	6	86	273	24	192	1.18e-06	45.9	60	COG1237	R					Metal-dependent hydrolases of the beta-lactamase superfamily II
+ACM49044.1	gnl|CDD|224157	25.153	163	95	9	83	228	13	165	1.79e-05	42.8	47	COG1236	J					Predicted exonuclease of the beta-lactamase fold involved in RNA processing
+ACM49044.1	gnl|CDD|223565	25.862	58	38	1	85	137	27	84	8.20e-04	37.5	17	COG0491	R					Zn-dependent hydrolases, including glyoxylases
+ACM49044.1	gnl|CDD|224696	27.848	79	39	3	84	151	194	265	0.004	35.8	22	COG1782	R					Predicted metal-dependent RNase, consists of a metallo-beta-lactamase domain and an RNA-binding KH domain
+ACM49045.1	gnl|CDD|223252	28.667	300	170	13	4	267	107	398	3.51e-51	170	96	COG0174	E					Glutamine synthetase
+ACM49045.1	gnl|CDD|225081	24.615	130	66	6	22	121	3	130	0.004	35.1	36	COG2170	S					Uncharacterized conserved protein
+ACM49046.1	gnl|CDD|223646	37.584	298	173	7	75	367	16	305	5.15e-77	237	78	COG0573	P					ABC-type phosphate transport system, permease component
+ACM49046.1	gnl|CDD|223654	33.600	250	147	7	125	367	50	287	1.87e-44	152	65	COG0581	P					ABC-type phosphate transport system, permease component
+ACM49046.1	gnl|CDD|226956	25.249	301	152	3	139	367	426	725	1.93e-25	104	61	COG4590	R					ABC-type uncharacterized transport system, permease component
+ACM49046.1	gnl|CDD|226629	24.675	231	144	7	148	369	12	221	3.67e-11	59.6	59	COG4149	P					ABC-type molybdate transport system, permease component
+ACM49046.1	gnl|CDD|223629	23.364	214	149	4	148	360	62	261	3.98e-10	56.9	57	COG0555	O					ABC-type sulfate transport system, permease component
+ACM49046.1	gnl|CDD|224098	22.273	220	143	4	148	367	70	261	5.26e-10	56.4	59	COG1177	E					ABC-type spermidine/putrescine transport system, permease component II
+ACM49046.1	gnl|CDD|224099	23.348	227	154	5	144	367	57	266	6.40e-08	51.1	61	COG1178	P					ABC-type Fe3+ transport system, permease component
+ACM49046.1	gnl|CDD|224099	23.246	228	150	7	141	367	331	534	0.002	36.8	61	COG1178	P					ABC-type Fe3+ transport system, permease component
+ACM49046.1	gnl|CDD|224096	25.541	231	147	7	148	367	73	289	1.88e-06	46.1	59	COG1175	G					ABC-type sugar transport systems, permease components
+ACM49046.1	gnl|CDD|227008	24.324	222	144	8	148	367	28	227	3.39e-06	44.7	59	COG4662	H					ABC-type tungstate transport system, periplasmic component
+ACM49046.1	gnl|CDD|223673	20.863	139	88	2	153	291	75	191	1.34e-05	43.0	37	COG0600	P					ABC-type nitrate/sulfonate/bicarbonate transport system, permease component
+ACM49046.1	gnl|CDD|224922	26.347	167	85	6	148	297	21	166	1.90e-04	39.5	40	COG2011	P					ABC-type metal ion transport system, permease component
+ACM49046.1	gnl|CDD|226644	26.708	161	88	5	145	299	98	234	5.60e-04	38.4	41	COG4176	E					ABC-type proline/glycine betaine transport system, permease component
+ACM49046.1	gnl|CDD|224097	23.881	134	87	2	237	370	165	283	0.003	35.7	36	COG1176	E					ABC-type spermidine/putrescine transport system, permease component I
+ACM49047.1	gnl|CDD|223092	46.830	899	437	17	1	879	1	878	0.0	973	99	COG0013	J					Alanyl-tRNA synthetase
+ACM49047.1	gnl|CDD|225427	27.309	249	139	10	470	708	15	231	1.79e-26	105	27	COG2872	R					Predicted metal-dependent hydrolases related to alanyl-tRNA synthetase HxxxH domain
+ACM49047.1	gnl|CDD|223518	27.972	143	86	7	564	699	19	151	2.12e-04	41.9	15	COG0441	J					Threonyl-tRNA synthetase
+ACM49048.1	gnl|CDD|223152	65.411	292	101	0	1	292	1	292	3.85e-157	437	99	COG0074	C					Succinyl-CoA synthetase, alpha subunit
+ACM49048.1	gnl|CDD|223972	23.243	185	122	8	29	202	34	209	2.50e-09	54.7	59	COG1042	C					Acyl-CoA synthetase (NDP forming)
+ACM49049.1	gnl|CDD|223123	53.608	388	174	4	13	397	2	386	2.55e-168	473	96	COG0045	C					Succinyl-CoA synthetase, beta subunit
+ACM49049.1	gnl|CDD|223972	24.138	87	64	2	294	378	347	433	0.007	35.4	21	COG1042	C					Acyl-CoA synthetase (NDP forming)
+ACM49051.1	gnl|CDD|223304	23.077	325	203	12	5	320	27	313	9.52e-38	134	93	COG0226	P					ABC-type phosphate transport system, periplasmic component
+ACM49052.1	gnl|CDD|224910	31.863	204	128	6	3	201	4	201	4.69e-37	125	95	COG1999	R					Uncharacterized protein SCO1/SenC/PrrC, involved in biogenesis of respiratory and photosynthetic systems
+ACM49053.1	gnl|CDD|224981	29.499	339	201	7	10	330	8	326	3.68e-63	201	95	COG2070	R					Dioxygenases related to 2-nitropropane dioxygenase
+ACM49053.1	gnl|CDD|227314	25.847	236	138	10	29	230	48	280	6.01e-09	54.5	60	COG4981	I					Enoyl reductase domain of yeast-type FAS1
+ACM49053.1	gnl|CDD|223245	27.451	102	46	4	125	204	176	271	0.004	35.6	24	COG0167	F					Dihydroorotate dehydrogenase
+ACM49054.1	gnl|CDD|225580	35.465	172	109	2	35	205	7	177	2.62e-42	138	83	COG3038	C					Cytochrome B561
+ACM49055.1	gnl|CDD|224099	28.545	536	357	10	1	523	6	528	9.49e-80	257	96	COG1178	P					ABC-type Fe3+ transport system, permease component
+ACM49055.1	gnl|CDD|224098	21.344	253	170	7	282	523	19	253	1.12e-13	68.4	84	COG1177	E					ABC-type spermidine/putrescine transport system, permease component II
+ACM49055.1	gnl|CDD|224098	19.214	229	145	7	9	220	15	220	1.01e-07	50.3	84	COG1177	E					ABC-type spermidine/putrescine transport system, permease component II
+ACM49055.1	gnl|CDD|223629	21.032	252	184	7	282	523	16	262	1.92e-11	61.9	85	COG0555	O					ABC-type sulfate transport system, permease component
+ACM49055.1	gnl|CDD|223629	21.171	222	156	5	1	217	14	221	1.37e-09	56.1	85	COG0555	O					ABC-type sulfate transport system, permease component
+ACM49055.1	gnl|CDD|226629	22.275	211	156	5	320	523	4	213	2.30e-11	60.7	65	COG4149	P					ABC-type molybdate transport system, permease component
+ACM49055.1	gnl|CDD|226629	22.436	156	101	4	60	208	21	163	2.33e-09	54.9	65	COG4149	P					ABC-type molybdate transport system, permease component
+ACM49055.1	gnl|CDD|224097	21.596	213	156	5	9	213	22	231	5.12e-08	51.5	83	COG1176	E					ABC-type spermidine/putrescine transport system, permease component I
+ACM49055.1	gnl|CDD|224097	20.974	267	183	8	281	523	10	272	4.46e-06	45.7	83	COG1176	E					ABC-type spermidine/putrescine transport system, permease component I
+ACM49055.1	gnl|CDD|226354	22.422	223	150	6	309	522	55	263	1.20e-06	47.2	39	COG3833	G					ABC-type maltose transport systems, permease component
+ACM49055.1	gnl|CDD|226665	27.273	110	75	2	9	113	23	132	9.76e-06	44.3	19	COG4208	P					ABC-type sulfate transport system, permease component
+ACM49055.1	gnl|CDD|223472	14.563	206	146	5	282	469	16	209	0.002	37.2	35	COG0395	G					ABC-type sugar transport system, permease component
+ACM49056.1	gnl|CDD|224482	21.466	382	191	18	78	453	18	296	1.22e-15	75.4	73	COG1566	V					Multidrug resistance efflux pump
+ACM49056.1	gnl|CDD|223914	15.000	460	271	14	70	502	5	371	6.69e-11	60.9	85	COG0845	M					Membrane-fusion protein
+ACM49056.1	gnl|CDD|224117	21.127	142	98	2	210	337	293	434	1.21e-06	48.2	36	COG1196	D					Chromosome segregation ATPases
+ACM49056.1	gnl|CDD|224117	21.192	151	105	3	206	353	226	365	2.61e-06	47.0	36	COG1196	D					Chromosome segregation ATPases
+ACM49056.1	gnl|CDD|224117	24.476	143	104	3	193	335	802	940	1.54e-05	44.7	36	COG1196	D					Chromosome segregation ATPases
+ACM49056.1	gnl|CDD|224117	23.684	152	100	2	201	346	740	881	3.30e-05	43.5	36	COG1196	D					Chromosome segregation ATPases
+ACM49056.1	gnl|CDD|224117	24.667	150	109	2	201	350	677	822	3.39e-05	43.5	36	COG1196	D					Chromosome segregation ATPases
+ACM49056.1	gnl|CDD|224117	23.567	157	102	3	203	352	784	929	3.72e-05	43.5	36	COG1196	D					Chromosome segregation ATPases
+ACM49056.1	gnl|CDD|224117	22.000	150	108	2	203	346	707	853	2.71e-04	40.5	36	COG1196	D					Chromosome segregation ATPases
+ACM49056.1	gnl|CDD|224117	27.049	122	78	2	225	346	666	776	4.13e-04	40.1	36	COG1196	D					Chromosome segregation ATPases
+ACM49056.1	gnl|CDD|224117	18.182	187	141	2	194	378	351	527	0.001	38.9	36	COG1196	D					Chromosome segregation ATPases
+ACM49056.1	gnl|CDD|226400	21.970	132	88	4	273	398	40	162	1.93e-04	40.1	25	COG3883	S					Uncharacterized protein conserved in bacteria
+ACM49056.1	gnl|CDD|223496	21.481	135	97	2	211	344	293	419	5.41e-04	39.7	26	COG0419	L					ATPase involved in DNA repair
+ACM49056.1	gnl|CDD|227278	18.471	157	103	5	213	348	39	191	0.001	38.2	27	COG4942	D					Membrane-bound metallopeptidase
+ACM49056.1	gnl|CDD|227061	19.337	181	115	7	181	349	154	315	0.006	36.4	33	COG4717	S					Uncharacterized conserved protein
+ACM49056.1	gnl|CDD|224495	21.795	78	60	1	224	301	57	133	0.007	35.4	15	COG1579	R					Zn-ribbon protein, possibly nucleic acid-binding
+ACM49057.1	gnl|CDD|227877	22.275	211	148	7	1	200	6	211	6.64e-20	81.8	92	COG5590	S					Uncharacterized conserved protein
+ACM49057.1	gnl|CDD|223647	22.642	53	36	1	39	91	687	734	7.73e-04	37.0	24	COG0574	G					Phosphoenolpyruvate synthase/pyruvate phosphate dikinase
+ACM49058.1	gnl|CDD|223842	38.496	452	256	11	7	444	5	448	8.69e-130	380	96	COG0771	M					UDP-N-acetylmuramoylalanine-D-glutamate ligase
+ACM49058.1	gnl|CDD|223841	24.415	299	184	13	110	371	102	395	3.07e-18	83.5	58	COG0770	M					UDP-N-acetylmuramyl pentapeptide synthase
+ACM49058.1	gnl|CDD|223840	25.703	249	130	8	108	309	88	328	2.50e-17	80.8	44	COG0769	M					UDP-N-acetylmuramyl tripeptide synthase
+ACM49058.1	gnl|CDD|223844	26.522	230	137	10	114	320	110	330	2.92e-17	80.7	46	COG0773	M					UDP-N-acetylmuramate-alanine ligase
+ACM49059.1	gnl|CDD|223893	33.953	430	267	8	16	439	7	425	1.88e-94	288	96	COG0823	U					Periplasmic component of the Tol biopolymer transport system
+ACM49059.1	gnl|CDD|224423	17.100	269	175	10	205	437	14	270	4.06e-10	58.7	53	COG1506	E					Dipeptidyl aminopeptidases/acylaminoacyl-peptidases
+ACM49059.1	gnl|CDD|227282	27.848	158	83	7	232	360	63	218	4.81e-09	55.2	45	COG4946	S					Uncharacterized protein related to the periplasmic component of the Tol biopolymer transport system
+ACM49059.1	gnl|CDD|227282	28.000	175	113	7	226	395	339	505	1.16e-04	41.3	45	COG4946	S					Uncharacterized protein related to the periplasmic component of the Tol biopolymer transport system
+ACM49059.1	gnl|CDD|227282	24.419	86	60	2	273	353	60	145	6.49e-04	39.0	45	COG4946	S					Uncharacterized protein related to the periplasmic component of the Tol biopolymer transport system
+ACM49059.1	gnl|CDD|227282	27.619	105	63	4	329	425	72	171	0.004	36.3	45	COG4946	S					Uncharacterized protein related to the periplasmic component of the Tol biopolymer transport system
+ACM49059.1	gnl|CDD|225201	23.000	300	207	8	104	399	70	349	1.50e-07	50.5	67	COG2319	R					FOG: WD40 repeat
+ACM49059.1	gnl|CDD|225201	27.419	186	112	6	181	351	251	428	1.34e-04	40.8	67	COG2319	R					FOG: WD40 repeat
+ACM49060.1	gnl|CDD|223668	37.017	543	326	8	26	553	11	552	5.78e-170	490	94	COG0595	R					Predicted hydrolase of the metallo-beta-lactamase superfamily
+ACM49060.1	gnl|CDD|223565	23.913	184	121	5	29	196	9	189	2.35e-11	61.4	30	COG0491	R					Zn-dependent hydrolases, including glyoxylases
+ACM49060.1	gnl|CDD|224157	24.199	281	155	11	24	281	1	246	2.46e-11	62.8	46	COG1236	J					Predicted exonuclease of the beta-lactamase fold involved in RNA processing
+ACM49060.1	gnl|CDD|225212	17.204	186	123	7	20	178	9	190	2.46e-06	46.6	28	COG2333	R					Predicted hydrolase (metallo-beta-lactamase superfamily)
+ACM49060.1	gnl|CDD|224696	29.293	99	55	6	29	120	186	276	5.01e-05	43.1	16	COG1782	R					Predicted metal-dependent RNase, consists of a metallo-beta-lactamase domain and an RNA-binding KH domain
+ACM49060.1	gnl|CDD|224156	18.182	209	136	7	61	244	35	233	5.49e-05	42.1	33	COG1235	R					Metal-dependent hydrolases of the beta-lactamase superfamily I
+ACM49060.1	gnl|CDD|223503	21.839	87	60	4	79	161	69	151	4.67e-04	39.6	15	COG0426	C					Uncharacterized flavoproteins
+ACM49063.1	gnl|CDD|223126	72.131	122	33	1	1	122	7	127	2.35e-62	183	98	COG0048	J					Ribosomal protein S12
+ACM49064.1	gnl|CDD|223127	54.135	133	57	2	21	153	20	148	1.62e-54	166	83	COG0049	J					Ribosomal protein S7
+ACM49065.1	gnl|CDD|223556	61.328	693	262	3	1	690	1	690	0.0	1032	100	COG0480	J					Translation elongation factors (GTPases)
+ACM49065.1	gnl|CDD|226593	30.159	504	264	16	7	474	9	460	2.31e-63	216	68	COG4108	J					Peptide chain release factor RF-3
+ACM49065.1	gnl|CDD|224138	27.551	490	236	13	11	485	6	391	6.79e-58	203	69	COG1217	T					Predicted membrane GTPase involved in stress response
+ACM49065.1	gnl|CDD|223557	22.688	692	303	22	6	678	5	483	9.47e-39	148	98	COG0481	M					Membrane GTPase LepA
+ACM49065.1	gnl|CDD|227581	28.324	173	98	7	12	159	9	180	2.05e-13	69.6	21	COG5256	J					Translation elongation factor EF-1alpha (GTPase)
+ACM49065.1	gnl|CDD|223606	31.250	144	74	4	15	155	10	131	1.82e-11	63.7	20	COG0532	J					Translation initiation factor 2 (IF-2; GTPase)
+ACM49065.1	gnl|CDD|223128	29.861	144	87	3	12	154	14	144	1.88e-09	56.9	21	COG0050	J					GTPases - translation elongation factors
+ACM49065.1	gnl|CDD|225815	27.820	133	72	5	12	139	2	115	4.32e-07	49.7	19	COG3276	J					Selenocysteine-specific translation elongation factor
+ACM49065.1	gnl|CDD|225448	32.759	116	59	5	18	116	14	127	5.01e-05	43.1	14	COG2895	P					GTPases - Sulfate adenylate transferase subunit 1
+ACM49065.1	gnl|CDD|224082	25.000	92	55	3	68	145	44	135	0.002	37.9	11	COG1160	R					Predicted GTPases
+ACM49066.1	gnl|CDD|223128	68.367	392	119	3	3	393	7	394	0.0	631	99	COG0050	J					GTPases - translation elongation factors
+ACM49066.1	gnl|CDD|227581	33.634	443	224	15	4	393	3	428	2.00e-86	266	99	COG5256	J					Translation elongation factor EF-1alpha (GTPase)
+ACM49066.1	gnl|CDD|225815	26.110	383	219	9	9	374	1	336	2.24e-49	170	93	COG3276	J					Selenocysteine-specific translation elongation factor
+ACM49066.1	gnl|CDD|227583	28.440	436	248	16	2	392	111	527	9.80e-40	145	99	COG5258	R					GTPase
+ACM49066.1	gnl|CDD|227582	28.859	447	217	22	5	390	7	413	1.23e-34	129	98	COG5257	J					Translation initiation factor 2, gamma subunit (eIF-2gamma; GTPase)
+ACM49066.1	gnl|CDD|225448	28.042	378	209	18	53	393	66	417	6.40e-33	125	87	COG2895	P					GTPases - Sulfate adenylate transferase subunit 1
+ACM49066.1	gnl|CDD|224138	31.179	263	129	14	10	247	7	242	2.75e-20	89.6	61	COG1217	T					Predicted membrane GTPase involved in stress response
+ACM49066.1	gnl|CDD|223556	30.263	152	90	4	10	153	12	155	1.93e-15	75.0	37	COG0480	J					Translation elongation factors (GTPases)
+ACM49066.1	gnl|CDD|223606	32.618	233	118	12	15	240	12	212	2.75e-14	71.0	58	COG0532	J					Translation initiation factor 2 (IF-2; GTPase)
+ACM49066.1	gnl|CDD|223557	29.644	253	142	13	1	242	1	228	5.94e-08	51.4	62	COG0481	M					Membrane GTPase LepA
+ACM49066.1	gnl|CDD|226593	29.070	86	56	2	54	137	62	144	4.16e-06	45.7	21	COG4108	J					Peptide chain release factor RF-3
+ACM49066.1	gnl|CDD|227254	29.592	98	52	5	63	154	31	117	0.001	36.4	23	COG4917	E					Ethanolamine utilization protein
+ACM49068.1	gnl|CDD|223328	35.955	178	112	1	10	187	3	178	1.79e-43	140	95	COG0250	K					Transcription antiterminator
+ACM49069.1	gnl|CDD|223158	46.715	137	68	1	10	146	8	139	4.90e-48	148	93	COG0080	J					Ribosomal protein L11
+ACM49070.1	gnl|CDD|223159	49.515	206	104	0	8	213	20	225	2.72e-87	254	95	COG0081	J					Ribosomal protein L1
+ACM49071.1	gnl|CDD|223322	32.624	141	93	2	7	146	5	144	3.59e-24	90.0	84	COG0244	J					Ribosomal protein L10
+ACM49072.1	gnl|CDD|223300	43.077	130	65	4	5	134	4	124	4.38e-22	82.0	97	COG0222	J					Ribosomal protein L7/L12
+ACM49073.1	gnl|CDD|223163	43.926	1350	436	22	39	1380	24	1060	0.0	1324	97	COG0085	K					DNA-directed RNA polymerase, beta subunit/140 kD subunit
+ACM49074.1	gnl|CDD|223164	45.487	853	389	16	18	844	6	808	0.0	856	66	COG0086	K					DNA-directed RNA polymerase, beta' subunit/160 kD subunit
+ACM49074.1	gnl|CDD|223164	32.653	49	29	1	903	947	414	462	2.51e-04	42.6	66	COG0086	K					DNA-directed RNA polymerase, beta' subunit/160 kD subunit
+ACM49074.1	gnl|CDD|223164	12.613	222	151	11	719	930	91	279	0.001	39.9	66	COG0086	K					DNA-directed RNA polymerase, beta' subunit/160 kD subunit
+ACM49075.1	gnl|CDD|223242	50.802	187	90	2	120	304	1	187	1.87e-78	235	55	COG0164	L					Ribonuclease HII
+ACM49075.1	gnl|CDD|223969	27.835	194	105	10	100	265	65	251	1.67e-15	72.7	49	COG1039	L					Ribonuclease HIII
+ACM49077.1	gnl|CDD|224159	28.467	137	93	2	1	133	10	145	6.05e-10	51.5	90	COG1238	S					Predicted membrane protein
+ACM49078.1	gnl|CDD|223234	41.927	384	197	6	5	364	3	384	4.61e-118	345	95	COG0156	H					7-keto-8-aminopelargonate synthetase and related enzymes
+ACM49078.1	gnl|CDD|223594	24.731	186	112	9	53	216	25	204	4.59e-06	45.4	43	COG0520	E					Selenocysteine lyase
+ACM49078.1	gnl|CDD|223153	27.083	192	110	7	89	258	39	222	1.72e-05	43.4	45	COG0075	E					Serine-pyruvate aminotransferase/archaeal aspartate aminotransferase
+ACM49078.1	gnl|CDD|224919	21.196	184	116	7	83	241	30	209	3.40e-04	39.2	42	COG2008	E					Threonine aldolase
+ACM49078.1	gnl|CDD|225428	25.287	174	94	9	94	249	68	223	4.83e-04	38.8	41	COG2873	E					O-acetylhomoserine sulfhydrylase
+ACM49078.1	gnl|CDD|224029	25.424	59	39	1	158	216	130	183	5.63e-04	38.7	16	COG1104	E					Cysteine sulfinate desulfinase/cysteine desulfurase and related enzymes
+ACM49079.1	gnl|CDD|224776	27.778	162	102	7	12	171	7	155	1.12e-12	59.6	92	COG1863	P					Multisubunit Na+/H+ antiporter, MnhE subunit
+ACM49080.1	gnl|CDD|224438	27.203	261	172	4	1	254	1	250	3.30e-53	170	99	COG1521	K					Putative transcriptional regulator, homolog of Bvg accessory factor
+ACM49081.1	gnl|CDD|223245	37.107	318	183	7	79	389	2	309	4.56e-102	301	80	COG0167	F					Dihydroorotate dehydrogenase
+ACM49081.1	gnl|CDD|224011	26.471	102	67	3	239	340	177	270	2.63e-04	39.9	26	COG1086	M	G				Predicted nucleoside-diphosphate sugar epimerases
+ACM49082.1	gnl|CDD|223320	39.333	150	74	4	15	163	13	146	1.20e-35	120	76	COG0242	J					N-formylmethionyl-tRNA deformylase
+ACM49083.1	gnl|CDD|223477	24.390	205	141	6	44	245	13	206	8.92e-34	118	81	COG0400	R					Predicted esterase
+ACM49083.1	gnl|CDD|226584	22.727	198	125	11	51	238	193	372	1.18e-05	42.6	75	COG4099	R					Predicted peptidase
+ACM49083.1	gnl|CDD|224423	18.981	216	123	10	51	229	396	596	9.74e-05	40.2	72	COG1506	E					Dipeptidyl aminopeptidases/acylaminoacyl-peptidases
+ACM49083.1	gnl|CDD|223669	18.852	122	79	4	52	173	24	125	1.60e-04	39.2	49	COG0596	R					Predicted hydrolases or acyltransferases (alpha/beta hydrolase superfamily)
+ACM49083.1	gnl|CDD|226040	22.561	164	105	7	46	201	58	207	0.001	36.3	62	COG3509	Q					Poly(3-hydroxybutyrate) depolymerase
+ACM49084.1	gnl|CDD|226148	30.070	286	182	10	1	271	6	288	1.25e-35	129	88	COG3621	R					Patatin
+ACM49084.1	gnl|CDD|224666	22.843	197	109	10	5	188	15	181	1.33e-06	45.9	60	COG1752	R					Predicted esterase of the alpha-beta hydrolase superfamily
+ACM49085.1	gnl|CDD|223337	49.479	192	93	2	27	218	27	214	5.01e-80	235	88	COG0259	H					Pyridoxamine-phosphate oxidase
+ACM49086.1	gnl|CDD|223840	37.295	488	266	17	7	469	3	475	1.88e-124	368	98	COG0769	M					UDP-N-acetylmuramyl tripeptide synthase
+ACM49086.1	gnl|CDD|223841	23.118	372	232	16	13	362	23	362	1.07e-26	109	74	COG0770	M					UDP-N-acetylmuramyl pentapeptide synthase
+ACM49086.1	gnl|CDD|223842	23.411	299	170	16	85	370	104	356	1.93e-18	84.3	61	COG0771	M					UDP-N-acetylmuramoylalanine-D-glutamate ligase
+ACM49086.1	gnl|CDD|223844	26.840	231	140	10	186	398	177	396	1.14e-15	76.1	45	COG0773	M					UDP-N-acetylmuramate-alanine ligase
+ACM49086.1	gnl|CDD|223362	20.745	376	191	25	90	401	41	373	4.45e-11	61.5	66	COG0285	H					Folylpolyglutamate synthase
+ACM49088.1	gnl|CDD|223699	31.053	380	238	11	39	407	29	395	2.00e-89	273	90	COG0626	E					Cystathionine beta-lyases/cystathionine gamma-synthases
+ACM49088.1	gnl|CDD|225428	26.933	375	226	10	75	406	56	425	1.92e-50	172	81	COG2873	E					O-acetylhomoserine sulfhydrylase
+ACM49088.1	gnl|CDD|223513	15.663	249	141	15	105	315	101	318	2.61e-05	43.0	52	COG0436	E					Aspartate/tyrosine/aromatic aminotransferase
+ACM49088.1	gnl|CDD|223234	19.725	218	140	8	51	248	59	261	0.002	36.8	49	COG0156	H					7-keto-8-aminopelargonate synthetase and related enzymes
+ACM49089.1	gnl|CDD|223349	35.366	82	49	2	65	145	8	86	3.77e-15	63.9	52	COG0271	T					Stress-induced morphogen (activity unknown)
+ACM49089.1	gnl|CDD|227340	30.909	55	36	1	99	151	26	80	1.61e-04	35.8	34	COG5007	K					Predicted transcriptional regulator, BolA superfamily
+ACM49091.1	gnl|CDD|223660	44.444	1125	587	19	6	1099	4	1121	0.0	1178	97	COG0587	L					DNA polymerase III, alpha subunit
+ACM49091.1	gnl|CDD|225087	21.209	844	439	44	161	876	697	1442	1.26e-11	66.2	69	COG2176	L					DNA polymerase III, alpha subunit (gram-positive type)
+ACM49091.1	gnl|CDD|225087	27.419	62	45	0	7	68	337	398	0.002	39.6	69	COG2176	L					DNA polymerase III, alpha subunit (gram-positive type)
+ACM49092.1	gnl|CDD|223206	25.698	358	223	12	52	394	40	369	9.31e-29	114	74	COG0128	E					5-enolpyruvylshikimate-3-phosphate synthase
+ACM49092.1	gnl|CDD|223837	26.829	82	53	3	221	302	199	273	0.007	35.6	18	COG0766	M					UDP-N-acetylglucosamine enolpyruvyl transferase
+ACM49093.1	gnl|CDD|224920	34.646	127	78	2	4	126	1	126	4.33e-14	61.2	97	COG2009	C					Succinate dehydrogenase/fumarate reductase, cytochrome b subunit
+ACM49094.1	gnl|CDD|225053	25.243	103	72	2	12	110	13	114	4.24e-08	44.9	85	COG2142	C					Succinate dehydrogenase, hydrophobic anchor subunit
+ACM49096.1	gnl|CDD|223428	46.341	246	122	7	15	253	20	262	2.48e-79	237	92	COG0351	H					Hydroxymethylpyrimidine/phosphomethylpyrimidine kinase
+ACM49096.1	gnl|CDD|225149	25.325	154	104	3	94	241	107	255	1.48e-09	54.2	57	COG2240	H					Pyridoxal/pyridoxine/pyridoxamine kinase
+ACM49096.1	gnl|CDD|225056	29.630	135	72	6	90	214	84	205	2.67e-05	41.5	48	COG2145	H					Hydroxyethylthiazole kinase, sugar kinase family
+ACM49096.1	gnl|CDD|224030	26.744	172	81	9	74	229	137	279	2.28e-04	38.7	60	COG1105	G					Fructose-1-phosphate kinase and related fructose-6-phosphate kinase (PfkB)
