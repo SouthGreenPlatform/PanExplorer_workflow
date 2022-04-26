@@ -1,0 +1,104 @@
+import glob
+import os
+import shutil
+
+with open("genome_names") as f:
+ SAMPLES = f.read().splitlines()
+
+
+rule final:
+ input:
+  "outputs/pav_matrix.csv",
+  "outputs/GCskew.txt",
+  "outputs/pav_matrix.tsv",
+  "outputs/heatmap.svg",
+  "outputs/cog_output.txt"
+
+rule wget:
+    input:
+        "genome_names"
+    output:
+        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gb", sample=SAMPLES)
+    shell:
+        """
+        perl Perl/wget.pl {input} outputs/genomes
+        """
+
+rule gcskew:
+    input:
+        "outputs/genomes/{sample}.fasta" 
+    output:
+        "outputs/genomes/{sample}.fasta.gcskew.txt"
+    shell:
+        """
+        python3 SkewIT/src/gcskew.py -i {input} -o {input}.gcskew.txt -k 1000 -w 1000
+        """ 
+
+rule concat_gcskew:
+    input:
+        expand("outputs/genomes/{sample}.fasta.gcskew.txt", sample=SAMPLES)
+    output:
+        out2="outputs/GCskew.txt"
+    shell:
+        """
+         cat {input} >>{output.out2}
+        """
+
+rule genbank2gff3:
+    input:
+        "outputs/genomes/{sample}.gb"
+    output:
+        gff1="outputs/genomes/{sample}.gb.gff",
+        gff2="outputs/genomes/{sample}.gb.rmdup.gff"
+    shell:
+        """
+        perl Perl/bp_genbank2gff3.pl -o outputs/genomes {input}
+        perl Perl/remove_duplicates_in_gff.pl {output.gff1} {output.gff2}
+        """
+
+rule roary:
+    input:
+        expand("outputs/genomes/{sample}.gb.rmdup.gff", sample=SAMPLES)
+    output:
+        pav="outputs/pav_matrix.csv",
+        newick="outputs/accessory_binary_genes.fa.newick"
+    shell:
+        """
+        roary -f outputs/roary_outdir outputs/genomes/*gb.rmdup.gff
+        cp -rf outputs/roary_outdir/gene_presence_absence.csv {output.pav}
+        cp -rf outputs/roary_outdir/accessory_binary_genes.fa.newick {output.newick}
+        """
+
+rule convert_matrix:
+    input:
+        pav="outputs/pav_matrix.csv"
+    output:
+        "outputs/pav_matrix.tsv"
+    shell:
+        """
+        perl Perl/ConvertRoaryMatrix.pl outputs/genomes {input} {output} outputs/genomes/strains.txt        
+        """
+
+rule heatmap_upset:
+    input:
+        pav="outputs/pav_matrix.tsv"
+    output:
+        heatmap="outputs/heatmap.svg",
+        upsetr="outputs/upsetr.svg"
+    shell:
+        """
+        perl Perl/GenerateHeatmapFromPAV.pl {input.pav} {output.heatmap}
+        mv {output.heatmap}.upsetr.svg {output.upsetr}
+        """
+
+rule cog:
+    input:
+        pav="outputs/pav_matrix.tsv"
+    output:
+        cog="outputs/cog_output.txt",
+        cogstat="outputs/cog_stats.txt"
+    shell:
+        """
+        perl Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} outputs/genomes/strains.txt
+        """
