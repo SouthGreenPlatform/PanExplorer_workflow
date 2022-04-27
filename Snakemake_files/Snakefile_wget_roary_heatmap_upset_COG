@@ -22,7 +22,7 @@ rule wget:
         expand("outputs/genomes/{sample}.gb", sample=SAMPLES)
     shell:
         """
-        perl Perl/wget.pl {input} outputs/genomes
+        perl $PANEX_PATH/Perl/wget.pl {input} outputs/genomes
         """
 
 rule gcskew:
@@ -32,7 +32,7 @@ rule gcskew:
         "outputs/genomes/{sample}.fasta.gcskew.txt"
     shell:
         """
-        python3 SkewIT/src/gcskew.py -i {input} -o {input}.gcskew.txt -k 1000 -w 1000
+        python3 $PANEX_PATH/SkewIT/src/gcskew.py -i {input} -o {input}.gcskew.txt -k 1000 -w 1000
         """ 
 
 rule concat_gcskew:
