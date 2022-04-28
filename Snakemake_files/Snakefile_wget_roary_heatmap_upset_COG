@@ -49,7 +49,7 @@ rule genbank2gff3:
     input:
         "outputs/genomes/{sample}.gb"
     output:
-        gff1="outputs/genomes/{sample}.g$PANEX_PATH/b.gff",
+        gff1="outputs/genomes/{sample}.gb.gff",
         gff2="outputs/genomes/{sample}.gb.rmdup.gff"
     shell:
         """
