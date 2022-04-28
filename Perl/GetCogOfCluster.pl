@@ -77,7 +77,7 @@ close(S);
 
 system("rpsblast+ -query $pav_matrix.selection_prot.fa -db COG/Cog -out $pav_matrix.selection.rps-blast.out -evalue 1e-2 -outfmt '7 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs'");
 
-system("perl COG/bac-genomics-scripts/cdd2cog/cdd2cog.pl -r $pav_matrix.selection.rps-blast.out -c COG/cddid.tbl -f COG/fun.txt -w COG/whog -a");
+system("perl $PANEX_PATH/COG/bac-genomics-scripts/cdd2cog/cdd2cog.pl -r $pav_matrix.selection.rps-blast.out -c $PANEX_PATH/COG/cddid.tbl -f $PANEX_PATH/COG/fun.txt -w $PANEX_PATH/COG/whog -a");
 
 open(COG,">$cog_outfile");
 my %cogs;
