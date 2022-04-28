@@ -49,12 +49,12 @@ rule genbank2gff3:
     input:
         "outputs/genomes/{sample}.gb"
     output:
-        gff1="outputs/genomes/{sample}.gb.gff",
+        gff1="outputs/genomes/{sample}.g$PANEX_PATH/b.gff",
         gff2="outputs/genomes/{sample}.gb.rmdup.gff"
     shell:
         """
-        perl Perl/bp_genbank2gff3.pl -o outputs/genomes {input}
-        perl Perl/remove_duplicates_in_gff.pl {output.gff1} {output.gff2}
+        perl $PANEX_PATH/Perl/bp_genbank2gff3.pl -o outputs/genomes {input}
+        perl $PANEX_PATH/Perl/remove_duplicates_in_gff.pl {output.gff1} {output.gff2}
         """
 
 rule roary:
@@ -77,7 +77,7 @@ rule convert_matrix:
         "outputs/pav_matrix.tsv"
     shell:
         """
-        perl Perl/ConvertRoaryMatrix.pl outputs/genomes {input} {output} outputs/genomes/strains.txt        
+        perl $PANEX_PATH/Perl/ConvertRoaryMatrix.pl outputs/genomes {input} {output} outputs/genomes/strains.txt        
         """
 
 rule heatmap_upset:
@@ -88,7 +88,7 @@ rule heatmap_upset:
         upsetr="outputs/upsetr.svg"
     shell:
         """
-        perl Perl/GenerateHeatmapFromPAV.pl {input.pav} {output.heatmap}
+        perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} {output.heatmap}
         mv {output.heatmap}.upsetr.svg {output.upsetr}
         """
 
@@ -100,5 +100,5 @@ rule cog:
         cogstat="outputs/cog_stats.txt"
     shell:
         """
-        perl Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} outputs/genomes/strains.txt
+        perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} outputs/genomes/strains.txt
         """
