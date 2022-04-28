@@ -1,5 +1,15 @@
 # PanExplorer_workflow
 
+## Prerequisites - Tool dependencies
+
+- Snakemake
+- Roary
+- PGAP
+- Panaroo
+- ncbi-blast+
+- PGAP
+- R
+
 ## Install
 
 1- Git clone
