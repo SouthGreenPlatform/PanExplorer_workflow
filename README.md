@@ -23,7 +23,17 @@ tar -xzvf Cog_LE.tar.gz
 cp -rf Cog.* $PANEX_PATH/COG
 ```
 
-## Prepare your list of genomes tio be analyzed
+## Prepare your list of genomes to be analyzed
+
+Edit a new file names "genome_names" listing the Genbank identifiers of complete assembled and annotated genomes.
+The file should look like this
+```
+cat genome_names
+CP000235.1
+CP001079.1
+CP001759.1
+CP015994.2
+```
 
 
 ## Run the workflow
