@@ -23,7 +23,7 @@ rule wget:
         expand("outputs/genomes/{sample}.pep", sample=SAMPLES)
     shell:
         """
-        perl Perl/wget.pl {input} outputs/genomes
+        perl $PANEX_PATH/Perl/wget.pl {input} outputs/genomes
         """
 rule gcskew:
     input:
@@ -32,7 +32,7 @@ rule gcskew:
         "outputs/genomes/{sample}.fasta.gcskew.txt"
     shell:
         """
-        python3 SkewIT/src/gcskew.py -i {input} -o {input}.gcskew.txt -k 1000 -w 1000
+        python3 $PANEX_PATH/SkewIT/src/gcskew.py -i {input} -o {input}.gcskew.txt -k 1000 -w 1000
         """
 
 rule concat_gcskew:
@@ -53,8 +53,8 @@ rule genbank2gff3:
         gff2="outputs/genomes/{sample}.gb.rmdup.gff"
     shell:
         """
-        perl Perl/bp_genbank2gff3.pl -o outputs/genomes {input}
-        perl Perl/remove_duplicates_in_gff.pl {output.gff1} {output.gff2}
+        perl $PANEX_PATH/Perl/bp_genbank2gff3.pl -o outputs/genomes {input}
+        perl $PANEX_PATH/Perl/remove_duplicates_in_gff.pl {output.gff1} {output.gff2}
         """
 
 
@@ -81,7 +81,7 @@ rule convert_matrix:
         "outputs/pav_matrix.tsv"
     shell:
         """
-        perl Perl/ConvertPGAPMatrix.pl outputs/genomes outputs/pav_matrix.csv outputs/pav_matrix.tsv outputs/genomes/strains.txt
+        perl $PANEX_PATH/Perl/ConvertPGAPMatrix.pl outputs/genomes outputs/pav_matrix.csv outputs/pav_matrix.tsv outputs/genomes/strains.txt
         """
 
 rule heatmap_upset:
@@ -92,7 +92,7 @@ rule heatmap_upset:
         upsetr="outputs/upsetr.svg"
     shell:
         """
-        perl Perl/GenerateHeatmapFromPAV.pl {input.pav} {output.heatmap}
+        perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} {output.heatmap}
         mv {output.heatmap}.upsetr.svg {output.upsetr}
         """
 
@@ -104,6 +104,6 @@ rule cog:
         cogstat="outputs/cog_stats.txt"
     shell:
         """
-        perl Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} outputs/genomes/strains.txt
+        perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} outputs/genomes/strains.txt
         """
 
