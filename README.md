@@ -7,7 +7,6 @@
 - PGAP
 - Panaroo
 - ncbi-blast+
-- PGAP
 - R
 
 ## Install
