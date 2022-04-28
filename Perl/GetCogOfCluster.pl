@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 
 use strict;
+use File::Basename;
+my $dirname = dirname(__FILE__);
 
 my $pav_matrix = $ARGV[0];
 my $prot_dir = $ARGV[1];
@@ -75,9 +77,9 @@ while(<O>){
 close(O);
 close(S);
 
-system("rpsblast+ -query $pav_matrix.selection_prot.fa -db COG/Cog -out $pav_matrix.selection.rps-blast.out -evalue 1e-2 -outfmt '7 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs'");
+system("rpsblast+ -query $pav_matrix.selection_prot.fa -db $dirname/../COG/Cog -out $pav_matrix.selection.rps-blast.out -evalue 1e-2 -outfmt '7 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs'");
 
-system("perl $PANEX_PATH/COG/bac-genomics-scripts/cdd2cog/cdd2cog.pl -r $pav_matrix.selection.rps-blast.out -c $PANEX_PATH/COG/cddid.tbl -f $PANEX_PATH/COG/fun.txt -w $PANEX_PATH/COG/whog -a");
+system("perl $dirname/../COG/bac-genomics-scripts/cdd2cog/cdd2cog.pl -r $pav_matrix.selection.rps-blast.out -c $dirname/../COG/cddid.tbl -f $dirname/../COG/fun.txt -w $dirname/../COG/whog -a");
 
 open(COG,">$cog_outfile");
 my %cogs;
