@@ -15,6 +15,14 @@ cp -rf PanExplorer_workflow /usr/local/bin
 export PANEX_PATH=/usr/local/bin/PanExplorer_workflow
 ```
 
+3- Retrieve COG database
+
+```
+wget https://ftp.ncbi.nlm.nih.gov/pub/mmdb/cdd/little_endian/Cog_LE.tar.gz
+tar -xzvf Cog_LE.tar.gz
+cp -rf Cog.* $PANEX_PATH/COG
+```
+
 ## Run the workflow
 
 ```
