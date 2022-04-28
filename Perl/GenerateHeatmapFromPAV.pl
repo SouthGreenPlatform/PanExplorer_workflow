@@ -56,7 +56,7 @@ close(F);
 close(M);
 
 
-system("ulimit -s 163840;Rscript R/heatmap.R -f $heatmap.accessory_01matrix.txt -o $heatmap.complete.svg");
+system("ulimit -s 163840;Rscript $PANEX_PATH/R/heatmap.R -f $heatmap.accessory_01matrix.txt -o $heatmap.complete.svg");
 
 
 my $min_y = 10000000;
@@ -155,7 +155,7 @@ foreach my $cluster(@clusters){
 close(M);
 
 my $nb_strains = scalar @strains;
-system("Rscript R/upsetr.R $heatmap.upsetr.txt $heatmap.upsetr.pdf $nb_strains");
+system("Rscript $PANEX_PATH/R/upsetr.R $heatmap.upsetr.txt $heatmap.upsetr.pdf $nb_strains");
 system("pdf2svg $heatmap.upsetr.pdf $heatmap.upsetr.svg 2");
 
 my $numstrain;
