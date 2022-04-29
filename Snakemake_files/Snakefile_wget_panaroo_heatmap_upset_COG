@@ -2,7 +2,7 @@ import glob
 import os
 import shutil
 
-with open("genome_names") as f:
+with open("genbank_ids") as f:
  SAMPLES = f.read().splitlines()
 
 
@@ -16,7 +16,7 @@ rule final:
 
 rule wget:
     input:
-        "genome_names"
+        "genbank_ids"
     output:
         expand("data/{sample}.fasta", sample=SAMPLES),
         expand("data/{sample}.gb", sample=SAMPLES)
