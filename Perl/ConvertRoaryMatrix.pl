@@ -85,6 +85,7 @@ while(<F>){
                 my $concat = "";
                 foreach my $gene(@genes){
                         my $prot_id = $corr{$gene};
+			if (!$prot_id){$prot_id = $gene;}
                         $concat .= "$prot_id,"
                 }
                 chop($concat);
