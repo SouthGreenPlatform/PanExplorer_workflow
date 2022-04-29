@@ -8,7 +8,37 @@ my $pav_matrix = $ARGV[0];
 my $prot_dir = $ARGV[1];
 my $cog_outfile = $ARGV[2];
 my $cog_stats = $ARGV[3];
-my $strain_info_file = $ARGV[4];
+my $cog_stats2 = $ARGV[4];
+my $strain_info_file = $ARGV[5];
+
+
+my %cogs_categories = (
+        "J"=>"INFORMATION STORAGE AND PROCESSING",
+        "A"=>"INFORMATION STORAGE AND PROCESSING",
+        "K"=>"INFORMATION STORAGE AND PROCESSING",
+        "L"=>"INFORMATION STORAGE AND PROCESSING",
+        "B"=>"INFORMATION STORAGE AND PROCESSING",
+        "D"=>"CELLULAR PROCESSES AND SIGNALING",
+        "Y"=>"CELLULAR PROCESSES AND SIGNALING",
+        "V"=>"CELLULAR PROCESSES AND SIGNALING",
+        "T"=>"CELLULAR PROCESSES AND SIGNALING",
+        "M"=>"CELLULAR PROCESSES AND SIGNALING",
+        "N"=>"CELLULAR PROCESSES AND SIGNALING",
+        "Z"=>"CELLULAR PROCESSES AND SIGNALING",
+        "W"=>"CELLULAR PROCESSES AND SIGNALING",
+        "U"=>"CELLULAR PROCESSES AND SIGNALING",
+        "O"=>"CELLULAR PROCESSES AND SIGNALING",
+        "C"=>"METABOLISM",
+        "G"=>"METABOLISM",
+        "E"=>"METABOLISM",
+        "F"=>"METABOLISM",
+        "H"=>"METABOLISM",
+        "I"=>"METABOLISM",
+        "P"=>"METABOLISM",
+        "Q"=>"METABOLISM",
+        "R"=>"POORLY CHARACTERIZED",
+        "S"=>"POORLY CHARACTERIZED"
+);
 
 my %strain_names;
 open(S,$strain_info_file);
@@ -27,7 +57,7 @@ while(<DIR>) {
 	my $filename = $_;
 	my $strain;
 	my $id;
-	if ($filename =~/\/(.*).pep/){
+	if ($filename =~/\/([^\/]*).pep/){
 		$strain = $1;
 	}
 	#open(F,"zcat $filename|" );
@@ -102,7 +132,9 @@ while(<C>){
 		my $strain = $strain_of_prot{$gene};
 		for (my $i = 2; $i <= $#letters; $i++){
 			my $letter = $letters[$i];
+			my $cat = $cogs_categories{$letter};
 			$count_letter{$strain}{$letter}++;
+			$count_letter{$strain}{$cat}++;
 		}
 		print COG $gene.$coginfo."\n";
 	}
@@ -111,12 +143,16 @@ close(C);
 system("rm -rf results");
 close(COG);
 
+my @cat_of_cat = ("INFORMATION STORAGE AND PROCESSING","METABOLISM","CELLULAR PROCESSES AND SIGNALING","POORLY CHARACTERIZED");
 my @cog_categories = ("D","M","N","O","T","U","V","W","Y","Z","A","B","J","K","L","C","E","F","G","H","I","P","Q","R","S");
 open(COG_STAT,">$cog_stats");
+open(COG_STAT2,">$cog_stats2");
 print COG_STAT "COG\t".join("\t",@cog_categories)."\n";
+print COG_STAT2 "COG\t".join("\t",@cat_of_cat)."\n";
 foreach my $strain(keys(%count_letter)){
 	my $strain_name = $strain_names{$strain};
 	print COG_STAT "$strain_name";
+	print COG_STAT2 "$strain_name";
 	my $ref_subhash = $count_letter{$strain};
 	my %subhash = %$ref_subhash;
 	foreach my $letter(@cog_categories){
@@ -125,6 +161,14 @@ foreach my $strain(keys(%count_letter)){
 		print COG_STAT "\t".$n;
 	}
 	print COG_STAT "\n";
+
+	foreach my $cat(@cat_of_cat){
+		my $n = 0;
+		if ($count_letter{$strain}{$cat}){$n = $count_letter{$strain}{$cat};}			
+		print COG_STAT2 "\t".$n;
+	}
+	print COG_STAT2 "\n";
 }
 close(COG_STAT);
+close(COG_STAT2);
 
