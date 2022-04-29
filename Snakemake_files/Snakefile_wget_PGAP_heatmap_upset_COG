@@ -66,7 +66,7 @@ rule pgap:
         newick="outputs/accessory_binary_genes.fa.newick"
     shell:
         """
-        listforpgap=$(cat genome_names | tr '\n' '+')
+        listforpgap=$(cat genbank_ids | tr '\n' '+')
         alias consense='/usr/bin/phylip consense';alias dnaml='phylip /usr/bin/dnaml' 
         cp -rf /usr/local/bin/PGAP-1.2.1/Blast_Filter.pl .
         perl /usr/local/bin/PGAP-1.2.1/PGAP.pl --strains $listforpgap --cluster --evolution --method GF --input outputs/genomes --output outputs/pgap_outdir
