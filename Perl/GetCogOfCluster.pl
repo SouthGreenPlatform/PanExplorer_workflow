@@ -94,12 +94,12 @@ while(<O>){
 			}
 		}
 	}
-        for (my $i=1; $i <= $#infos; $i++){
+        LINE: for (my $i=1; $i <= $#infos; $i++){
 		my @genenames = split(/,/,$infos[$i]);
 		foreach my $genename(@genenames){
 			if ($genename=~/\w+/){
 				print S $proteins{$genename};
-				last;
+				last LINE;
 			}
 		}
         }
