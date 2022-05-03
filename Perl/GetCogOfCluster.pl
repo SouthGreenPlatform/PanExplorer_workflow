@@ -9,7 +9,9 @@ my $prot_dir = $ARGV[1];
 my $cog_outfile = $ARGV[2];
 my $cog_stats = $ARGV[3];
 my $cog_stats2 = $ARGV[4];
-my $strain_info_file = $ARGV[5];
+my $cog_clusters = $ARGV[5];
+my $strain_info_file = $ARGV[6];
+
 
 
 my %cogs_categories = (
@@ -140,6 +142,7 @@ while(<C>){
 	}
 }
 close(C);
+system("cp -rf results/protein-id_cog.txt $cog_clusters");
 system("rm -rf results");
 close(COG);
 
