@@ -3,6 +3,7 @@
 library(dendextend)
 library("optparse")
 library(svglite)
+library(heatmaply)
 
 #args = commandArgs(trailingOnly=TRUE)
 
@@ -28,6 +29,8 @@ if (is.null(opt$out)){
 svglite(opt$out,width = 31, height = 28)
 
 mydata <- read.table(opt$file, header=TRUE,sep="\t", row.names="Gene")
+
+heatmaply(mydata, file = paste(opt$out, "html", sep="."))
 
 iris <- mydata
 
