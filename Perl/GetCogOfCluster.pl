@@ -77,7 +77,7 @@ while(<DIR>) {
 }
 closedir(DIR);
 
-
+my %accessory_clusters;
 my %genes_of_cluster;
 open(S,">$pav_matrix.selection_prot.fa");
 open(O,$pav_matrix);
@@ -96,6 +96,9 @@ while(<O>){
 			}
 		}
 	}
+	for (my $i=1; $i <= $#infos; $i++){
+                if ($infos[$i] =~/-/){$accessory_clusters{$cluster} = 1;}
+        }
         LINE: for (my $i=1; $i <= $#infos; $i++){
 		my @genenames = split(/,/,$infos[$i]);
 		foreach my $genename(@genenames){
@@ -145,6 +148,37 @@ close(C);
 system("cp -rf results/protein-id_cog.txt $cog_clusters");
 system("rm -rf results");
 close(COG);
+
+
+my %cogs_of_clusters;
+my %cogcats_of_clusters;
+open(C,$cog_clusters);
+while(<C>){
+        my $line = $_;
+        $line =~s/\n//g;$line =~s/\r//g;
+        my @infos = split(/\t/,$line);
+        my $cluster = $infos[0];
+        my $cog = $infos[1];
+        my $cog_category = $infos[2];
+        $cogs_of_clusters{$cluster}{$cog} = 1;
+        $cogcats_of_clusters{$cluster} = $cog_category;
+}
+close(C);
+
+open(CC,">$cog_clusters.2");
+foreach my $cluster(sort{$a<=>$b} keys(%genes_of_cluster)){
+        my $cog_category = "Unknown";
+        my $cog_list = "Unknown";
+        if ($cogcats_of_clusters{$cluster}){
+                $cog_category = $cogcats_of_clusters{$cluster};
+                my $ref_cogs_of_clusters = $cogs_of_clusters{$cluster};
+                $cog_list = join(",",keys(%$ref_cogs_of_clusters));
+        }
+        if ($accessory_clusters{$cluster}){
+                print CC "$cluster	$cog_list	$cog_category\n";
+        }
+}
+close(CC);
 
 my @cat_of_cat = ("INFORMATION STORAGE AND PROCESSING","METABOLISM","CELLULAR PROCESSES AND SIGNALING","POORLY CHARACTERIZED");
 my @cog_categories = ("D","M","N","O","T","U","V","W","Y","Z","A","B","J","K","L","C","E","F","G","H","I","P","Q","R","S");
