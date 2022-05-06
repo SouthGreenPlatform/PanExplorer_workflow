@@ -77,6 +77,7 @@ while(<DIR>) {
 }
 closedir(DIR);
 
+my %functions;
 my %accessory_clusters;
 my %genes_of_cluster;
 open(S,">$pav_matrix.selection_prot.fa");
@@ -104,6 +105,14 @@ while(<O>){
 		foreach my $genename(@genenames){
 			if ($genename=~/\w+/){
 				print S $proteins{$genename};
+				my $function = `grep $genename $prot_dir/*func`;
+                                $function =~s/\n//g;$function =~s/\r//g;
+                                my @t = split(/$genename/,$function);
+                                if ($t[1] =~/-\s+(.*)/){
+                                        $function = $1;
+                                        $function =~s/'//g;
+                                }
+                                $functions{$cluster} = $function;
 				last LINE;
 			}
 		}
@@ -174,8 +183,12 @@ foreach my $cluster(sort{$a<=>$b} keys(%genes_of_cluster)){
                 my $ref_cogs_of_clusters = $cogs_of_clusters{$cluster};
                 $cog_list = join(",",keys(%$ref_cogs_of_clusters));
         }
+	my $function = "Unknown";
+	if ($functions{$cluster}){
+		$function = $functions{$cluster};
+	}
         if ($accessory_clusters{$cluster}){
-                print CC "$cluster	$cog_list	$cog_category\n";
+                print CC "$cluster\t$cog_list\t$cog_category\t$function\n";
         }
 }
 close(CC);
