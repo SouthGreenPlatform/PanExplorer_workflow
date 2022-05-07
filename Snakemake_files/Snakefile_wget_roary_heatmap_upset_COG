@@ -80,18 +80,6 @@ rule convert_matrix:
         perl $PANEX_PATH/Perl/ConvertRoaryMatrix.pl outputs/genomes {input} {output} outputs/genomes/strains.txt        
         """
 
-rule heatmap_upset:
-    input:
-        pav="outputs/pav_matrix.tsv"
-    output:
-        heatmap="outputs/heatmap.svg",
-        upsetr="outputs/upsetr.svg"
-    shell:
-        """
-        perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} {output.heatmap}
-        mv {output.heatmap}.upsetr.svg {output.upsetr}
-        """
-
 rule cog:
     input:
         pav="outputs/pav_matrix.tsv"
@@ -103,4 +91,17 @@ rule cog:
     shell:
         """
         perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} {output.cogstat2} {output.cogofclusters} outputs/genomes/strains.txt
+        """
+        
+rule heatmap_upset:
+    input:
+        pav="outputs/pav_matrix.tsv",
+        cogofclusters="outputs/cog_of_clusters.txt"
+    output:
+        heatmap="outputs/heatmap.svg",
+        upsetr="outputs/upsetr.svg"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} {output.heatmap}
+        mv {output.heatmap}.upsetr.svg {output.upsetr}
         """
