@@ -54,7 +54,7 @@ while(<F>){
                 $strain = $1;
 		($genus) = split(/\s/,$strain);
         }
-	my $country = `grep country $genbank.gb`;
+	my $country = `grep country $outdir/$genbank.gb`;
         $country =~s/^\s+//g;
         $country =~s/\/country=//g;
         $country =~s/\"//g;
