@@ -4,12 +4,24 @@ use strict;
 
 system("wget https://ftp.ncbi.nlm.nih.gov/genomes/GENOME_REPORTS/prokaryotes.txt");
 
+my %continents;
+open(F,"countries.txt");
+<F>;
+while(<F>){
+        my $line = $_;
+        $line =~s/\n//g;$line =~s/\r//g;
+        my ($continent,$country) = split(/,/,$line);
+        $continents{$country} = $continent;
+}
+close(F);
+
 my $input = $ARGV[0];
 my $outdir = $ARGV[1];
 my $concat = "";
 open(O2,">$outdir/genbanks.txt");
 open(O,">$outdir/strains.txt");
 open(L,">$outdir/list_genomes.txt");
+open(METADATA,">$outdir/metadata_strains.txt");
 open(F,$input);
 while(<F>){
 	my $line = $_;$line =~s/\n//g;$line =~s/\r//g;
@@ -37,9 +49,27 @@ while(<F>){
 
 	my $get_organism_line = `head -10 $outdir/$genbank.gb | grep DEFINITION `;
         my $strain;
+	my $genus;
         if ($get_organism_line =~/DEFINITION  (.*)$/){
                 $strain = $1;
+		($genus) = split(/\s/,$strain);
         }
+	my $country = `grep country $genbank.gb`;
+        $country =~s/^\s+//g;
+        $country =~s/\/country=//g;
+        $country =~s/\"//g;
+        $country =~s/\n//g;$country =~s/\r//g;
+        if ($country =~/:/){
+                my $city;
+                ($country,$city) = split(/:/,$country);
+        }
+        if ($country eq ""){$country = "unresolved";}
+        my $continent = "unresolved";
+        if ($continents{$country}){
+                $continent = $continents{$country};
+        }
+        $continent =~s/Africa/africa/g;
+	
 	my ($info1,$info2 ) = split(",",$strain);
         $strain = $info1;
         $strain =~s/ /_/g;
@@ -54,6 +84,8 @@ while(<F>){
 	print O "$genbank	$strain\n";	
 	$concat .= "$genbank,";
 	print L "$genbank	$outdir/$genbank.gb\n";
+	
+	print METADATA "$strain\t$genus\t$country\t$continent\n";
 
 
 	my $genome = "";
@@ -148,6 +180,7 @@ while(<F>){
 }
 close(F);
 close(O);
+close(METADATA);
 chop($concat);
 print O2 $concat;
 close(O2);
