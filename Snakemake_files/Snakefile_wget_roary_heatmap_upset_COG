@@ -92,18 +92,6 @@ rule cog:
         """
         perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} {output.cogstat2} {output.cogofclusters} outputs/genomes/strains.txt
         """
-
-rule heatmap:
-    input:
-        pav="outputs/pav_matrix.tsv",
-        cogofclusters="outputs/cog_of_clusters.txt"
-    output:
-        heatmap="outputs/matrix.html"
-    shell:
-        """
-        perl $PANEX_PATH/Perl/Heatmaply.pl outputs/heatmap.svg.accessory_01matrix.txt {output.heatmap} outputs/cog_of_clusters.txt.2 outputs/genomes/metadata_strains.txt
-        mv {output.heatmap}.upsetr.svg {output.upsetr}
-        """
         
 rule heatmap_upset:
     input:
