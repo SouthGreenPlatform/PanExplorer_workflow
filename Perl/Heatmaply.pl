@@ -48,4 +48,4 @@ foreach my $n(sort {$a<=>$b} keys(%hash)){
 close(T);
 
 use strict;
-system("ulimit -s 163840;Rscript /scratch2/galaxy/galaxy-20.09/galaxy/tools/SouthGreen/Roary_from_accessions/heatmaply.R -f $in -o $out -c $colmetadata -r $rowmetadata");
+system("ulimit -s 163840;Rscript $dirname/../R/heatmaply.R -f $in -o $out -c $colmetadata -r $rowmetadata");
