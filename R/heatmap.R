@@ -30,8 +30,6 @@ svglite(opt$out,width = 31, height = 28)
 
 mydata <- read.table(opt$file, header=TRUE,sep="\t", row.names="Gene")
 
-heatmaply(mydata, file = paste(opt$out, "html", sep="."))
-
 iris <- mydata
 
 dend_r <- iris %>% dist(method = "man") %>% hclust(method = "ward.D") %>% as.dendrogram %>% ladderize
