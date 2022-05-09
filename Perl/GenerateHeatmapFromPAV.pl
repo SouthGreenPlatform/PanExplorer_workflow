@@ -7,7 +7,9 @@ my $dirname = dirname(__FILE__);
 my $infile = $ARGV[0];
 my $heatmap = $ARGV[1];
 
+my %core_cluster;
 my %samples;
+my %matrix;
 my %hash;
 my $cl_num = 0;
 my $nb_strains = 1;
@@ -39,6 +41,7 @@ while(<F>){
 	for (my $i = 1; $i <= $#infos; $i++){
                 my $val = $infos[$i];
 		my $sample = $samples{$i};
+		$matrix{$sample}{$cl_num} = $val;
                 $val =~s/\"//g;
                 if ($val =~/\w+/){
                         $concat_accessory .= "\t1";
@@ -51,6 +54,9 @@ while(<F>){
         }
         if ($concat_accessory =~/0/){
                 print M $cl_num.$concat_accessory."\n";
+        }
+	else{
+                $core_cluster{$cl_num}=1;
         }
 	#if ($cl_num > 1000){last;}
 }
@@ -103,6 +109,27 @@ while(<F>){
         push(@strains,$line);
 }
 close(F);
+
+open(O,">$infile.sorted");
+print O "ClutserID"."\t".join("\t",@strains)."\n";
+foreach my $cl(keys(%core_cluster)){
+        print O $cl;
+        foreach my $strain(@strains){
+                my $val = $matrix{$strain}{$cl};
+                print O "\t$val";
+        }
+        print O "\n";
+}
+foreach my $cl(@clusters){
+        print O $cl;
+        foreach my $strain(@strains){
+                my $val = $matrix{$strain}{$cl};
+                print O "\t$val";
+        }
+        print O "\n";
+}
+close(O);
+rename("$infile.sorted",$infile);
 
 my $svg_section = "";
 
