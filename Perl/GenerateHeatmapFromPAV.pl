@@ -112,7 +112,7 @@ close(F);
 
 open(O,">$infile.sorted");
 print O "ClutserID"."\t".join("\t",@strains)."\n";
-foreach my $cl(keys(%core_cluster)){
+foreach my $cl(reverse(@clusters)){
         print O $cl;
         foreach my $strain(@strains){
                 my $val = $matrix{$strain}{$cl};
@@ -120,7 +120,7 @@ foreach my $cl(keys(%core_cluster)){
         }
         print O "\n";
 }
-foreach my $cl(@clusters){
+foreach my $cl(keys(%core_cluster)){
         print O $cl;
         foreach my $strain(@strains){
                 my $val = $matrix{$strain}{$cl};
