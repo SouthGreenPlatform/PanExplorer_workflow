@@ -78,6 +78,7 @@ while(<F>){
         $strain =~s/_genome//g;
         $strain =~s/str\._//g;
 	$strain =~s/\=//g;
+	$strain =~s/\///g;
         $strain =~s/\(//g;
         $strain =~s/\)//g;
         $strain =~s/\.//g;
