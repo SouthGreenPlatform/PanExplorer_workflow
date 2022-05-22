@@ -179,6 +179,23 @@ while(<F>){
         close(P);
         close(N);
         close(FUNC);
+	
+	my $prot_num = 0;
+        open(PRT,">$outdir/$genbank.prt");
+        open(P,"$outdir/$genbank.pep");
+        while(<P>){
+                if (/>(.*)/){
+                        my $prot_id = $1;
+                        $prot_num++;
+                        my $new_id = "$strain"."_".$prot_num;
+                        print PRT ">$new_id\n";
+                }
+                else{
+                        print PRT $_;
+                }
+        }
+        close(P);
+        close(PRT);
 }
 close(F);
 close(O);
