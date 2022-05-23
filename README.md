@@ -53,6 +53,12 @@ Creating a pangenome using Roary
 snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG
 ```
 
+Creating a pangenome using PanACoTA
+
+```
+snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG
+```
+
 Creating a pangenome using PGAP
 
 ```
