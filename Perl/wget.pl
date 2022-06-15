@@ -83,6 +83,7 @@ while(<F>){
         $strain =~s/\)//g;
         $strain =~s/\.//g;
         $strain =~s/\-/_/g;
+	$strain =~s/\:/_/g;
 	print O "$genbank	$strain\n";	
 	$concat .= "$genbank,";
 	print L "$genbank	$outdir/$genbank.gb\n";
