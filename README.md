@@ -1,5 +1,18 @@
 # PanExplorer_workflow
 
+# Introduction
+
+This workflow is a snakemake worklow that can be run in the backend of the PanExplorer web application.
+
+
+## Citation
+
+[https://doi.org/10.1093/bioinformatics/btac504](https://doi.org/10.1093/bioinformatics/btac504)
+
+## Authors
+
+* Alexis Dereeper (IRD)
+
 ## Prerequisites - Tool dependencies
 
 - Snakemake
