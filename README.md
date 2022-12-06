@@ -27,7 +27,8 @@ It provides a presence/absence matrix of genes, an UpsetR Diagram for synthetizi
 - Panaroo
 - ncbi-blast+
 - R (version 4.2.0)
-- optparse R package (install.packages("optparse"))
+  - optparse R package (install.packages("optparse"))
+  - install.packages("dendextend")
 
 ## Install
 
