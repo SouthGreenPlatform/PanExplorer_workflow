@@ -185,7 +185,8 @@ close(M);
 
 my $nb_strains = scalar @strains;
 system("Rscript $dirname/../R/upsetr.R $heatmap.upsetr.txt $heatmap.upsetr.pdf $nb_strains");
-system("pdf2svg $heatmap.upsetr.pdf $heatmap.upsetr.svg 2");
+system("Rscript $dirname/../R/upsetr.R $heatmap.upsetr.txt $heatmap.upsetr.svg $nb_strains");
+#system("pdf2svg $heatmap.upsetr.pdf $heatmap.upsetr.svg 2");
 
 my $numstrain;
 my $y = $min_y + $height_matrix + $step_y;
