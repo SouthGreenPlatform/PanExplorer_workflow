@@ -29,6 +29,8 @@ It provides a presence/absence matrix of genes, an UpsetR Diagram for synthetizi
 - R (version 4.2.0) and following packages:
   - optparse : ``install.packages("optparse")``
   - dendextend : ``install.packages("dendextend")``
+  - svglite : ``install.packages("svglite")``
+  - heatmaply : ``install.packages("heatmaply")``
 
 ## Install
 
