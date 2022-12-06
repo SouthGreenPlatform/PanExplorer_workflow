@@ -6,7 +6,7 @@ This workflow is a snakemake worklow that can be run in the backend of the PanEx
 
 **Homepage:** [https://panexplorer.southgreen.fr/](https://panexplorer.southgreen.fr/)
 
-It allows to perform a pan-genome analysis using published and annotated bacteria genomes, using different tools that can be invoqked: Roary, PGAP, PanACoTA.
+It allows to perform a pan-genome analysis using published and annotated bacteria genomes, using different tools that can be invoked: Roary, PGAP, PanACoTA.
 
 It provides a presence/absence matrix of genes, an UpsetR Diagram for synthetizing the matrix information and a COG assignation summary for each strain.
 
@@ -31,6 +31,8 @@ It provides a presence/absence matrix of genes, an UpsetR Diagram for synthetizi
   - dendextend : ``install.packages("dendextend")``
   - svglite : ``install.packages("svglite")``
   - heatmaply : ``install.packages("heatmaply")``
+  - gplots : ``install.packages("gplots")``
+  - UpSetR : ``install.packages("UpSetR")``
 
 ## Install
 
