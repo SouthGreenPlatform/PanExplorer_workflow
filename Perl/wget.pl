@@ -17,35 +17,64 @@ close(F);
 
 my $input = $ARGV[0];
 my $outdir = $ARGV[1];
+my $private_genomes = $ARGV[2];
+
+system("cat $input $private_genomes >$outdir/list.txt");
+
 my $concat = "";
 open(O2,">$outdir/genbanks.txt");
 open(O,">$outdir/strains.txt");
 open(L,">$outdir/list_genomes.txt");
 open(METADATA,">$outdir/metadata_strains.txt");
-open(F,$input);
+open(F,"$outdir/list.txt");
 while(<F>){
 	my $line = $_;$line =~s/\n//g;$line =~s/\r//g;
 	my $genbank = $line;
-	my $grep = `grep $line prokaryotes.txt`;
-	my @infos = split(/\t/,$grep);
-        my $status = $infos[15];
-        if ($status !~/Complete Genome/ && $status !~/Chromosome/){
-                next;
-        }
-        my $ftp_path = $infos[$#infos -2];
-        $ftp_path =~s/ftp:/http:/g;
-        my @table = split(/\//,$ftp_path);
-        my $name = $table[$#table];
-        my $prot_file = "$ftp_path/$name"."_protein.faa.gz";
-        my $gbff = "$ftp_path/$name"."_genomic.gbff.gz";
-        my $gff = "$ftp_path/$name"."_genomic.gff.gz";
-        my $genome_fasta = "$ftp_path/$name"."_genomic.fna.gz";
-        my @particules = split(/_/,$name);
+	
+	if (!-e "$genbank"){
+		my $grep = `grep $line prokaryotes.txt`;
+		my @infos = split(/\t/,$grep);
+	        my $status = $infos[15];
+        	if ($status !~/Complete Genome/ && $status !~/Chromosome/){
+	                next;
+        	}
+	        my $ftp_path = $infos[$#infos -2];
+        	$ftp_path =~s/ftp:/http:/g;
+	        my @table = split(/\//,$ftp_path);
+        	my $name = $table[$#table];
+	        my $prot_file = "$ftp_path/$name"."_protein.faa.gz";
+        	my $gbff = "$ftp_path/$name"."_genomic.gbff.gz";
+	        my $gff = "$ftp_path/$name"."_genomic.gff.gz";
+        	my $genome_fasta = "$ftp_path/$name"."_genomic.fna.gz";
+	        my @particules = split(/_/,$name);
 
-        `wget -O $outdir/$genbank.fasta.gz $genome_fasta`;
-	`gunzip $outdir/$genbank.fasta.gz`;
-	`wget -O $outdir/$genbank.gb.gz $gbff`;
-        system("gunzip $outdir/$genbank.gb.gz");
+        	`wget -O $outdir/$genbank.fasta.gz $genome_fasta`;
+		`gunzip $outdir/$genbank.fasta.gz`;
+		`wget -O $outdir/$genbank.gb.gz $gbff`;
+	        system("gunzip $outdir/$genbank.gb.gz");
+	}
+	else{
+		my $genbank_file = $genbank;
+		my $grep = `grep 'LOCUS' $genbank_file`;
+		$genbank = "unknown";
+		if ($grep =~/LOCUS\s+(\w+)/){$genbank = $1;}
+		`cp $genbank_file $outdir/$genbank.gb`;
+
+		my $go = 0;
+		open(F,">$outdir/$genbank.fasta");
+		print F ">$genbank\n";
+		open(G,"$outdir/$genbank.gb");
+		while(<G>){
+			if ($go == 1 && /(\d+) (.*)$/){
+				my $line = $2;
+				$line =~s/ //g;
+				print F $line;
+			}
+			if (/ORIGIN/){$go = 1;}
+		}
+		close(G);
+		close(F);
+	}
 
 	my $get_organism_line = `head -10 $outdir/$genbank.gb | grep DEFINITION `;
         my $strain;
