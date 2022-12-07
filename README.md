@@ -25,7 +25,7 @@ It provides a presence/absence matrix of genes, an UpsetR Diagram for synthetizi
 - Roary
 - PGAP
 - Panaroo
-- ncbi-blast+
+- ncbi-blast+ (version BLAST 2.4.0+)
 - R (version 4.2.0) and following packages:
   - optparse : ``install.packages("optparse")``
   - dendextend : ``install.packages("dendextend")``
