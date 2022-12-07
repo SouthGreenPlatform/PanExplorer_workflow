@@ -5,6 +5,12 @@ import shutil
 with open("genbank_ids") as f:
  SAMPLES = f.read().splitlines()
 
+with open("genbank_files") as f:
+    for line in f.readlines():
+        cmd = "grep 'ACCESSION' "+line
+        returned_value = subprocess.getoutput(cmd)
+        words = returned_value.split()
+        SAMPLES.append(words[1])
 
 rule final:
  input:
