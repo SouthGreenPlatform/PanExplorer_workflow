@@ -59,7 +59,7 @@ cp -rf Cog.* $PANEX_PATH/COG
 
 ## Prepare your list of genomes to be analyzed
 
-Edit a new file names "genbank_ids" listing the Genbank identifiers of complete assembled and annotated genomes.
+Edit a new file named "genbank_ids" listing the Genbank identifiers of complete assembled and annotated genomes.
 The file should look like this
 ```
 cat genbank_ids
