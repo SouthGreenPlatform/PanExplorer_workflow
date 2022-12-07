@@ -64,9 +64,16 @@ The file should look like this
 ```
 cat genbank_ids
 CP000235.1
-CP001079.1
 CP001759.1
 CP015994.2
+```
+
+Edit another new file named "genbank_files" listing the path to your own assembled and annotated genomes.
+The file should look like this
+```
+cat genbank_files
+/home/myname/genbank_files_dir/CP006617.1.genbank.gb
+/home/myname/genbank_files_dir/CP001079.1.genbank.gb
 ```
 
 
