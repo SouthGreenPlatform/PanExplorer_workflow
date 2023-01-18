@@ -61,19 +61,19 @@ while(<F>){
 		`cp $genbank_file $outdir/$genbank.gb`;
 
 		my $go = 0;
-		open(F,">$outdir/$genbank.fasta");
-		print F ">$genbank\n";
+		open(FASTA,">$outdir/$genbank.fasta");
+		print FASTA ">$genbank\n";
 		open(G,"$outdir/$genbank.gb");
 		while(<G>){
 			if ($go == 1 && /(\d+) (.*)$/){
 				my $line = $2;
 				$line =~s/ //g;
-				print F $line;
+				print FASTA $line;
 			}
 			if (/ORIGIN/){$go = 1;}
 		}
 		close(G);
-		close(F);
+		close(FASTA);
 	}
 
 	my $get_organism_line = `head -10 $outdir/$genbank.gb | grep DEFINITION `;
