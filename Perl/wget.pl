@@ -24,6 +24,7 @@ system("cat $input $private_genomes >$outdir/list.txt");
 my $concat = "";
 open(O2,">$outdir/genbanks.txt");
 open(O,">$outdir/strains.txt");
+open(GENES,">$outdir/genes.txt");
 open(L,">$outdir/list_genomes.txt");
 open(METADATA,">$outdir/metadata_strains.txt");
 open(F,"$outdir/list.txt");
@@ -58,7 +59,9 @@ while(<F>){
 		my $grep = `grep 'LOCUS' $genbank_file`;
 		$genbank = "unknown";
 		if ($grep =~/LOCUS\s+(\w+)/){$genbank = $1;}
-		`cp $genbank_file $outdir/$genbank.gb`;
+
+		my $cmd = "cp -rf $genbank_file $outdir/$genbank.gb";
+		system($cmd);
 
 		my $go = 0;
 		open(FASTA,">$outdir/$genbank.fasta");
@@ -75,7 +78,7 @@ while(<F>){
 		close(G);
 		close(FASTA);
 	}
-
+	
 	my $get_organism_line = `head -10 $outdir/$genbank.gb | grep DEFINITION `;
         my $strain;
 	my $genus;
@@ -97,8 +100,6 @@ while(<F>){
         if ($continents{$country}){
                 $continent = $continents{$country};
         }
-        $continent =~s/Africa/africa/g;
-	
 	my ($info1,$info2 ) = split(",",$strain);
         $strain = $info1;
         $strain =~s/ /_/g;
@@ -146,7 +147,8 @@ while(<F>){
         while(<G>){
                 if (/^\s+ORGANISM\s+(.*)$/){
                 }
-                if (/protein_id=\"(.*)\"/){
+		if (/protein_id=\"(.*)\"/){
+                #if (/locus_tag=\"(.*)\"/){
                         $current_gene = $1;
                         print P ">$current_gene\n";
 
@@ -234,5 +236,6 @@ chop($concat);
 print O2 $concat;
 close(O2);
 close(L);
+close(GENES);
 
 unlink("prokaryotes.txt");
