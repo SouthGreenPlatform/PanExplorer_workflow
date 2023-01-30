@@ -148,13 +148,11 @@ while(<F>){
                 if (/^\s+ORGANISM\s+(.*)$/){
                 }
 		if (/protein_id=\"(.*)\"/){
-                #if (/locus_tag=\"(.*)\"/){
+			$current_gene = $1;
+		}
+                if (/locus_tag=\"(.*)\"/){
                         $current_gene = $1;
-                        print P ">$current_gene\n";
-
-                        print N ">$current_gene\n";
-                        print GENES "$current_gene $product [$strain]\n";
-                }
+		}
                 if ($go == 1){
                         my $line = $_;
                         $line =~s/ //g;
@@ -169,6 +167,9 @@ while(<F>){
                 if (/\/translation=\"(.*)/){
                         $go = 1;
                         $protein .= $1;
+			print P ">$current_gene\n";
+			print N ">$current_gene\n";
+			print GENES "$current_gene $product [$strain]\n";
 
                         if ($protein =~/\"$/){
                                 $end_gene = "yes";
