@@ -26,6 +26,7 @@ open(O2,">$outdir/genbanks.txt");
 open(O,">$outdir/strains.txt");
 open(GENES,">$outdir/genes.txt");
 open(L,">$outdir/list_genomes.txt");
+open(L2,">$outdir/list_genomes2.txt");
 open(METADATA,">$outdir/metadata_strains.txt");
 open(F,"$outdir/list.txt");
 while(<F>){
@@ -117,6 +118,7 @@ while(<F>){
 	print O "$genbank	$strain\n";	
 	$concat .= "$genbank,";
 	print L "$genbank	$outdir/$genbank.gb\n";
+	print L2 "$genbank\n";
 	
 	print METADATA "$strain\t$genus\t$country\t$continent\n";
 
@@ -183,6 +185,7 @@ while(<F>){
                                 my $length = $end - $start;
                                 my $geneseq = substr($genome,$start,$length);
 
+
                                 if ($complement){
                                         my $revcomp = reverse $geneseq;
                                         $revcomp =~ tr/ATGCatgc/TACGtacg/;
@@ -197,12 +200,12 @@ while(<F>){
                 if (/\/product=\"(.*)\"/){
                         $product = $1;
                 }
-                if (/^\s+gene\s+(\d+)\.\.(\d+)$/){
+                if (/^\s+CDS\s+(\d+)\.\.(\d+)$/){
                         $start = $1;
                         $end = $2;
                         $complement = 0;
                 }
-                if (/^\s+gene\s+complement\((\d+)\.\.(\d+)\)$/){
+                if (/^\s+CDS\s+complement\((\d+)\.\.(\d+)\)$/){
                         $start = $1;
                         $end = $2;
                         $complement = 1;
@@ -237,6 +240,7 @@ chop($concat);
 print O2 $concat;
 close(O2);
 close(L);
+close(L2);
 close(GENES);
 
 unlink("prokaryotes.txt");
