@@ -182,8 +182,8 @@ while(<F>){
                         $protein =~s/\"//g;
                         print P "$protein\n";
                         $protein = "";
-                                my $length = $end - $start;
-                                my $geneseq = substr($genome,$start,$length);
+                                my $length = $end - $start + 1;
+                                my $geneseq = substr($genome,$start-1,$length);
 
 
                                 if ($complement){
