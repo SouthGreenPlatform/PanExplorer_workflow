@@ -1,9 +1,8 @@
 #!/usr/local/R-4.1.2/bin/R
 
+
 library(dendextend)
 library("optparse")
-library(svglite)
-library(heatmaply)
 
 #args = commandArgs(trailingOnly=TRUE)
 
@@ -26,15 +25,21 @@ if (is.null(opt$out)){
   stop("At least one argument must be supplied (out file).\n", call.=FALSE)
 }
 
-svglite(opt$out,width = 31, height = 28)
+#svglite(opt$out,width = 31, height = 28)
+pdf(opt$out,width = 31,height = 28)
 
 mydata <- read.table(opt$file, header=TRUE,sep="\t", row.names="Gene")
 
 iris <- mydata
 
-dend_r <- iris %>% dist(method = "man") %>% hclust(method = "ward.D") %>% as.dendrogram %>% ladderize
+#dend_r <- iris %>% dist(method = "man") %>% hclust(method = "ward.D") %>% as.dendrogram %>% ladderize
+#dend_r <- iris %>% dist(method = "man") %>% hclust(method = "com") %>% as.dendrogram %>% ladderize
 
-dend_c <- t(iris) %>% dist(method = "man") %>% hclust(method = "com") %>% as.dendrogram %>% ladderize
+#dend_c <- t(iris) %>% dist(method = "man") %>% hclust(method = "com") %>% as.dendrogram %>% ladderize
+dend_c <- t(iris) %>% dist(method = "man") %>% hclust(method = "ward.D") %>% as.dendrogram %>% ladderize
+
+dend_c
+#write(hc2Newick(dend_c),file='hclust.newick')
 
 mat <- as.matrix(t(iris-1))
 out <- gplots::heatmap.2(mat,
@@ -42,7 +47,7 @@ out <- gplots::heatmap.2(mat,
           scale="none",
           srtCol=NULL,
           Rowv = dend_c,
-          Colv = dend_r,
+          #Colv = dend_r,
           key = FALSE,
           margins =c(20,20),
           trace="row", hline = NA, tracecol = NA
