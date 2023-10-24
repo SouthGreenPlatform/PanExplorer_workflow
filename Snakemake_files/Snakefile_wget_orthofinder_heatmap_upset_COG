@@ -1,0 +1,138 @@
+import glob
+import os
+import shutil
+
+with open("genbank_ids") as f:
+ SAMPLES = f.read().splitlines()
+
+numsample=0
+with open("genbank_files") as f:
+    for line in f.readlines():
+        numsample=numsample+1
+        cmd = "grep 'ACCESSION' "+line
+        returned_value = subprocess.getoutput(cmd)
+        words = returned_value.split()
+        #SAMPLES.append(numsample)
+        SAMPLES.append(words[1])
+
+
+rule final:
+ input:
+  "outputs/GCskew.txt",
+  "outputs/pav_matrix.tsv",
+  "outputs/heatmap.svg",
+  "outputs/cog_output.txt"
+
+rule wget:
+    input:
+        public_genomes="genbank_ids",
+        private_genomes="genbank_files"
+    output:
+        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gb", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.pep", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.prt", sample=SAMPLES)
+    shell:
+        """
+        perl $PANEX_PATH/Perl/wget.pl {input.public_genomes} outputs/genomes {input.private_genomes}
+        """
+
+
+rule gcskew:
+    input:
+        "outputs/genomes/{sample}.fasta"
+    output:
+        "outputs/genomes/{sample}.fasta.gcskew.txt"
+    shell:
+        """
+        python3 $PANEX_PATH/SkewIT/src/gcskew.py -i {input} -o {input}.gcskew.txt -k 1000 -w 1000
+        """
+
+rule concat_gcskew:
+    input:
+        expand("outputs/genomes/{sample}.fasta.gcskew.txt", sample=SAMPLES)
+    output:
+        out2="outputs/GCskew.txt"
+    shell:
+        """
+         cat {input} >>{output.out2}
+        """
+
+rule genbank2gff3:
+    input:
+        "outputs/genomes/{sample}.gb"
+    output:
+        gff1="outputs/genomes/{sample}.gb.gff",
+        gff2="outputs/genomes/{sample}.gb.rmdup.gff",
+    shell:
+        """
+        perl $PANEX_PATH/Perl/bp_genbank2gff3.pl -o outputs/genomes {input}
+        perl $PANEX_PATH/Perl/remove_duplicates_in_gff.pl {output.gff1} {output.gff2}
+        mv outputs/genomes/*.faa outputs/proteomes
+        """
+
+rule orthofinder:
+    envmodules:
+        "bioinfo/orthofinder/2.5.4"
+    input:
+        expand("outputs/genomes/{sample}.pep", sample=SAMPLES)
+    output:
+        pav="outputs/Orthogroups.tsv"
+    shell:
+        """
+        mkdir -p outputs/proteomes
+        cp -rf outputs/genomes/*.pep outputs/proteomes
+        orthofinder -f outputs/proteomes
+        mv outputs/proteomes/OrthoFinder/R*/Orthogroups/Orthogroups.tsv outputs/Orthogroups.tsv
+        """
+
+rule convert_matrix:
+    input:
+        pav="outputs/Orthogroups.tsv"
+    output:
+        "outputs/pav_matrix.tsv"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/ConvertOrthofinderMatrix.pl outputs/genomes {input} {output} outputs/genomes/strains.txt
+        """
+
+rule cog:
+    input:
+        pav="outputs/pav_matrix.tsv"
+    output:
+        cog="outputs/cog_output.txt",
+        cogstat="outputs/cog_stats.txt",
+        cogstat2="outputs/cog_stats2.txt",
+        cogofclusters="outputs/cog_of_clusters.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} {output.cogstat2} {output.cogofclusters} outputs/genomes/strains.txt
+        """
+
+rule heatmap_upset:
+    input:
+        pav="outputs/pav_matrix.tsv",
+        cogofclusters="outputs/cog_of_clusters.txt"
+    output:
+        heatmap="outputs/heatmap.svg",
+        upsetr="outputs/upsetr.svg",
+        binpav="outputs/heatmap.svg.accessory_01matrix.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} {output.heatmap}
+        mv {output.heatmap}.upsetr.svg {output.upsetr}
+        """
+
+rule micropan:
+    input:
+        binpav="outputs/heatmap.svg.accessory_01matrix.txt"
+    output:
+        txt="outputs/rarefaction_curves.txt",
+        pdf="outputs/rarefaction_curves.pdf",
+        svg="outputs/rarefaction_curves.svg",
+        heaps="outputs/heaps.tsv"
+    shell:
+        """
+        Rscript $PANEX_PATH/R/micropan_rarefaction.R -f {input.binpav} -p {output.pdf} -a {output.heaps} -o {output.txt}
+        pdf2svg {output.pdf} {output.svg}
+        """
