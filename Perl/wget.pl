@@ -2,6 +2,9 @@
 
 use strict;
 
+use File::Basename;
+my $dirname = dirname(__FILE__);
+
 system("wget https://ftp.ncbi.nlm.nih.gov/genomes/GENOME_REPORTS/prokaryotes.txt");
 system("wget https://ftp.ncbi.nlm.nih.gov/genomes/GENOME_REPORTS/eukaryotes.txt");
 
@@ -298,7 +301,7 @@ while(<F>){
         close(FUNC);
 
 	if ($has_translation == 0){
-		system("perl /scratch2/galaxy/galaxy-20.09/galaxy/tools/SouthGreen/PanExplorer/PanExplorer_workflow/Perl/translate.pl $outdir/$genbank.nuc $outdir/$genbank.pep");
+		system("perl $dirname/translate.pl $outdir/$genbank.nuc $outdir/$genbank.pep");
 	}
 	
 	my $prot_num = 0;
