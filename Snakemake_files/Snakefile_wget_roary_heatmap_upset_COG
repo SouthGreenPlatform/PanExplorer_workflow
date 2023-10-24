@@ -21,8 +21,10 @@ rule final:
   "outputs/pav_matrix.csv",
   "outputs/GCskew.txt",
   "outputs/pav_matrix.tsv",
-  "outputs/heatmap.svg",
-  "outputs/cog_output.txt"
+  "outputs/heatmap.svg.gz",
+  "outputs/cog_output.txt",
+  "outputs/fastani.out",
+  "outputs/rarefaction_curves.txt"
 
 rule wget:
     input:
@@ -30,7 +32,8 @@ rule wget:
         private_genomes="genbank_files"
     output:
         expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
-        expand("outputs/genomes/{sample}.gb", sample=SAMPLES)
+        expand("outputs/genomes/{sample}.gb", sample=SAMPLES),
+        genomes="outputs/genomes/genomes.txt"
     shell:
         """
         perl $PANEX_PATH/Perl/wget.pl {input.public_genomes} outputs/genomes {input.private_genomes}
@@ -76,7 +79,7 @@ rule roary:
         newick="outputs/accessory_binary_genes.fa.newick"
     shell:
         """
-        roary -f outputs/roary_outdir outputs/genomes/*gb.rmdup.gff
+        roary -f outputs/roary_outdir -i IDENTITY outputs/genomes/*gb.rmdup.gff
         cp -rf outputs/roary_outdir/gene_presence_absence.csv {output.pav}
         cp -rf outputs/roary_outdir/accessory_binary_genes.fa.newick {output.newick}
         """
@@ -103,16 +106,49 @@ rule cog:
         """
         perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} {output.cogstat2} {output.cogofclusters} outputs/genomes/strains.txt
         """
-        
+
 rule heatmap_upset:
     input:
-        pav="outputs/pav_matrix.tsv",
-        cogofclusters="outputs/cog_of_clusters.txt"
+        pav="outputs/pav_matrix.tsv"
     output:
-        heatmap="outputs/heatmap.svg",
-        upsetr="outputs/upsetr.svg"
+        heatmap="outputs/heatmap.svg.gz",
+        html="outputs/heatmap.svg.heatmap_plotly.html",
+        upsetr="outputs/upsetr.svg",
+        binpav="outputs/heatmap.svg.accessory_01matrix.txt"
     shell:
         """
-        perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} {output.heatmap}
-        mv {output.heatmap}.upsetr.svg {output.upsetr}
+        perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} outputs/heatmap.svg
+        mv outputs/heatmap.svg.upsetr.svg {output.upsetr}
         """
+
+rule micropan:
+    input:
+        binpav="outputs/heatmap.svg.accessory_01matrix.txt"
+    output:
+        txt="outputs/rarefaction_curves.txt",
+        pdf="outputs/rarefaction_curves.pdf",
+        svg="outputs/rarefaction_curves.svg",
+        heaps="outputs/heaps.tsv"
+    shell:
+        """
+        Rscript $PANEX_PATH/R/micropan_rarefaction.R -f {input.binpav} -p {output.pdf} -a {output.heaps} -o {output.txt}
+        pdf2svg {output.pdf} {output.svg}
+        """
+
+rule fastani:
+    input:
+        "outputs/genomes/genomes.txt"
+    output:
+        out="outputs/fastani.out",
+        matrix="outputs/fastani.out.matrix",
+        completematrix="outputs/fastani.out.matrix.complete",
+        pdf="outputs/fastani.out.pdf",
+        svg="outputs/fastani.out.svg"
+    shell:
+        """
+        fastANI --rl {input} --ql {input} -o {output.out} -t 4 --matrix
+        perl $PANEX_PATH/Perl/convertANI.pl {output.matrix} outputs/genomes/genomes2.txt >{output.completematrix}
+        Rscript $PANEX_PATH/R/heatmap_ani.R -f {output.completematrix} -o {output.pdf}
+        pdf2svg {output.pdf} {output.svg}
+        """
+
