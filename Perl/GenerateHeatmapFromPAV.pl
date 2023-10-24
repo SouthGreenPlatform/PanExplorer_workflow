@@ -9,6 +9,7 @@ my $heatmap = $ARGV[1];
 
 my %core_cluster;
 my %samples;
+my %sequences;
 my %matrix;
 my %hash;
 my $cl_num = 0;
@@ -25,8 +26,19 @@ for (my $j=1; $j <= $#infos; $j++){
         my $gbfile = $infos[$j];
         $gbfile =~s/\"//g;
         $gbfile =~s/\.gb\.filt//g;
-        print M "\t".$gbfile;
-	$samples{$j} = $gbfile;
+	
+	my $strain = $gbfile;
+	my @words = split(/_/,$strain);
+        my $genus = $words[0];
+        my $species = $words[1];
+        my $shortname = substr($genus,0,3) . "_". substr($species,0,2);
+        for (my $j = 2; $j <= $#words; $j++){
+                $shortname.="_".$words[$j];
+        }
+        #$shortname = substr($shortname,0,25);
+
+        print M "\t".$strain;
+	$samples{$j} = $strain;
         $nb_strains++;
 }
 print M "\n";
@@ -46,10 +58,12 @@ while(<F>){
                 if ($val =~/\w+/){
                         $concat_accessory .= "\t1";
 			$hash{$sample}{$cl_num} = 1;
+			$sequences{$sample}.=  "T";
                 }
                 else{
                         $concat_accessory .= "\t0";
 			$hash{$sample}{$cl_num} = 0;
+			$sequences{$sample}.=  "A";
                 }
         }
         if ($concat_accessory =~/0/){
@@ -64,7 +78,19 @@ close(F);
 close(M);
 
 
-system("ulimit -s 163840;Rscript $dirname/../R/heatmap.R -f $heatmap.accessory_01matrix.txt -o $heatmap.complete.svg");
+system("ulimit -s 163840;Rscript $dirname/../R/heatmap.R -f $heatmap.accessory_01matrix.txt -o $heatmap.complete.pdf");
+#system("ulimit -s 163840;Rscript $dirname/../R/heatmaply.R -f $heatmap.accessory_01matrix.txt -o $heatmap.complete2.svg");
+system("pdf2svg $heatmap.complete.pdf $heatmap.complete.svg");
+
+
+open(A,">$heatmap.alignment.fa");
+foreach my $sample(keys(%sequences)){
+	my $seq = $sequences{$sample};
+	print A ">$sample\n";
+	print A "$seq\n";
+}
+close(A);
+
 
 
 my $min_y = 10000000;
@@ -74,64 +100,98 @@ my $max_x = 0;
 my $step_x;
 my $step_y;
 open(SVG,"$heatmap.complete.svg");
+open(SVGNEW,">$heatmap.complete.new.svg");
 while(<SVG>){
-	if (/\<rect.*stroke/ && /x='(\d+\.\d+)' y='(\d+\.\d+)' width='(\d+\.\d+)' height='(\d+\.\d+)'/ ){
-		my $y = $2;
-		my $x = $1;
-		$step_x = $3;
-		$step_y = $4;
-		#$y -= $height;
-		if ($x < $min_x){$min_x = $x;}
-		if ($y < $min_y){$min_y = $y;}
-		if ($x > $max_x){$max_x = $x;}
-		if ($y > $max_y){$max_y = $y;}
+	if (/rgb\(100%,0%,0%\)/){
+		$_ =~s/rgb\(100%,0%,0%\)/rgb\(100%,100%,100%\)/g;
 	}
+	if (/rgb\(100%,63.529968%,0%\)/){
+                $_ =~s/rgb\(100%,63.529968%,0%\)/rgb\(41%,72%,64%\)/g;
+        }
+	print SVGNEW $_;
 }
 close(SVG);
+close(SVGNEW);
+
 
 
 my @clusters;
-open(F,"$heatmap.complete.svg.cols.csv");
+open(F,"$heatmap.complete.pdf.cols.csv");
 <F>;
 while(<F>){
 	my $line = $_;
 	$line =~s/\n//g;$line =~s/\r//g;
 	push(@clusters,$line);
+	print $line;
 }
 close(F);
 
 my @strains;
-open(F,"$heatmap.complete.svg.rows.csv");
+open(F,"$heatmap.complete.pdf.rows.csv");
 <F>;
 while(<F>){
         my $line = $_;
         $line =~s/\n//g;$line =~s/\r//g;
         push(@strains,$line);
+	print $line;
 }
 close(F);
 
+
 open(O,">$infile.sorted");
+open(HP,">$infile.sorted.for_heatmap_plotly.txt");
 print O "ClutserID"."\t".join("\t",@strains)."\n";
+print HP "ClutserID"."\t".join("\t",@strains)."\n";
 foreach my $cl(reverse(@clusters)){
-        print O $cl;
+	print O $cl;
+	my $clnb = $cl;
+	if (length($clnb) == 1){$clnb = "000".$clnb;}
+        elsif (length($clnb) == 2){$clnb = "00".$clnb;}
+        elsif (length($clnb) == 3){$clnb = "0".$clnb;}
+        my $name = "CLUSTER".$clnb;
+
+	print HP $name;
         foreach my $strain(@strains){
                 my $val = $matrix{$strain}{$cl};
                 print O "\t$val";
+		if ($val =~/\w/){print HP "\t1";}
+		else{print HP "\t0";}
         }
         print O "\n";
+	print HP "\n";
 }
 foreach my $cl(keys(%core_cluster)){
         print O $cl;
+	my $clnb = $cl;
+	if (length($clnb) == 1){$clnb = "000".$clnb;}
+        elsif (length($clnb) == 2){$clnb = "00".$clnb;}
+        elsif (length($clnb) == 3){$clnb = "0".$clnb;}
+        my $name = "CLUSTER".$clnb;
+	print HP $name;
         foreach my $strain(@strains){
                 my $val = $matrix{$strain}{$cl};
                 print O "\t$val";
+		if ($val =~/\w/){print HP "\t1";}
+		else{print HP "\t0";}
+		
         }
         print O "\n";
+	print HP "\n";
 }
 close(O);
-rename("$infile.sorted",$infile);
+close(HP);
 
 my $svg_section = "";
+
+if (scalar @clusters == 0){
+	system("touch $heatmap.upsetr.svg");
+	if (!-e "$heatmap"){
+		system("touch $heatmap");
+	}	
+	exit;
+}
+system("cp -rf $infile $infile.bkp");
+system("cp -rf $infile.sorted $infile");
 
 my %combinaisons;
 my $x = $min_x;
@@ -183,43 +243,16 @@ foreach my $cluster(@clusters){
 }
 close(M);
 
+
 my $nb_strains = scalar @strains;
-system("Rscript $dirname/../R/upsetr.R $heatmap.upsetr.txt $heatmap.upsetr.pdf $nb_strains");
-system("Rscript $dirname/../R/upsetr.R $heatmap.upsetr.txt $heatmap.upsetr.svg $nb_strains");
-#system("pdf2svg $heatmap.upsetr.pdf $heatmap.upsetr.svg 2");
+system("Rscript $dirname/../R/upsetr.R $heatmap.upsetr.txt $heatmap.upsetr.pdf $nb_strains >>$heatmap.upsetr.log 2>&1");
+system("pdf2svg $heatmap.upsetr.pdf $heatmap.upsetr.svg 2");
 
-my $numstrain;
-my $y = $min_y + $height_matrix + $step_y;
-foreach my $strain(@strains){
-	$numstrain++;
-	$y = $y - $step_y;
-	my $x = $min_x;
-	foreach my $combinaison_id(keys(%combinaisons)){
-		my $combinaison = $combinaison_ids{$combinaison_id};
-		my $x_values = $combinaisons{$combinaison_id};
-		my @table_x = split(/\|/,$x_values);
-		my $first_x = $table_x[1];
-		my $last_x = $table_x[$#table_x];
-		my $step_x = $last_x - $first_x;
-		my $new_combinaison = "$combinaison,";
-		if ($new_combinaison =~/,$numstrain,/){
-			#$svg_section .= "<rect x=\"$first_x\" y=\"$y\" width=\"$step_x\" height=\"$step_y\" style=\"stroke: red; fill: red;\"><title>$strain $combinaison</title></rect>";
-			$svg_section .= "<rect x=\"$first_x\" y=\"$y\" width=\"$step_x\" height=\"$step_y\" style=\"stroke: purple; fill: purple;\"/>";
-		}
-		#print "$combinaison $x_values $first_x $last_x\n";
-	}
-	#last;
-}
+system("python3 $dirname/../Heatmap.py -i $infile.sorted.for_heatmap_plotly.txt -o $heatmap.heatmap_plotly.html >>$heatmap.heatmap_plotly.log 2>&1");
 
-open(FINAL_SVG,">$heatmap");
-open(SVG,"$heatmap.complete.svg");
-while(<SVG>){
-	#if (/<path/){next;}
-	if (/^\<rect/){next;}
-	if (/^\<\/svg/){
-		print FINAL_SVG $svg_section;
-	}
-	print FINAL_SVG $_;
+if (!-e "$heatmap.upsetr.svg"){
+        system("touch $heatmap.upsetr.svg");
 }
-close(SVG);
-close(FINAL_SVG);
+system("perl $dirname/../Perl/reformatHeatmapSVG.pl $heatmap.complete.svg $heatmap.complete.new.svg $infile.sorted.for_heatmap_plotly.txt");
+system("cp -rf $heatmap.complete.new.svg $heatmap");
+system("gzip $heatmap");
