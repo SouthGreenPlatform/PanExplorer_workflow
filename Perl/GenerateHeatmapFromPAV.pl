@@ -248,7 +248,7 @@ my $nb_strains = scalar @strains;
 system("Rscript $dirname/../R/upsetr.R $heatmap.upsetr.txt $heatmap.upsetr.pdf $nb_strains >>$heatmap.upsetr.log 2>&1");
 system("pdf2svg $heatmap.upsetr.pdf $heatmap.upsetr.svg 2");
 
-system("python3 $dirname/../Heatmap.py -i $infile.sorted.for_heatmap_plotly.txt -o $heatmap.heatmap_plotly.html >>$heatmap.heatmap_plotly.log 2>&1");
+system("python3 $dirname/../Python/Heatmap.py -i $infile.sorted.for_heatmap_plotly.txt -o $heatmap.heatmap_plotly.html >>$heatmap.heatmap_plotly.log 2>&1");
 
 if (!-e "$heatmap.upsetr.svg"){
         system("touch $heatmap.upsetr.svg");
