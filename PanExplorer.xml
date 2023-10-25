@@ -1,0 +1,95 @@
+<tool id="PanExplorer" name="PanExplorer" version="1.0">
+  <description> Bacterial pan-genome analysis </description>
+  <!--<requirements>
+ <requirement type="package" version="2.2.26">blast-legacy</requirement>
+ <requirement type="package" version="7.480">mafft</requirement>
+ <requirement type="package" version="14.137">mcl</requirement>
+ <requirement type="package" version="3.697">phylip</requirement>
+ <requirement type="package" version="1.7.2">perl-bioperl</requirement>
+   </requirements>
+-->
+    <command><![CDATA[
+module load system/singularity/3.6.0;
+export PANEX_PATH=${__tool_directory__}/PanExplorer_workflow;
+
+touch genbank_files;
+touch genbank_ids;
+perl ${__tool_directory__}/generateConfig.pl $private_genomes genbank_files;
+
+
+#if $input==""
+touch genbank_ids;
+#else
+echo $input >genbank_ids;
+sed -i "s/,/\n/g" genbank_ids;
+sed -i "s/NZ_//g" genbank_ids;
+#end if
+
+cat genbank_ids >$logfile;
+cat genbank_files >>$logfile;
+
+
+#if $software=="pgap"
+sed "s/IDENTITY/$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_PGAP_heatmap_upset_COG >snakefile;
+#else if $software=="roary"
+sed "s/IDENTITY/$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG >snakefile;
+#else if $software=="orthofinder"
+sed "s/IDENTITY/$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_orthofinder_heatmap_upset_COG >snakefile;
+#else
+sed "s/IDENTITY/$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG >snakefile;
+#end if
+
+singularity exec \$PANEX_PATH/panexplorer.sif snakemake --cores 1 -s snakefile >>$logfile 2>&1;
+
+cp -rf outputs/upsetr.svg $upset;
+cp -rf outputs/pav_matrix.tsv $output;
+cp -rf outputs/GCskew.txt $gcfile;
+cp -rf outputs/heatmap.svg.gz $heatmap;
+cp -rf outputs/cog_output.txt $cogfile;
+cp -rf outputs/cog_stats.txt $outcog_stat;
+cp -rf outputs/cog_stats2.txt $outcog_stat2;
+cp -rf outputs/cog_of_clusters.txt $outcog_clusters;
+cp -rf outputs/genomes/genes.txt $genes;
+cp -rf outputs/heatmap.svg.heatmap_plotly.html $heatmap_html;
+cp -rf outputs/fastani.out.matrix.complete $fastani;
+cp -rf outputs/fastani.out.svg $ani_svg;
+cp -rf outputs/rarefaction_curves.txt $rarefaction_curves;
+cp -rf outputs/rarefaction_curves.svg $rarefaction_curves_svg;
+cp -rf outputs/heaps.tsv $heaps;
+]]></command>
+
+
+  <inputs>
+  <param name="input" type="text" multiple="true" label="List of genbank identifiers" help="Coma separated list (ex: CP000235.1,CP001079.1,CP001759.1,CP015994.2)"/>
+  <param name="private_genomes" type="data" format="zip" label="Zip of genbank files" optional="true"/>
+  <param name="min_identity" type="text" value="80" label="Minimum percentage identity for BlastP" />
+  <param type="select" name="software" label="Choose the pan-genome software">
+    <option value="pgap">PGAP</option>
+    <option value="roary">Roary</option>
+    <option value="panacota">PanACoTA</option>
+    <option value="orthofinder">OrthoFinder</option>
+  </param>
+ </inputs>
+
+ <outputs>
+ <data format="txt" name="output" label="Pangenome presence absence matrix"/>
+ <data format="newick" name="njtree" label="PanBased NJ tree"/>
+ <data format="txt" name="genes" label="Genes"/>
+ <data format="txt" name="cogfile" label="COG assignation"/>
+ <data format="txt" name="gcfile" label="GC_percent"/>
+ <data format="svg" name="upset" label="Upset Diagram"/>
+ <data format="svg" name="heatmap" label="Presence Absence Heatmap"/>
+ <data format="html" name="heatmap_html" label="Presence Absence Heatmap interactive"/>
+ <data format="tabular" name="outcog_stat" label="COG category counts"/>
+ <data format="tabular" name="outcog_stat2" label="COG category 2 counts"/>
+ <data format="tabular" name="outcog_clusters" label="COG of clusters"/>
+ <data format="tabular" name="fastani" label="ANI" />
+ <data format="svg" name="ani_svg" label="ANI heatmap" />
+ <data format="txt" name="rarefaction_curves" label="Rarefaction curves data"/>
+ <data format="svg" name="rarefaction_curves_svg" label="Rarefaction curves"/>
+ <data format="txt" name="heaps" label="Heaps law alpha"/>
+ <data format="txt" name="logfile" label="Logfile"/>
+ <data format="txt" name="roary_log" label="Roary Logfile"/>
+</outputs>
+
+</tool>
