@@ -37,7 +37,7 @@ rule wget:
         genomes="outputs/genomes/genomes.txt"
     shell:
         """
-        perl /scratch2/galaxy/galaxy-20.09/galaxy/tools/SouthGreen/PanExplorer/PanExplorer_workflow/Perl/wget.pl {input.public_genomes} outputs/genomes {input.private_genomes}
+        perl $PANEX_PATH/Perl/wget.pl {input.public_genomes} outputs/genomes {input.private_genomes}
         """
 
 
