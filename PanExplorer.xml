@@ -1,4 +1,4 @@
-<tool id="PanExplorer" name="PanExplorer" version="1.0">
+<tool id="PanExplorer2" name="PanExplorer2" version="2.0">
   <description> Bacterial pan-genome analysis </description>
   <!--<requirements>
  <requirement type="package" version="2.2.26">blast-legacy</requirement>
@@ -10,7 +10,7 @@
 -->
     <command><![CDATA[
 module load system/singularity/3.6.0;
-export PANEX_PATH=${__tool_directory__}/PanExplorer_workflow;
+export PANEX_PATH=${__tool_directory__};
 
 touch genbank_files;
 touch genbank_ids;
