@@ -15,12 +15,14 @@ my %hash;
 my $cl_num = 0;
 my $nb_strains = 1;
 open(M,">$heatmap.accessory_01matrix.txt");
+open(PAN,">$heatmap.pangenes_01matrix.txt");
 open(F,"$infile");
 my $firstline = <F>;
 $firstline =~s/\n//g;$firstline =~s/\r//g;
 #my @infos = split(/","/,$firstline);
 my @infos = split(/\t/,$firstline);
 print M "Gene";
+print PAN "Gene";
 #for (my $j=14; $j <= $#infos; $j++){
 for (my $j=1; $j <= $#infos; $j++){
         my $gbfile = $infos[$j];
@@ -38,10 +40,12 @@ for (my $j=1; $j <= $#infos; $j++){
         #$shortname = substr($shortname,0,25);
 
         print M "\t".$strain;
+	print PAN "\t".$strain;
 	$samples{$j} = $strain;
         $nb_strains++;
 }
 print M "\n";
+print PAN "\n";
 while(<F>){
         $cl_num++;
         my $line = $_;
@@ -72,10 +76,12 @@ while(<F>){
 	else{
                 $core_cluster{$cl_num}=1;
         }
+	print PAN $cl_num.$concat_accessory."\n";
 	#if ($cl_num > 1000){last;}
 }
 close(F);
 close(M);
+close(PAN);
 
 
 system("ulimit -s 163840;Rscript $dirname/../R/heatmap.R -f $heatmap.accessory_01matrix.txt -o $heatmap.complete.pdf");
