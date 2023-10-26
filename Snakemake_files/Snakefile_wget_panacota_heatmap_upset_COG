@@ -115,7 +115,7 @@ rule heatmap_upset:
         heatmap="outputs/heatmap.svg.gz",
         html="outputs/heatmap.svg.heatmap_plotly.html",
         upsetr="outputs/upsetr.svg",
-        binpav="outputs/heatmap.svg.accessory_01matrix.txt"
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
     shell:
         """
         perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} outputs/heatmap.svg
@@ -124,7 +124,7 @@ rule heatmap_upset:
 
 rule micropan:
     input:
-        binpav="outputs/heatmap.svg.accessory_01matrix.txt"
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
     output:
         txt="outputs/rarefaction_curves.txt",
         pdf="outputs/rarefaction_curves.pdf",
