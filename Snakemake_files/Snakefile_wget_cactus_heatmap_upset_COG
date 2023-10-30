@@ -1,0 +1,83 @@
+import glob
+import os
+import shutil
+
+with open("genbank_ids") as f:
+ SAMPLES = f.read().splitlines()
+
+numsample=0
+with open("genbank_files") as f:
+    for line in f.readlines():
+        numsample=numsample+1
+        cmd = "grep 'ACCESSION' "+line
+        returned_value = subprocess.getoutput(cmd)
+        words = returned_value.split()
+        #SAMPLES.append(numsample)
+        SAMPLES.append(words[1])
+
+
+rule final:
+ input:
+  "outputs/GCskew.txt",
+  "outputs/cactus_outdir/output_cactus.full.gfa.gz"
+
+
+rule wget:
+    input:
+        public_genomes="genbank_ids",
+        private_genomes="genbank_files"
+    output:
+        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gb", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.prt", sample=SAMPLES),
+        genomes="outputs/genomes/genomes.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/wget.pl {input.public_genomes} outputs/genomes {input.private_genomes}
+        """
+
+
+rule gcskew:
+    input:
+        "outputs/genomes/{sample}.fasta" 
+    output:
+        "outputs/genomes/{sample}.fasta.gcskew.txt"
+    shell:
+        """
+        python3 $PANEX_PATH/SkewIT/src/gcskew.py -i {input} -o {input}.gcskew.txt -k 1000 -w 1000
+        """ 
+
+rule concat_gcskew:
+    input:
+        expand("outputs/genomes/{sample}.fasta.gcskew.txt", sample=SAMPLES)
+    output:
+        out2="outputs/GCskew.txt"
+    shell:
+        """
+         cat {input} >>{output.out2}
+        """
+
+rule genbank2gff3:
+    input:
+        "outputs/genomes/{sample}.gb"
+    output:
+        gff1="outputs/genomes/{sample}.gb.gff",
+        gff2="outputs/genomes/{sample}.gb.rmdup.gff"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/bp_genbank2gff3.pl -o outputs/genomes {input}
+        perl $PANEX_PATH/Perl/remove_duplicates_in_gff.pl {output.gff1} {output.gff2}
+        """
+
+rule cactus:
+    input:
+        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES)
+    params:
+        reference=SAMPLES[0]
+    output:
+        gfa="outputs/cactus_outdir/output_cactus.full.gfa.gz"
+    shell:
+        """
+        mkdir outputs/cactus_work
+        cactus-pangenome outputs/jobstore outputs/genomes/seqfile --outDir outputs/cactus_outdir --outName output_cactus --reference {params.reference} --workDir outputs/cactus_work --vcf --mapCores 12 --gfa clip full
+        """
