@@ -33,6 +33,7 @@ open(L,">$outdir/list_genomes.txt");
 open(L2,">$outdir/list_genomes2.txt");
 open(L3,">$outdir/genomes.txt");
 open(L4,">$outdir/genomes2.txt");
+open(SEQFILE,">$outdir/seqfile");
 open(METADATA,">$outdir/metadata_strains.txt");
 
 open(F,"$outdir/list.txt");
@@ -188,6 +189,7 @@ while(<F>){
 	print L2 "$genbank\n";
 	print L3 "$outdir/$genbank.fasta\n";
 	print L4 "$outdir/$genbank.fasta	$strain\n";
+	print SEQFILE "$genbank	$outdir/$genbank.fasta\n";
 	print METADATA "$strain\t$genus\t$country\t$continent\n";
 
 
@@ -332,6 +334,7 @@ close(L2);
 close(L3);
 close(L4);
 close(GENES);
+close(SEQFILE);
 #close(TEST);
 
 unlink("prokaryotes.txt");
