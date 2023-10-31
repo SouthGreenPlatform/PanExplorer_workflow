@@ -71,10 +71,10 @@ From: debian:latest
     cd gfatools && make
     cp -rf  gfatools /usr/bin/
 
-    git clone https://github.com/agshumate/Liftoff liftoff 
-    cd liftoff
-    python setup.py install
-    pipx install Liftoff
+    #git clone https://github.com/agshumate/Liftoff liftoff 
+    #cd liftoff
+    #python setup.py install
+    #pipx install Liftoff
 
     #wget https://github.com/ComparativeGenomicsToolkit/cactus/releases/download/v2.6.9/cactus-bin-v2.6.9.tar.gz
     wget https://github.com/ComparativeGenomicsToolkit/cactus/releases/download/v2.6.9/cactus-bin-legacy-v2.6.9.tar.gz
