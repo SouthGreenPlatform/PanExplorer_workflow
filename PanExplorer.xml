@@ -57,6 +57,7 @@ cp -rf outputs/rarefaction_curves.txt $rarefaction_curves;
 cp -rf outputs/rarefaction_curves.svg $rarefaction_curves_svg;
 cp -rf outputs/heaps.tsv $heaps;
 cp -rf outputs/heatmap.svg.complete.pdf.distance_matrix.txt $distance_matrix;
+cp -rf outputs/heatmap.svg.complete.pdf.distance_matrix.hclust.newick $njtree;
 ]]></command>
 
 

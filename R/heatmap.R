@@ -4,6 +4,7 @@
 library(dendextend)
 library("optparse")
 library(reshape2)
+library(ctc)
 
 #args = commandArgs(trailingOnly=TRUE)
 
@@ -44,15 +45,22 @@ iris <- mydata
 
 
 distance_matrix = t(iris) %>% dist(method = "man")
+h = distance_matrix %>% hclust(method = "ward.D")
 
-dend_c = distance_matrix %>% hclust(method = "ward.D") %>% as.dendrogram %>% ladderize
+dend_c = h %>% as.dendrogram %>% ladderize
 
-distance_matrix
+nwk = hc2Newick(h)
+write(
+  nwk,
+  paste(opt$out, "distance_matrix.hclust.newick", sep=".")
+)
+
 dist_df <- melt(as.matrix(distance_matrix), varnames = c("row", "col"))
 write.table(
   dist_df,
   paste(opt$out, "distance_matrix.txt", sep=".")
 )
+
 
 
 mat <- as.matrix(t(iris-1))
