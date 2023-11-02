@@ -3,6 +3,7 @@
 
 library(dendextend)
 library("optparse")
+library(reshape2)
 
 #args = commandArgs(trailingOnly=TRUE)
 
@@ -36,10 +37,23 @@ iris <- mydata
 #dend_r <- iris %>% dist(method = "man") %>% hclust(method = "com") %>% as.dendrogram %>% ladderize
 
 #dend_c <- t(iris) %>% dist(method = "man") %>% hclust(method = "com") %>% as.dendrogram %>% ladderize
-dend_c <- t(iris) %>% dist(method = "man") %>% hclust(method = "ward.D") %>% as.dendrogram %>% ladderize
+#dend_c <- t(iris) %>% dist(method = "man") %>% hclust(method = "ward.D") %>% as.dendrogram %>% ladderize
 
-dend_c
+#dend_c
 #write(hc2Newick(dend_c),file='hclust.newick')
+
+
+distance_matrix = t(iris) %>% dist(method = "man")
+
+dend_c = distance_matrix %>% hclust(method = "ward.D") %>% as.dendrogram %>% ladderize
+
+distance_matrix
+dist_df <- melt(as.matrix(distance_matrix), varnames = c("row", "col"))
+write.table(
+  dist_df,
+  paste(opt$out, "distance_matrix.txt", sep=".")
+)
+
 
 mat <- as.matrix(t(iris-1))
 out <- gplots::heatmap.2(mat,
