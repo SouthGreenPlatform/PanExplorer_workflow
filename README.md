@@ -105,8 +105,17 @@ This includes:
 
  <img src="images/fastani.out.svg" align="center" width="70%" style="display: block; margin: auto;"/>
  
+ Presence/absence heatmap of accessory genes:
+ 
+ <img src="images/heatmap.svg.complete.new.svg" align="center" width="70%" style="display: block; margin: auto;"/>
 
+ Upset plot
 
+ <img src="images/upset.svg" align="center" width="70%" style="display: block; margin: auto;"/>
+
+ Rarefaction curves
+
+ <img src="images/rarefaction_curves.svg" align="center" width="70%" style="display: block; margin: auto;"/>
 ## License
 
 GNU General Public GPLv3 License
