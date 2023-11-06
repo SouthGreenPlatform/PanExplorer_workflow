@@ -19,7 +19,16 @@ with open("genbank_files") as f:
 rule final:
  input:
   "outputs/GCskew.txt",
-  "outputs/cactus_outdir/output_cactus.full.gfa.gz"
+  "outputs/cactus_outdir/output_cactus.sv.gfa.gz",
+  "outputs/cactus_outdir/full.gfa",
+  "outputs/cactus_outdir/full.gfa.png",
+  "outputs/cactus_outdir/output_cactus.sv.gfa.pangenome.fasta",
+  "outputs/pangenome.sorted.merged.bed",
+  "outputs/pav_matrix.tsv",
+  "outputs/heatmap.svg.gz",
+  "outputs/cog_output.txt",
+  "outputs/fastani.out",
+  "outputs/rarefaction_curves.txt"
 
 
 rule wget:
@@ -30,6 +39,7 @@ rule wget:
         expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
         expand("outputs/genomes/{sample}.gb", sample=SAMPLES),
         expand("outputs/genomes/{sample}.prt", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.nuc", sample=SAMPLES),
         genomes="outputs/genomes/genomes.txt"
     shell:
         """
@@ -71,13 +81,140 @@ rule genbank2gff3:
 
 rule cactus:
     input:
-        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES)
+        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gb.rmdup.gff", sample=SAMPLES),
     params:
         reference=SAMPLES[0]
     output:
-        gfa="outputs/cactus_outdir/output_cactus.full.gfa.gz"
+        gfasv="outputs/cactus_outdir/output_cactus.sv.gfa.gz",
+        gfafull="outputs/cactus_outdir/full.gfa"
     shell:
         """
         mkdir outputs/cactus_work
         cactus-pangenome outputs/jobstore outputs/genomes/seqfile --outDir outputs/cactus_outdir --outName output_cactus --reference {params.reference} --workDir outputs/cactus_work --vcf --mapCores 12 --gfa clip full
+        zcat outputs/cactus_outdir/output_cactus.full.gfa.gz >{output.gfafull}
+        """
+
+rule gfatools:
+    input:
+        "outputs/cactus_outdir/output_cactus.sv.gfa.gz"
+    output:
+        "outputs/cactus_outdir/output_cactus.sv.gfa.pangenome.fasta"
+    shell:
+        """
+        gfatools gfa2fa -s {input} > {output}
+        """
+
+rule minigraph:
+    input:
+        cds_fasta="outputs/genomes/{sample}.nuc",
+        gfa="outputs/cactus_outdir/output_cactus.sv.gfa.gz",
+    output:
+        gaf="outputs/genomes/{sample}.nuc.pangenome.gaf",
+    shell:
+        """
+        minigraph -x lr {input.gfa} {input.cds_fasta} > {output.gaf}
+        """
+
+rule odgi:
+    input:
+        "outputs/cactus_outdir/full.gfa"
+    output:
+        og="outputs/cactus_outdir/full.gfa.og",
+        png="outputs/cactus_outdir/full.gfa.png",
+    shell:
+        """
+        odgi build -g {input} -o {output.og}     
+        odgi viz -i {output.og} -o {output.png}
+        """
+
+rule gaf2bed:
+    input:
+        "outputs/genomes/{sample}.nuc.pangenome.gaf"
+    output:
+        "outputs/genomes/{sample}.nuc.pangenome.gaf.bed",
+    shell:
+        """
+        perl $PANEX_PATH/Perl/Gaf2Bed.pl {input} {output}
+        """
+
+rule bedtools_merge:
+    input:
+        expand("outputs/genomes/{sample}.nuc.pangenome.gaf.bed", sample=SAMPLES)
+    output:
+        "outputs/pangenome.sorted.merged.bed",
+    shell:
+        """
+        cat outputs/genomes/*.nuc.pangenome.gaf.bed >outputs/pangenome.bed
+        bedtools sort -i outputs/pangenome.bed >outputs/pangenome.sorted.bed 
+        bedtools merge -i outputs/pangenome.sorted.bed >outputs/pangenome.sorted.merged.bed
+        """
+
+rule bedtools_intersect:
+    input:
+        "outputs/pangenome.sorted.merged.bed"
+    output:
+        "outputs/pav_matrix.tsv",
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input} {output}
+        """
+
+
+rule cog:
+    input:
+        pav="outputs/pav_matrix.tsv"
+    output:
+        cog="outputs/cog_output.txt",
+        cogstat="outputs/cog_stats.txt",
+        cogstat2="outputs/cog_stats2.txt",
+        cogofclusters="outputs/cog_of_clusters.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} {output.cogstat2} {output.cogofclusters} outputs/genomes/strains.txt
+        """
+
+rule heatmap_upset:
+    input:
+        pav="outputs/pav_matrix.tsv"
+    output:
+        heatmap="outputs/heatmap.svg.gz",
+        html="outputs/heatmap.svg.heatmap_plotly.html",
+        upsetr="outputs/upsetr.svg",
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} outputs/heatmap.svg
+        mv outputs/heatmap.svg.upsetr.svg {output.upsetr}
+        """
+
+rule micropan:
+    input:
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
+    output:
+        txt="outputs/rarefaction_curves.txt",
+        pdf="outputs/rarefaction_curves.pdf",
+        svg="outputs/rarefaction_curves.svg",
+        heaps="outputs/heaps.tsv"
+    shell:
+        """
+        Rscript $PANEX_PATH/R/micropan_rarefaction.R -f {input.binpav} -p {output.pdf} -a {output.heaps} -o {output.txt}
+        pdf2svg {output.pdf} {output.svg}
+        """
+
+rule fastani:
+    input:
+        "outputs/genomes/genomes.txt"
+    output:
+        out="outputs/fastani.out",
+        matrix="outputs/fastani.out.matrix",
+        completematrix="outputs/fastani.out.matrix.complete",
+        pdf="outputs/fastani.out.pdf",
+        svg="outputs/fastani.out.svg"
+    shell:
+        """
+        fastANI --rl {input} --ql {input} -o {output.out} -t 4 --matrix
+        perl $PANEX_PATH/Perl/convertANI.pl {output.matrix} outputs/genomes/genomes2.txt >{output.completematrix}
+        Rscript $PANEX_PATH/R/heatmap_ani.R -f {output.completematrix} -o {output.pdf}
+        pdf2svg {output.pdf} {output.svg}
         """
