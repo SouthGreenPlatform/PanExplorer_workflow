@@ -111,7 +111,7 @@ This includes:
 
  Upset plot
 
- <img src="images/upset.svg" align="center" width="70%" style="display: block; margin: auto;"/>
+ <img src="images/upsetr.svg" align="center" width="70%" style="display: block; margin: auto;"/>
 
  Rarefaction curves
 
