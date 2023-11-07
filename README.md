@@ -97,6 +97,8 @@ Creating a pangenome using PGAP
 snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_PGAP_heatmap_upset_COG
 ```
 
+## Graphical outputs
+
 In all cases, you should a new directory named "outputs" containing all output files.
 
 This includes:
