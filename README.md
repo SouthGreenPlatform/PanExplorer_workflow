@@ -108,15 +108,15 @@ ANI values are calcultaed using FastANI software.
 
  <img src="images/fastani.out.svg" align="center" width="70%" style="display: block; margin: auto;"/>
  
- Presence/absence heatmap of accessory genes:
+* Presence/absence heatmap of accessory genes:
  
  <img src="images/heatmap.svg.complete.new.svg" align="center" width="70%" style="display: block; margin: auto;"/>
 
- Upset plot
+* Upset plot
 
  <img src="images/upsetr.svg" align="center" width="70%" style="display: block; margin: auto;"/>
 
- Rarefaction curves
+* Rarefaction curve
 
  <img src="images/rarefaction_curves.svg" align="center" width="70%" style="display: block; margin: auto;"/>
 ## License
