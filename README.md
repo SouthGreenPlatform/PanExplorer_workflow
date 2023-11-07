@@ -53,15 +53,13 @@ export PANEX_PATH=$PWD
 
 ```
 wget https://ftp.ncbi.nlm.nih.gov/pub/mmdb/cdd/little_endian/Cog_LE.tar.gz
-tar -xzvf Cog_LE.tar.gz
-cp -rf Cog.* $PANEX_PATH/COG
+tar -xzvf Cog_LE.tar.gz -C $PANEX_PATH/COG
 ```
 
 4- Get the singularity container
 
 ```
-wget https://panexplorer.southgreen.fr/singularity/panexplorer.sif
-cp -rf panexplorer.sif singularity/panexplorer.sif
+wget -P $PANEX_PATH/singularity https://panexplorer.southgreen.fr/singularity/panexplorer.sif
 ```
 
 
@@ -90,19 +88,19 @@ cat genbank_files
 Creating a pangenome using Roary
 
 ```
-singularity exec PanExplorer/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG
+singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG
 ```
 
 Creating a pangenome using PanACoTA
 
 ```
-singularity exec PanExplorer/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG
+singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG
 ```
 
 Creating a pangenome using PGAP
 
 ```
-singularity exec PanExplorer/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_PGAP_heatmap_upset_COG
+singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_PGAP_heatmap_upset_COG
 ```
 
 ## Graphical outputs
