@@ -57,6 +57,14 @@ tar -xzvf Cog_LE.tar.gz
 cp -rf Cog.* $PANEX_PATH/COG
 ```
 
+4- Get the singularity container
+
+```
+wget https://panexplorer.southgreen.fr/singularity/panexplorer.sif
+cp -rf panexplorer.sif singularity/panexplorer.sif
+```
+
+
 ## Prepare your list of genomes to be analyzed
 
 Edit a new file named "genbank_ids" listing the Genbank identifiers of complete assembled and annotated genomes.
@@ -82,19 +90,19 @@ cat genbank_files
 Creating a pangenome using Roary
 
 ```
-snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG
+singularity exec PanExplorer/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG
 ```
 
 Creating a pangenome using PanACoTA
 
 ```
-snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG
+singularity exec PanExplorer/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG
 ```
 
 Creating a pangenome using PGAP
 
 ```
-snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_PGAP_heatmap_upset_COG
+singularity exec PanExplorer/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_PGAP_heatmap_upset_COG
 ```
 
 ## Graphical outputs
