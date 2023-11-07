@@ -45,8 +45,8 @@ git clone https://github.com/SouthGreenPlatform/PanExplorer_workflow.git
 2- Define the PANEX_PATH environnement variable
 
 ```
-cp -rf PanExplorer_workflow /usr/local/bin
-export PANEX_PATH=/usr/local/bin/PanExplorer_workflow
+cd PanExplorer_workflow
+export PANEX_PATH=$PWD
 ```
 
 3- Get preformatted RPS-BLAST+ database of the CDD COG distribution
