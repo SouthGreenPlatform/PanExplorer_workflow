@@ -97,11 +97,14 @@ Creating a pangenome using PGAP
 snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_PGAP_heatmap_upset_COG
 ```
 
-In both cases, you should a new directory named "outputs" containing all output files.
+In all cases, you should a new directory named "outputs" containing all output files.
 
 This includes:
 
- ANI (Average Nucleotide Identity)
+* ANI (Average Nucleotide Identity) : images/fastani.out.svg
+
+The heatmap chart generated from distances calculated based on the ANI values. 
+ANI values are calcultaed using FastANI software.
 
  <img src="images/fastani.out.svg" align="center" width="70%" style="display: block; margin: auto;"/>
  
