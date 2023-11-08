@@ -55,7 +55,7 @@ foreach my $id(keys(%strains)){
 }
 
 open(OUT,">$PAV");
-print OUT "ClutserID\t";
+print OUT "ClutserID";
 foreach my $id(sort keys(%strains)){
 	my $name = $strains{$id};
 	print OUT "\t".$name;
