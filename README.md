@@ -21,6 +21,10 @@ It provides a presence/absence matrix of genes, an UpsetR Diagram for synthetizi
 
 ## Prerequisites - Tool dependencies
 
+Using a singularity container, the only dependency you will need is **singularity**.
+
+This container already contains all dependencies required for running the workflow:
+
 - Snakemake
 - Roary
 - PGAP
@@ -97,10 +101,10 @@ Creating a pangenome using PanACoTA
 singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG
 ```
 
-Creating a pangenome using PGAP
+Creating a pangenome graph using Minigraph/Cactus and derived pangenes matrix
 
 ```
-singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_PGAP_heatmap_upset_COG
+singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_cactus_heatmap_upset_COG
 ```
 
 ## Graphical outputs
@@ -136,6 +140,7 @@ Each row corresponds to a possible intersection: the filled-in cells show which 
 The rarefaction curve (computed by micropan R package) is the cumulative number of gene clusters we can observe as more and more genomes are being considered.
 
  <img src="images/rarefaction_curves.svg" align="center" width="70%" style="display: block; margin: auto;"/>
+
 ## License
 
 GNU General Public GPLv3 License
