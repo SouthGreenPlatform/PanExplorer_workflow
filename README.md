@@ -146,7 +146,7 @@ The rarefaction curve (computed by micropan R package) is the cumulative number 
 
 In case of a pangenome graph analysis, you will obtain an additonnal vizualization of the graph (using ODGI)
 
- <img src="images/CP000030.1.full.viz.png" align="center" width="70%" style="display: block; margin: auto;"/> 
+ <img src="images/NZ_CP033176.1.full.viz.png" align="center" width="70%" style="display: block; margin: auto;"/> 
 
 ## License
 
