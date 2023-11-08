@@ -92,7 +92,7 @@ rule cactus:
     shell:
         """
         mkdir outputs/cactus_work
-        cactus-pangenome outputs/jobstore outputs/genomes/seqfile --outDir outputs/cactus_outdir --outName output_cactus --reference {params.reference} --workDir outputs/cactus_work --vcf --mapCores 12 --gfa clip full
+        cactus-pangenome outputs/jobstore outputs/genomes/seqfile --outDir outputs/cactus_outdir --outName output_cactus --reference {params.reference} --workDir outputs/cactus_work --vcf --mapCores 12 --gfa clip full --viz
         zcat outputs/cactus_outdir/output_cactus.full.gfa.gz >{output.gfafull}
         """
 
