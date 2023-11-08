@@ -121,13 +121,13 @@ This includes:
 The heatmap chart generated from distances calculated based on the ANI values. 
 ANI values are calcultaed using FastANI software.
 
- <img src="images/fastani.out.svg" align="center" width="70%" style="display: block; margin: auto;"/>
+ <img src="images/fastani.out.svg" align="center" width="90%" style="display: block; margin: auto;"/>
  
 * Presence/absence matrix of accessory genes: outputs/heatmap.svg.complete.new.svg
 
 Both gene clusters and samples have been ordered using a Hierarchical Clustering.
  
- <img src="images/heatmap.svg.complete.new.svg" align="center" width="70%" style="display: block; margin: auto;"/>
+ <img src="images/heatmap.svg.complete.new.svg" align="center" width="90%" style="display: block; margin: auto;"/>
 
 * Upset plot: outputs/upsetr.svg
 
@@ -136,7 +136,7 @@ The total size of each set is represented on the left barplot.
 Every possible intersection is represented by the bottom plot, and their occurence is shown on the top barplot.
 Each row corresponds to a possible intersection: the filled-in cells show which set is part of an intersection.
 
- <img src="images/upsetr.svg" align="center" width="70%" style="display: block; margin: auto;"/>
+ <img src="images/upsetr.svg" align="center" width="90%" style="display: block; margin: auto;"/>
 
 * Rarefaction curve: outputs/rarefaction_curves.svg
 
@@ -146,7 +146,7 @@ The rarefaction curve (computed by micropan R package) is the cumulative number 
 
 In case of a pangenome graph analysis, you will obtain an additonnal vizualization of the graph (using ODGI)
 
- <img src="images/NZ_CP033176.1.full.viz.png" align="center" width="70%" style="display: block; margin: auto;"/> 
+ <img src="images/NZ_CP033176.1.full.viz.png" align="center" width="90%" style="display: block; margin: auto;"/> 
 
 ## License
 
