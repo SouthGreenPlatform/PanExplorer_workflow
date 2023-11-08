@@ -30,13 +30,15 @@ cat genbank_files >>$logfile;
 
 
 #if $software=="pgap"
-sed "s/IDENTITY/$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_PGAP_heatmap_upset_COG >snakefile;
+sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_PGAP_heatmap_upset_COG >snakefile;
 #else if $software=="roary"
-sed "s/IDENTITY/$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG >snakefile;
+sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG >snakefile;
 #else if $software=="orthofinder"
-sed "s/IDENTITY/$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_orthofinder_heatmap_upset_COG >snakefile;
+sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_orthofinder_heatmap_upset_COG >snakefile;
+#else if $software=="cactus"
+sed "s/IDENTITY/$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_cactus_heatmap_upset_COG >snakefile;
 #else
-sed "s/IDENTITY/$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG >snakefile;
+cp -rf \$PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG snakefile;
 #end if
 
 singularity exec \$PANEX_PATH/panexplorer.sif snakemake --cores 1 -s snakefile >>$logfile 2>&1;
@@ -70,6 +72,7 @@ cp -rf outputs/heatmap.svg.complete.pdf.distance_matrix.hclust.newick $njtree;
     <option value="roary">Roary</option>
     <option value="panacota">PanACoTA</option>
     <option value="orthofinder">OrthoFinder</option>
+    <option value="cactus">Minigraph-Cactus</option>
   </param>
  </inputs>
 

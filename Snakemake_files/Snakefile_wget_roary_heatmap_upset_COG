@@ -74,12 +74,14 @@ rule genbank2gff3:
 rule roary:
     input:
         expand("outputs/genomes/{sample}.gb.rmdup.gff", sample=SAMPLES)
+    params:
+        identity=80
     output:
         pav="outputs/pav_matrix.csv",
         newick="outputs/accessory_binary_genes.fa.newick"
     shell:
         """
-        roary -f outputs/roary_outdir -i IDENTITY outputs/genomes/*gb.rmdup.gff
+        roary -f outputs/roary_outdir -i {params.identity} outputs/genomes/*gb.rmdup.gff
         cp -rf outputs/roary_outdir/gene_presence_absence.csv {output.pav}
         cp -rf outputs/roary_outdir/accessory_binary_genes.fa.newick {output.newick}
         """

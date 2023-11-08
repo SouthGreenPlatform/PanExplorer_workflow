@@ -77,16 +77,19 @@ rule panacota:
     input:
         expand("outputs/genomes/{sample}.prt", sample=SAMPLES)
     output:
-        pav="outputs/panacota/PanGenome-mydataset.All.prt-clust-0.IDENTITY000001-mode1.lst"
+        pav="outputs/panacota/PanGenome-mydataset.All.prt.lst"
+    params:
+        identity=80
     shell:
         """
         cat outputs/genomes/*prt >outputs/genomes/mydataset.All.prt
-        PanACoTA pangenome -i 0.IDENTITY000001 -l outputs/genomes/mydataset.All.prt -n mydataset -d outputs/genomes -o outputs/panacota
+        PanACoTA pangenome -i 0.{params.identity} -l outputs/genomes/mydataset.All.prt -n mydataset -d outputs/genomes -o outputs/panacota
+        mv outputs/panacota/PanGenome-mydataset.All.prt-clust-0.{params.identity}-mode1.lst {output}
         """
 
 rule convert_matrix:
     input:
-        pav="outputs/panacota/PanGenome-mydataset.All.prt-clust-0.IDENTITY000001-mode1.lst"
+        pav="outputs/panacota/PanGenome-mydataset.All.prt.lst"
     output:
         "outputs/pav_matrix.tsv"
     shell:

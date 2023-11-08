@@ -2,6 +2,9 @@ import glob
 import os
 import shutil
 
+import yaml
+configfile: "config.yaml"
+
 
 with open("genbank_ids") as f:
  SAMPLES = f.read().splitlines()

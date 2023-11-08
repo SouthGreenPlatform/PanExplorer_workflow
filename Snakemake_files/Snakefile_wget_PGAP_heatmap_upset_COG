@@ -72,6 +72,8 @@ rule genbank2gff3:
 rule pgap:
     input:
         expand("outputs/genomes/{sample}.pep", sample=SAMPLES)
+    params:
+        identity=80
     output:
         pav="outputs/pav_matrix.csv",
         newick="outputs/accessory_binary_genes.fa.newick"
