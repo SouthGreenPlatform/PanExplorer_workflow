@@ -80,7 +80,7 @@ CP001759.1
 CP015994.2
 ```
 
-Edit another new file named "genbank_files" listing the path to your own assembled and annotated genomes.
+Or edit another new file named "genbank_files" listing the path to your own assembled and annotated genomes.
 The file should look like this
 ```
 cat genbank_files
@@ -88,6 +88,7 @@ cat genbank_files
 /home/myname/genbank_files_dir/CP001079.1.genbank.gb
 ```
 
+It's best not to mix NCBI genomes with your own annotated genomes, to avoid biaises due to annotation method/software. Keep an homogeneous annotation procedure to feed the workflow.
 
 ## Run the workflow
 
@@ -142,6 +143,10 @@ Each row corresponds to a possible intersection: the filled-in cells show which 
 The rarefaction curve (computed by micropan R package) is the cumulative number of gene clusters we can observe as more and more genomes are being considered.
 
  <img src="images/rarefaction_curves.svg" align="center" width="70%" style="display: block; margin: auto;"/>
+
+In case of a pangenome graph analysis, you will obtain an additonnal vizualization of the graph (using ODGI)
+
+ <img src="images/CP000030.1.full.viz.png" align="center" width="70%" style="display: block; margin: auto;"/> 
 
 ## License
 
