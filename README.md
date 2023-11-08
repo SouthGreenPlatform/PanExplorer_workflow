@@ -23,12 +23,14 @@ It provides a presence/absence matrix of genes, an UpsetR Diagram for synthetizi
 
 Using a singularity container, the only dependency you will need is **singularity**.
 
-This container already contains all dependencies required for running the workflow:
+This singularity image (panexplorer.sif) already contains all dependencies required for running the workflow:
 
 - Snakemake
 - Roary
 - PGAP
 - Panaroo
+- Panacota
+- Minigraph/cactus
 - ncbi-blast+ (version BLAST 2.4.0+)
 - R (version 4.2.0) and following packages:
   - optparse : ``install.packages("optparse")``
@@ -122,7 +124,7 @@ ANI values are calcultaed using FastANI software.
  
 * Presence/absence matrix of accessory genes: outputs/heatmap.svg.complete.new.svg
 
-Both Gene clusters and samples have been ordered using a Hierarchical Clustering.
+Both gene clusters and samples have been ordered using a Hierarchical Clustering.
  
  <img src="images/heatmap.svg.complete.new.svg" align="center" width="70%" style="display: block; margin: auto;"/>
 
