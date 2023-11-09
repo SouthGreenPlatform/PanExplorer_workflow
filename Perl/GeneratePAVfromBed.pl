@@ -65,7 +65,7 @@ my $clnum = 0;
 my @cc = $graph->connected_components();
 foreach my $component (@cc){
 	$clnum++;
-	print OUT $clnum."\t";
+	print OUT $clnum;
         my @genes = @$component;
 	my %h;
 	foreach my $gene(@genes){
@@ -84,7 +84,7 @@ foreach my $component (@cc){
 }
 foreach my $gene(keys(%genes)){
 	$clnum++;
-	print OUT $clnum."\t";
+	print OUT $clnum;
 	my ($id,$genename) = split(/:/,$gene);
 	my %h;
 	$h{$id}.="$genename,";
