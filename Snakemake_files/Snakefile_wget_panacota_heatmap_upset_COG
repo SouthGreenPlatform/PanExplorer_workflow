@@ -84,7 +84,7 @@ rule panacota:
         """
         cat outputs/genomes/*prt >outputs/genomes/mydataset.All.prt
         PanACoTA pangenome -i 0.{params.identity} -l outputs/genomes/mydataset.All.prt -n mydataset -d outputs/genomes -o outputs/panacota
-        mv outputs/panacota/PanGenome-mydataset.All.prt-clust-0.{params.identity}-mode1.lst {output}
+        mv outputs/panacota/PanGenome-mydataset.All.prt-clust-*-mode1.lst {output}
         """
 
 rule convert_matrix:

@@ -76,6 +76,8 @@ rule orthofinder:
         "bioinfo/orthofinder/2.5.4"
     input:
         expand("outputs/genomes/{sample}.pep", sample=SAMPLES)
+    params:
+        identity=80
     output:
         pav="outputs/Orthogroups.tsv"
     shell:
