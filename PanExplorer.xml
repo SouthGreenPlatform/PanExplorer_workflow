@@ -36,7 +36,7 @@ sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snak
 #else if $software=="orthofinder"
 sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_orthofinder_heatmap_upset_COG >snakefile;
 #else if $software=="cactus"
-cp -rf \$PANEX_PATH/Snakemake_files/Snakefile_wget_cactus_heatmap_upset_COG snakefile;
+cp -rf \$PANEX_PATH/Snakemake_files/Snakefile_wget_cactus_heatmap_upset_COG2 snakefile;
 #else
 sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG >snakefile;
 #end if
