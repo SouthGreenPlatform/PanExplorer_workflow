@@ -9,6 +9,10 @@ From: debian:latest
     apt-get update
     apt-get install -y bash wget r-base-core r-cran-svglite r-cran-upsetr r-cran-optparse r-cran-dendextend r-cran-gplots ncbi-blast+ ncbi-blast+-legacy roary prokka snakemake python3 cd-hit mafft mcl phylip python3-pip libstatistics-linefit-perl bioperl libstatistics-distributions-perl pdf2svg python3-biopython r-cran-heatmaply python3-pandas python3-numpy python3-seaborn python3-xarray python3-plotly pipx autoconf libgsl-dev fastani python3-virtualenv
 
+    wget https://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+    chmod +x Miniconda3-py38_4.8.3-Linux-x86_64.sh
+    ./Miniconda3-py38_4.8.3-Linux-x86_64.sh -b -p /opt/miniconda3
+    ln -s /opt/miniconda3/bin/conda /usr/bin/conda
  
     git clone https://github.com/aleimba/bac-genomics-scripts.git
     cp -rf bac-genomics-scripts /usr/local/bin
@@ -70,6 +74,9 @@ From: debian:latest
     git clone https://github.com/lh3/gfatools
     cd gfatools && make
     cp -rf  gfatools /usr/bin/
+
+    conda install -y -c bioconda minimap2
+    conda install -y -c bioconda liftoff
 
     #git clone https://github.com/agshumate/Liftoff liftoff 
     #cd liftoff
