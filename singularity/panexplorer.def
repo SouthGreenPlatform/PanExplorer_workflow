@@ -1,23 +1,97 @@
 Bootstrap: docker
 From: debian:latest
 
+%labels
+    software=pggb
+    about.home=https://github.com/pangenome/pggb
+
 %runscript
     echo "This is what happens when you run the container..."
 
 %post
     echo "Hello from inside the container"
     apt-get update
-    apt-get install -y bash wget r-base-core r-cran-svglite r-cran-upsetr r-cran-optparse r-cran-dendextend r-cran-gplots ncbi-blast+ ncbi-blast+-legacy roary prokka snakemake python3 cd-hit mafft mcl phylip python3-pip libstatistics-linefit-perl bioperl libstatistics-distributions-perl pdf2svg python3-biopython r-cran-heatmaply python3-pandas python3-numpy python3-seaborn python3-xarray python3-plotly pipx autoconf libgsl-dev fastani python3-virtualenv
+    apt-get install -y bash wget r-base-core r-cran-svglite r-cran-upsetr r-cran-optparse r-cran-dendextend r-cran-gplots r-bioc-ctc ncbi-blast+ ncbi-blast+-legacy roary prokka snakemake python3 cd-hit mafft mcl phylip python3-pip libstatistics-linefit-perl bioperl libstatistics-distributions-perl pdf2svg python3-biopython r-cran-heatmaply python3-pandas python3-numpy python3-seaborn python3-xarray python3-plotly pipx autoconf libgsl-dev fastani python3-virtualenv cmake samtools curl make g++-11 pybind11-dev libbz2-dev bc libatomic-ops-dev autoconf libgsl-dev zlib1g-dev libzstd-dev libjemalloc-dev libhts-dev build-essential pkg-config time pigz bcftools libcairo2-dev unzip parallel
 
     wget https://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh
     chmod +x Miniconda3-py38_4.8.3-Linux-x86_64.sh
     ./Miniconda3-py38_4.8.3-Linux-x86_64.sh -b -p /opt/miniconda3
     ln -s /opt/miniconda3/bin/conda /usr/bin/conda
+
+
+
+#############################
+# singularity
+#############################
+#    apt-get install -y build-essential libssl-dev uuid-dev libgpgme11-dev squashfs-tools libseccomp-dev pkg-config
+#    export VERSION=1.11 OS=linux ARCH=amd64 && \
+#    wget https://go.dev/dl/go1.21.4.linux-amd64.tar.gz
+#    tar -C /usr/local -xzvf go1.21.4.linux-amd64.tar.gz && \
+#    rm go1.21.4.linux-amd64.tar.gz
+#    echo 'export GOPATH=${HOME}/go' >> ~/.bashrc && \
+#    echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc && \
+#    . ~/.bashrc
+#    go get -d github.com/sylabs/singularity
+#    export VERSION=v3.0.3 # or another tag or branch if you like && \
+#    cd $GOPATH/src/github.com/sylabs/singularity && \
+#    git fetch && \
+#    git checkout $VERSION # omit this command to install the latest bleeding edge code from master
+#    export VERSION=3.0.3 && # adjust this as necessary \
+#    mkdir -p $GOPATH/src/github.com/sylabs && \
+#    cd $GOPATH/src/github.com/sylabs && \
+#    wget https://github.com/sylabs/singularity/releases/download/v4.0.1/singularity-ce-4.0.1.tar.gz  && \
+#    tar -xzf singularity-ce-4.0.1.tar.gz && \
+#    cd ./singularity && \
+#    ./mconfig
  
+################################
+# pggb
+################################
+
+    git clone --recursive https://github.com/ekg/wfmash.git && cd wfmash && cmake -H. -Bbuild && cmake --build build -- -j 3 && cp build/bin/wfmash /usr/local/bin/wfmash     && cp build/lib/libwfa2cpp.so.0 /usr/local/lib/     && cp build/lib/libwfa2cpp.so /usr/local/lib/     && cp build/lib/libwfa2.so.0 /usr/local/lib/     && cp build/lib/libwfa2.so /usr/local/lib/     && cd ../     && rm -rf wfmash # buildkit 
+
+    git clone --recursive https://github.com/ekg/seqwish     && cd seqwish     && git pull     && git checkout f44b402f0c2e02988d431d9b2e5eba9727cf93a9     && git submodule update --init --recursive     && cmake -H. -Bbuild && cmake --build build -- -j $(nproc)     && cp bin/seqwish /usr/local/bin/seqwish     && cd ../     && rm -rf seqwish # buildkit
+
+    git clone --recursive https://github.com/pangenome/smoothxg     && cd smoothxg     && git pull     && git checkout aaa0b283e13ca57c4e6e4e67a03451925f5342f1     && git submodule update --init --recursive     && cmake -H. -Bbuild && cmake --build build -- -j $(nproc)     && cp bin/smoothxg /usr/local/bin/smoothxg     && cp deps/odgi/bin/odgi /usr/local/bin/odgi     && cd ../     && rm -rf odgi # buildkit
+
+    /bin/sh -c curl https://sh.rustup.rs -sSf | sh -s -- -y # buildkit
+
+    git clone https://github.com/marschall-lab/GFAffix.git     && cd GFAffix     && git pull     && git checkout d630eb7d9827340f5f292e57cb3cb5e31e6f86f0     && cargo install --force --path .     && mv /root/.cargo/bin/gfaffix /usr/local/bin/gfaffix     && cd ../     && rm -rf GFAffix # buildkit
+
+    pipx install multiqc==1.16 # buildkit
+
+    wget https://github.com/vgteam/vg/releases/download/v1.52.0/vg && chmod +x vg && mv vg /usr/local/bin/vg # buildkit
+
+    git clone https://github.com/pangenome/vcfbub     && cd vcfbub     && git pull     && git checkout 26a1f0cb216a423f8547c4ad0e0ce38cb9d324b9     && cargo install --force --path .     && mv /root/.cargo/bin/vcfbub /usr/local/bin/vcfbub     && cd ../     && rm -rf vcfbub 
+ 
+    git clone --recursive https://github.com/vcflib/vcflib.git     && cd vcflib     && git checkout 7c1a31a430d339adcb9a0c2fd3fd02d3b30e3549     && mkdir -p build     && cd build     && cmake -DZIG=OFF -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . -- -j $(nproc)     && mv vcfwave /usr/local/bin/vcfwave     && mv vcfuniq /usr/local/bin/vcfuniq     && cd ../     && rm -rf vcflib # buildkit
+
+:    pipx install igraph==0.10.4 # buildkit
+
+    #pipx install pycairo==1.23.0 # buildkit
+
+    #git clone https://github.com/ekg/fastix.git     && cd fastix     && git pull     && git checkout 331c1159ea16625ee79d1a82522e800c99206834     && cargo install --force --path . &&     mv /root/.cargo/bin/fastix /usr/local/bin/fastix     && cd ../     && rm -rf fastix # buildkit
+
+    #git clone https://github.com/ekg/pafplot.git     && cd pafplot     && git pull     && git checkout 7dda24c0aeba8556b600d53d748ae3103ec85501     && cargo install --force --path .     && mv /root/.cargo/bin/pafplot /usr/local/bin/     && cd ../     && rm -rf pafplot # buildkit
+
+    git clone https://github.com/pangenome/pggb.git
+    cp pggb/pggb /usr/local/bin/pggb # buildkit
+    chmod 777 /usr/local/bin/pggb # buildkit
+    cp pggb/partition-before-pggb /usr/local/bin/partition-before-pggb # buildkit
+    chmod a+rx /usr/local/bin/partition-before-pggb # buildkit
+
+    wget -qO- https://get.nextflow.io | bash
+    chmod 777 nextflow
+    cp nextflow /usr/local/bin/nextflow
+###################################
+
     git clone https://github.com/aleimba/bac-genomics-scripts.git
     cp -rf bac-genomics-scripts /usr/local/bin
 
     R --quiet --slave -e 'install.packages("micropan", version = "1.3.0", repos="https://cloud.r-project.org/")'
+
+    R --quiet --slave -e 'devtools::install_github("KlausVigo/phangorn")'
+
 
     #pip3 install git+https://github.com/gtonkinhill/panaroo
 
@@ -76,7 +150,9 @@ From: debian:latest
     cp -rf  gfatools /usr/bin/
 
     conda install -y -c bioconda minimap2
-    conda install -y -c bioconda liftoff
+
+
+    #conda install -y -c bioconda liftoff
 
     #git clone https://github.com/agshumate/Liftoff liftoff 
     #cd liftoff
@@ -124,3 +200,4 @@ From: debian:latest
 %environment
     export PATH=$PATH:/usr/games:/usr/bin/OrthoFinder:/usr/bin/OrthoFinder/bin:/usr/bin/cactus-bin-v2.6.9/bin:/usr/bin/cactus-bin-v2.6.9/venv-cactus-v2.6.9/bin
     export PYTHONPATH=$PYTHONPATH:/usr/bin/cactus-bin-v2.6.9/lib
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
