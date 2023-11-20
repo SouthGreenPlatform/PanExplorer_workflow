@@ -75,6 +75,7 @@ From: debian:latest
     #git clone https://github.com/ekg/pafplot.git     && cd pafplot     && git pull     && git checkout 7dda24c0aeba8556b600d53d748ae3103ec85501     && cargo install --force --path .     && mv /root/.cargo/bin/pafplot /usr/local/bin/     && cd ../     && rm -rf pafplot # buildkit
 
     git clone https://github.com/pangenome/pggb.git
+    sed -i "s/which time/\/usr\/bin\/which time/g" pggb/pggb
     cp pggb/pggb /usr/local/bin/pggb # buildkit
     chmod 777 /usr/local/bin/pggb # buildkit
     cp pggb/partition-before-pggb /usr/local/bin/partition-before-pggb # buildkit
