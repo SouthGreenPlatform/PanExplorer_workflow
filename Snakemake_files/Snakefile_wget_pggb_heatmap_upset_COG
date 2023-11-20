@@ -89,7 +89,7 @@ rule pggb:
         """
         samtools faidx outputs/genomes/all_genomes.fa
         pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out
-        mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output}
+        mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output.gfa}
         mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
         mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
         """
