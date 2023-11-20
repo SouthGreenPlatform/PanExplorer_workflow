@@ -110,6 +110,13 @@ Creating a pangenome graph using Minigraph/Cactus and derived pangenes matrix
 singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_cactus_heatmap_upset_COG
 ```
 
+Creating a pangenome graph using PanGenomeGraph Builder (PGGB) and derived pangenes matrix
+
+```
+singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_pggb_heatmap_upset_COG
+```
+
+
 ## Graphical outputs
 
 In all cases, you should a new directory named "outputs" containing all output files.
@@ -147,6 +154,8 @@ The rarefaction curve (computed by micropan R package) is the cumulative number 
 In case of a pangenome graph analysis, you will obtain an additonnal vizualization of the graph (using ODGI)
 
  <img src="images/NZ_CP033176.1.full.viz.png" align="center" width="90%" style="display: block; margin: auto;"/> 
+
+ 
 
 ## License
 
