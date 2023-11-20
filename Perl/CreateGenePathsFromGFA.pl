@@ -21,13 +21,16 @@ while(<F>){
 		$line =~s/\n//g;$line =~s/\r//g;
 		my @infos = split(/\t/,$line);
 		#if ($infos[2] eq "gene" && /CITME_006g014440/){
-		if ($infos[2] eq "gene" && /ID=([^;]+);/){
+		if ($infos[2] eq "CDS" && /ID=([^;]+);/){
 		#if ($infos[2] eq "exon" && /Parent=([^;]+)$/){
 			my $chr = $infos[0];
 			my $start = $infos[3];
 			my $end = $infos[4];
 			my $gene = $1;
 			$gene =~s/\n//g;$gene =~s/\r//g;
+			if (/protein_id=([^;]+);/){
+				$gene = $1;
+			}
 			$coordinates{$chr}.= "$gene:$start-$end|";
 			for (my $i = $start; $i <= $end; $i++){
 				$allgenes{$gene}=1;
@@ -53,12 +56,25 @@ while(my $line = <GFA>){
 		my ($type,$segment,$segment_sequence,$SN,$tag) = split(/\t/,$line);
 		$segments{$segment} = $segment_sequence;
 	}
-	elsif ($line =~/^W/){
-		my ($type,$sample,$strand,$chrom,$start,$length,$path) = split(/\t/,$line);
+	elsif ($line =~/^P/ or $line =~/^W/){
+
+		my $path;
+		my $chrom;
+		if ($line =~/^W/){
+	                my ($type,$sample,$strand,$chromW,$start,$length,$pathW) = split(/\t/,$line);
+			$path = $pathW;
+			$chrom = $chromW;
+		}
+		elsif ($line =~/^P/){
+			my ($type,$strain_chrom,$pathP) = split(/\t/,$line);
+			my ($stra,$chromP) = split(/#/,$strain_chrom);
+			$path = $pathP;
+			$chrom = $chromP;
+		}
 		$chrom =~s/\.\d+$//g;
 		my @genes = split(/\|/,$coordinates{$chrom});
 		if ($coordinates{$chrom}){
-			my @segments = split(/[\>\<]/,$path);
+			my @segments = split(/,/,$path);
 			my $end_segment = 0;
 			my $start_segment = 0;
 			my $nb_gene = 0;
@@ -66,12 +82,15 @@ while(my $line = <GFA>){
 			my %genes_located;
 			my %first_segment_of_gene;
 			print "$chrom: ". scalar @segments."\n";
+			my $cumul = 0;
 			LOOP_SEGMENT: foreach my $segment(@segments){
 				if ($segment eq ""){next;}
+				$segment =~s/\+//g;
+				$segment =~s/\-//g;
 				my $size = length($segments{$segment});
 				$start_segment = $end_segment+1;
 				$end_segment = $start_segment+$size-1;
-
+				$cumul+=$size;
 				my $current_gene;
 				my $pos_in_segment = 0;
 				for (my $k = $start_segment; $k <= $end_segment; $k++){
@@ -87,8 +106,9 @@ while(my $line = <GFA>){
 						}
 					}				
 				}
-	
+			
 			}
+			print "$chrom $cumul $end_segment\n";
 		}
 	}
 }
@@ -100,8 +120,10 @@ foreach my $gene(keys(%segments_of_gene)){
 	my $segments = $segments_of_gene{$gene};
 	my @positions = split(/\|/,$segments);
 	my $previous_segment;
+	
 	#print O "$gene	$segments\n";
 	print O "$gene\t";
+	
 	my $concat = "";
 	foreach my $pos(@positions){
 		
