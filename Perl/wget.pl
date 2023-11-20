@@ -11,9 +11,8 @@ system("wget https://ftp.ncbi.nlm.nih.gov/genomes/GENOME_REPORTS/eukaryotes.txt"
 my %continents;
 open(F,"countries.txt");
 <F>;
-while(<F>){
-        my $line = $_;
-        $line =~s/\n//g;$line =~s/\r//g;
+while(my $line =<F>){
+        chomp($line);
         my ($continent,$country) = split(/,/,$line);
         $continents{$country} = $continent;
 }
@@ -34,12 +33,13 @@ open(L2,">$outdir/list_genomes2.txt");
 open(L3,">$outdir/genomes.txt");
 open(L4,">$outdir/genomes2.txt");
 open(SEQFILE,">$outdir/seqfile");
+open(PanSN,">$outdir/all_genomes.fa");
 open(METADATA,">$outdir/metadata_strains.txt");
 
 open(F,"$outdir/list.txt");
 #open(TEST,">$outdir/test");
-while(<F>){
-	my $line = $_;$line =~s/\n//g;$line =~s/\r//g;
+while(my $line =<F>){
+	chomp($line);
 	my $genbank = $line;
 	if (!-e "$genbank"){
 		my $grep = `grep '$line' prokaryotes.txt`;
@@ -203,10 +203,12 @@ while(<F>){
                         $line =~s/\n//g;$line =~s/\r//g;
 			$genome_sequences{$seqid} .= $line;
                         $genome .= $line;
+			print PanSN $_;
                 }
 		elsif (/>([^\s]+)/){
 			$seqid = $1;
 			$seqid =~s/\.\d+$//g;
+			print PanSN ">$strain#$seqid\n";
 		}
         }
         close(GENOME);
@@ -335,6 +337,7 @@ close(L3);
 close(L4);
 close(GENES);
 close(SEQFILE);
+close(PanSN);
 #close(TEST);
 
 unlink("prokaryotes.txt");
