@@ -83,11 +83,15 @@ rule pggb:
         expand("outputs/genomes/{sample}.gb.rmdup.gff", sample=SAMPLES),
     output:
         gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+        png1="outputs/pggb_out/all_genomes.fa.lay.draw.png",
+        png2="outputs/pggb_out/all_genomes.fa.og.viz_multiqc.png",
     shell:
         """
         samtools faidx outputs/genomes/all_genomes.fa
         pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out
         mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output}
+        mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
+        mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
         """
 
 rule create_gene_paths:
