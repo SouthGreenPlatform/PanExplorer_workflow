@@ -60,21 +60,23 @@ while(my $line = <GFA>){
 
 		my $path;
 		my $chrom;
+		my @segments;
 		if ($line =~/^W/){
 	                my ($type,$sample,$strand,$chromW,$start,$length,$pathW) = split(/\t/,$line);
 			$path = $pathW;
 			$chrom = $chromW;
+			@segments = split(/[\>\<]/,$path);
 		}
 		elsif ($line =~/^P/){
 			my ($type,$strain_chrom,$pathP) = split(/\t/,$line);
 			my ($stra,$chromP) = split(/#/,$strain_chrom);
 			$path = $pathP;
 			$chrom = $chromP;
+			@segments = split(/,/,$path);
 		}
 		$chrom =~s/\.\d+$//g;
 		my @genes = split(/\|/,$coordinates{$chrom});
 		if ($coordinates{$chrom}){
-			my @segments = split(/,/,$path);
 			my $end_segment = 0;
 			my $start_segment = 0;
 			my $nb_gene = 0;
