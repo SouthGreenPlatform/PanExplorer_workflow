@@ -7,7 +7,7 @@ use Graph::Undirected;
 my $strain_info = $ARGV[0];
 my $bed_directory = $ARGV[1];
 my $PAV = $ARGV[2];
-my $threshold_coverage = 50;
+my $threshold_coverage = 30;
 
 my %strains;
 open(S,$strain_info);
