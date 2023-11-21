@@ -142,13 +142,13 @@ ANI values are calcultaed using FastANI software.
 
  <img src="images/fastani.out.svg" align="center" width="90%" style="display: block; margin: auto;"/>
  
-* Presence/absence matrix of accessory genes: outputs/heatmap.svg.complete.new.svg
+* **Presence/absence matrix of accessory genes**: outputs/heatmap.svg.complete.new.svg
 
 Both gene clusters and samples have been ordered using a Hierarchical Clustering.
  
  <img src="images/heatmap.svg.complete.new.svg" align="center" width="90%" style="display: block; margin: auto;"/>
 
-* Upset plot: outputs/upsetr.svg
+* **Upset plot**: outputs/upsetr.svg
 
 An Upset plot is an alternative to the Venn Diagram used to deal with more than 3 sets.
 The total size of each set is represented on the left barplot.
@@ -157,14 +157,11 @@ Each row corresponds to a possible intersection: the filled-in cells show which 
 
  <img src="images/upsetr.svg" align="center" width="90%" style="display: block; margin: auto;"/>
 
-* Rarefaction curve: outputs/rarefaction_curves.svg
+* **Rarefaction curve**: outputs/rarefaction_curves.svg
 
 The rarefaction curve (computed by micropan R package) is the cumulative number of gene clusters we can observe as more and more genomes are being considered.
 
  <img src="images/rarefaction_curves.svg" align="center" width="70%" style="display: block; margin: auto;"/>
-
-
-
  
 
 ## License
