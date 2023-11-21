@@ -120,6 +120,13 @@ singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s 
 
 ## Graphical outputs
 
+In case of a pangenome graph analysis with PGGB, you will obtain an additonnal vizualization of the graph (using ODGI)
+
+ <img src="images/all_genomes.fa.lay.draw.png" align="center" width="40%" style="display: block; margin: auto;"/>
+
+ <img src="images/all_genomes.fa.og.viz_multiqc.png" align="center" width="90%" style="display: block; margin: auto;"/>
+
+
 In all cases, you should a new directory named "outputs" containing all output files.
 
 This includes:
@@ -152,11 +159,7 @@ The rarefaction curve (computed by micropan R package) is the cumulative number 
 
  <img src="images/rarefaction_curves.svg" align="center" width="70%" style="display: block; margin: auto;"/>
 
-In case of a pangenome graph analysis with PGGB, you will obtain an additonnal vizualization of the graph (using ODGI)
 
- <img src="images/all_genomes.fa.og.viz_multiqc.png" align="center" width="90%" style="display: block; margin: auto;"/> 
-
- <img src="images/all_genomes.fa.lay.draw.png" align="center" width="90%" style="display: block; margin: auto;"/>
 
  
 
