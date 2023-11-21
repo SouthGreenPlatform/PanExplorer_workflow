@@ -124,18 +124,18 @@ In all cases, you should a new directory named "outputs" containing all output f
 
 In case of a pangenome graph analysis with PGGB, you will obtain vizualizations of the graph (using ODGI)
 
-* 2D graph visualization : outputs/pggb_out/all_genomes.fa.lay.draw.png
+* **2D graph visualization** : outputs/pggb_out/all_genomes.fa.lay.draw.png
 
  <img src="images/all_genomes.fa.lay.draw.png" align="center" width="40%" style="display: block; margin: auto;"/>
 
-* 1D graph visualization : outputs/pggb_out/all_genomes.fa.og.viz_multiqc.png
+* **1D graph visualization** : outputs/pggb_out/all_genomes.fa.og.viz_multiqc.png
 
  <img src="images/all_genomes.fa.og.viz_multiqc.png" align="center" width="90%" style="display: block; margin: auto;"/>
 
 
 In all cases, it also includes:
 
-* ANI (Average Nucleotide Identity) : outputs/fastani.out.svg
+* **ANI (Average Nucleotide Identity)** : outputs/fastani.out.svg
 
 The heatmap chart generated from distances calculated based on the ANI values. 
 ANI values are calcultaed using FastANI software.
