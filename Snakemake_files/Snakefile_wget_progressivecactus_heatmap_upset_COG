@@ -1,0 +1,189 @@
+import glob
+import os
+import shutil
+
+
+with open("genbank_ids") as f:
+ SAMPLES = f.read().splitlines()
+
+numsample=0
+with open("genbank_files") as f:
+    for line in f.readlines():
+        numsample=numsample+1
+        cmd = "grep 'ACCESSION' "+line
+        returned_value = subprocess.getoutput(cmd)
+        words = returned_value.split()
+        #SAMPLES.append(numsample)
+        SAMPLES.append(words[1])
+
+
+rule final:
+ input:
+  "outputs/GCskew.txt",
+  "outputs/progressive_cactus.gfa",
+  "outputs/progressive_cactus.gfa.png",
+  "outputs/pav_matrix.tsv",
+  "outputs/heatmap.svg.gz",
+  "outputs/cog_output.txt",
+  "outputs/fastani.out",
+  "outputs/rarefaction_curves.txt"
+
+
+rule wget:
+    input:
+        public_genomes="genbank_ids",
+        private_genomes="genbank_files"
+    output:
+        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gb", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.prt", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.nuc", sample=SAMPLES),
+        genomes="outputs/genomes/genomes.txt",
+        strains="outputs/genomes/strains.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/wget.pl {input.public_genomes} outputs/genomes {input.private_genomes}
+        """
+
+
+rule gcskew:
+    input:
+        "outputs/genomes/{sample}.fasta" 
+    output:
+        "outputs/genomes/{sample}.fasta.gcskew.txt"
+    shell:
+        """
+        python3 $PANEX_PATH/SkewIT/src/gcskew.py -i {input} -o {input}.gcskew.txt -k 1000 -w 1000
+        """ 
+
+rule concat_gcskew:
+    input:
+        expand("outputs/genomes/{sample}.fasta.gcskew.txt", sample=SAMPLES)
+    output:
+        out2="outputs/GCskew.txt"
+    shell:
+        """
+         cat {input} >>{output.out2}
+        """
+
+rule genbank2gff3:
+    input:
+        "outputs/genomes/{sample}.gb"
+    output:
+        gff1="outputs/genomes/{sample}.gb.gff",
+        gff2="outputs/genomes/{sample}.gb.rmdup.gff"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/bp_genbank2gff3.pl -o outputs/genomes {input}
+        perl $PANEX_PATH/Perl/remove_duplicates_in_gff.pl {output.gff1} {output.gff2}
+        """
+
+rule cactus:
+    input:
+        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gb.rmdup.gff", sample=SAMPLES),
+    output:
+        hal="outputs/progressive_cactus.hal",
+        vg="outputs/progressive_cactus.vg",
+        gfa="outputs/progressive_cactus.gfa",
+    shell:
+        """
+        cactus outputs/jobstore outputs/genomes/seqfile {output.hal}
+        hal2vg {output.hal} >{output.vg}
+        vg view {output.vg} >{output.gfa}
+        """
+
+rule create_gene_paths:
+    input:
+        gff="outputs/genomes/{sample}.gb.rmdup.gff",
+        gfa="outputs/progressive_cactus.gfa",
+    output:
+        basename="outputs/genomes/{sample}.gene_segments",
+        gene_length="outputs/genomes/{sample}.gene_segments.gene_length.txt",
+        bed="outputs/genomes/{sample}.gene_segments.bed",
+    shell:
+        """
+        perl $PANEX_PATH/Perl/CreateGenePathsFromGFA.pl {input.gfa} {input.gff} {output.basename}
+        """
+
+rule odgi:
+    input:
+        "outputs/progressive_cactus.gfa",
+    output:
+        og="outputs/progressive_cactus.gfa.og",
+        png="outputs/progressive_cactus.gfa.png",
+    shell:
+        """
+        odgi build -g {input} -o {output.og}     
+        odgi viz -i {output.og} -o {output.png}
+        """
+
+rule bedtools_intersect:
+    input:
+        strains="outputs/genomes/strains.txt",
+        bedfiles=expand("outputs/genomes/{sample}.gene_segments.bed", sample=SAMPLES)
+    output:
+        "outputs/pav_matrix.tsv",
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input.strains} outputs/genomes {output}
+        """
+
+
+rule cog:
+    input:
+        pav="outputs/pav_matrix.tsv"
+    output:
+        cog="outputs/cog_output.txt",
+        cogstat="outputs/cog_stats.txt",
+        cogstat2="outputs/cog_stats2.txt",
+        cogofclusters="outputs/cog_of_clusters.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} {output.cogstat2} {output.cogofclusters} outputs/genomes/strains.txt
+        """
+
+rule heatmap_upset:
+    input:
+        pav="outputs/pav_matrix.tsv"
+    output:
+        heatmap="outputs/heatmap.svg.gz",
+        html="outputs/heatmap.svg.heatmap_plotly.html",
+        upsetr="outputs/upsetr.svg",
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} outputs/heatmap.svg
+        mv outputs/heatmap.svg.upsetr.svg {output.upsetr}
+        """
+
+rule micropan:
+    input:
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
+    output:
+        txt="outputs/rarefaction_curves.txt",
+        pdf="outputs/rarefaction_curves.pdf",
+        svg="outputs/rarefaction_curves.svg",
+        heaps="outputs/heaps.tsv"
+    shell:
+        """
+        Rscript $PANEX_PATH/R/micropan_rarefaction.R -f {input.binpav} -p {output.pdf} -a {output.heaps} -o {output.txt}
+        pdf2svg {output.pdf} {output.svg}
+        """
+
+rule fastani:
+    input:
+        "outputs/genomes/genomes.txt"
+    output:
+        out="outputs/fastani.out",
+        matrix="outputs/fastani.out.matrix",
+        completematrix="outputs/fastani.out.matrix.complete",
+        pdf="outputs/fastani.out.pdf",
+        svg="outputs/fastani.out.svg"
+    shell:
+        """
+        fastANI --rl {input} --ql {input} -o {output.out} -t 4 --matrix
+        perl $PANEX_PATH/Perl/convertANI.pl {output.matrix} outputs/genomes/genomes2.txt >{output.completematrix}
+        Rscript $PANEX_PATH/R/heatmap_ani.R -f {output.completematrix} -o {output.pdf}
+        pdf2svg {output.pdf} {output.svg}
+        """
