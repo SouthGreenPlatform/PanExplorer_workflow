@@ -31,6 +31,7 @@ This singularity image (panexplorer.sif) already contains all dependencies requi
 - Panaroo
 - Panacota
 - Minigraph/cactus
+- PanGenome Graph Builder (PGGB)
 - ncbi-blast+ (version BLAST 2.4.0+)
 - R (version 4.2.0) and following packages:
   - optparse : ``install.packages("optparse")``
@@ -151,9 +152,11 @@ The rarefaction curve (computed by micropan R package) is the cumulative number 
 
  <img src="images/rarefaction_curves.svg" align="center" width="70%" style="display: block; margin: auto;"/>
 
-In case of a pangenome graph analysis, you will obtain an additonnal vizualization of the graph (using ODGI)
+In case of a pangenome graph analysis with PGGB, you will obtain an additonnal vizualization of the graph (using ODGI)
 
- <img src="images/NZ_CP033176.1.full.viz.png" align="center" width="90%" style="display: block; margin: auto;"/> 
+ <img src="images/all_genomes.fa.og.viz_multiqc.png" align="center" width="90%" style="display: block; margin: auto;"/> 
+
+ <img src="images/all_genomes.fa.lay.draw.png" align="center" width="90%" style="display: block; margin: auto;"/>
 
  
 
