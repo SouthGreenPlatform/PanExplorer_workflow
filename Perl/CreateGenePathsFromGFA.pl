@@ -21,7 +21,7 @@ while(<F>){
 		$line =~s/\n//g;$line =~s/\r//g;
 		my @infos = split(/\t/,$line);
 		#if ($infos[2] eq "gene" && /CITME_006g014440/){
-		if ($infos[2] eq "CDS" && /ID=([^;]+);/){
+		if ($infos[2] eq "CDS" && /Parent=([^;]+);*/){
 		#if ($infos[2] eq "exon" && /Parent=([^;]+)$/){
 			my $chr = $infos[0];
 			my $start = $infos[3];
