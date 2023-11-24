@@ -1,0 +1,125 @@
+import glob
+import os
+import shutil
+
+import yaml
+configfile: "config.yaml"
+
+
+# Globals ---------------------------------------------------------------------
+input_genome=config["input_genome"]
+list_genome=input_genome.keys() 
+
+path = "outputs/genomes"
+isExist = os.path.exists(path)
+if not isExist:
+   os.mkdir(path)
+
+SAMPLES = []
+
+with open("config.yaml", "r") as yaml_file: 
+    genome_data = yaml.safe_load(yaml_file)
+    for genome_name, genome_info in genome_data["input_genome"].items():
+        fasta_file = genome_info["fasta"]
+        gff_file = genome_info["gff3"]
+        name = genome_info["name"]
+        SAMPLES.append(name)
+
+
+rule all:
+    input:
+        "outputs/seqfile",
+        "outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+        "outputs/pav_matrix.tsv",
+        "outputs/heatmap.svg.gz",
+        "outputs/rarefaction_curves.txt"
+
+# Write input file for cactus-pangenome
+rule get_data:
+    input:
+        "config.yaml"   
+    output:
+        "outputs/seqfile",
+        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
+    run:
+        with open(input[0], "r") as yaml_file, open(output[0], "w") as output_file:
+            genome_data = yaml.safe_load(yaml_file)
+            for genome_name, genome_info in genome_data["input_genome"].items():
+                fasta_file = genome_info["fasta"]
+                name = genome_info["name"]
+                output_file.write(f"{genome_name}\t{genome_name}\t{fasta_file}\n")
+                cmd = "sed 's/>/>"+str(name)+"#/g' "+fasta_file+" >outputs/genomes/"+str(name)+".fasta"
+                os.system(cmd)
+                gff_file = genome_info["gff3"]
+                shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
+
+rule pggb:
+    input:
+        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
+    output:
+        gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+        png1="outputs/pggb_out/all_genomes.fa.lay.draw.png",
+        png2="outputs/pggb_out/all_genomes.fa.og.viz_multiqc.png",
+    shell:
+        """
+        cat outputs/genomes/*fasta >outputs/genomes/all_genomes.fa
+        samtools faidx outputs/genomes/all_genomes.fa
+        pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out
+        mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output.gfa}
+        mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
+        mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
+        """
+
+rule create_gene_paths:
+    input:
+        gff="outputs/genomes/{sample}.gff",
+        gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+    output:
+        basename="outputs/genomes/{sample}.gene_segments",
+        gene_length="outputs/genomes/{sample}.gene_segments.gene_length.txt",
+        bed="outputs/genomes/{sample}.gene_segments.bed",
+    shell:
+        """
+        perl $PANEX_PATH/Perl/CreateGenePathsFromGFA.pl {input.gfa} {input.gff} {output.basename}
+        """
+
+rule bedtools_intersect:
+    input:
+        samples="outputs/seqfile",
+        bedfiles=expand("outputs/genomes/{sample}.gene_segments.bed", sample=SAMPLES)
+    output:
+        "outputs/pav_matrix.tsv",
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input.samples} outputs/genomes {output}
+        """
+
+rule heatmap_upset:
+    input:
+        pav="outputs/pav_matrix.tsv"
+    output:
+        heatmap="outputs/heatmap.svg.gz",
+        html="outputs/heatmap.svg.heatmap_plotly.html",
+        upsetr="outputs/upsetr.svg",
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} outputs/heatmap.svg
+        mv outputs/heatmap.svg.upsetr.svg {output.upsetr}
+        """
+
+rule micropan:
+    input:
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
+    output:
+        txt="outputs/rarefaction_curves.txt",
+        pdf="outputs/rarefaction_curves.pdf",
+        svg="outputs/rarefaction_curves.svg",
+        heaps="outputs/heaps.tsv"
+    shell:
+        """
+        Rscript $PANEX_PATH/R/micropan_rarefaction.R -f {input.binpav} -p {output.pdf} -a {output.heaps} -o {output.txt}
+        pdf2svg {output.pdf} {output.svg}
+        """
