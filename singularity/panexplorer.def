@@ -107,6 +107,11 @@ From: debian:latest
     tar -xzvf OrthoFinder.tar.gz
     cp -rf OrthoFinder /usr/bin/
 
+    git clone https://github.com/gpertea/gffread
+    cd gffread
+    make release
+    cp -rf gffread /usr/bin/
+
     wget http://github.com/bbuchfink/diamond/releases/download/v2.1.8/diamond-linux64.tar.gz
     tar xzf diamond-linux64.tar.gz
     cp -rf ./diamond /usr/bin/OrthoFinder/bin/
@@ -151,8 +156,6 @@ From: debian:latest
     cp -rf  gfatools /usr/bin/
 
     conda install -y -c bioconda minimap2
-
-    conda install -y -c bioconda gffread
 
     #conda install -y -c bioconda liftoff
 
