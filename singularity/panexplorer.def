@@ -152,6 +152,7 @@ From: debian:latest
 
     conda install -y -c bioconda minimap2
 
+    conda install -y -c bioconda gffread
 
     #conda install -y -c bioconda liftoff
 
