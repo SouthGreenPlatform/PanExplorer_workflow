@@ -115,6 +115,8 @@ It's best not to mix NCBI genomes with your own annotated genomes, to avoid biai
 
 ## Run the workflow
 
+**For prokaryotes**
+
 Creating a pangenome using Roary
 
 ```
@@ -139,6 +141,13 @@ Creating a pangenome graph using PanGenomeGraph Builder (PGGB) and derived pange
 singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_pggb_heatmap_upset_COG
 ```
 
+**For eukaryotes**
+
+Creating a pangenome using Orthofinder
+
+```
+singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_orthofinder_heatmap_upset
+```
 
 ## Graphical outputs
 
