@@ -73,7 +73,6 @@ wget -P $PANEX_PATH/singularity https://panexplorer.southgreen.fr/singularity/pa
 ## Prepare your list of genomes to be analyzed
 
 Edit the configuration file config.yaml to list the Genbank identifiers of complete assembled and annotated genomes.
-The file should look like this
 ```
 #########################################################
 # Complete one of the following input data

@@ -35,7 +35,7 @@ rule ncbi_datasets:
     output:
         expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
         expand("outputs/genomes/{sample}.gb", sample=SAMPLES),
-        expand("outputs/genomes/{sample}.pep", sample=SAMPLES)
+        expand("outputs/genomes/{sample}.pep", sample=SAMPLES),
         genomes="outputs/genomes/genomes.txt"
     shell:
         """
