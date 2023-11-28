@@ -1,0 +1,107 @@
+import glob
+import os
+import shutil
+
+import yaml
+configfile: "config.yaml"
+
+SAMPLES = []
+with open("config.yaml", "r") as yaml_file:
+    genome_data = yaml.safe_load(yaml_file)
+    for genome_name, genome_info in genome_data["input_genomes"].items():
+        name = genome_info["name"]
+        SAMPLES.append(name) 
+
+
+
+rule final:
+ input:
+  expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+  expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
+  expand("outputs/genomes/{sample}.pep", sample=SAMPLES),
+  "outputs/pav_matrix.tsv",
+  "outputs/heatmap.svg.gz",
+  "outputs/rarefaction_curves.txt"
+
+rule get_data:
+    input:
+        "config.yaml"
+    output:
+        "outputs/genomes/strains.txt",
+        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
+    run:
+        with open(input[0], "r") as yaml_file, open(output[0], "w") as output_file:
+            genome_data = yaml.safe_load(yaml_file)
+            for genome_name, genome_info in genome_data["input_genomes"].items():
+                fasta_file = genome_info["fasta"]
+                name = genome_info["name"]
+                gff_file = genome_info["gff3"]
+                shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
+                shutil.copy(fasta_file, "outputs/genomes/"+str(name)+".fasta")
+                output_file.write(f"{name}\t{name}\n")
+
+rule gffread:
+    input:
+        fasta = "outputs/genomes/{sample}.fasta",
+        gff = "outputs/genomes/{sample}.gff"
+    output:
+        "outputs/genomes/{sample}.pep"
+    shell:
+        """
+        gffread -y {output} -g {input.fasta} {input.gff}
+        """
+
+rule orthofinder:
+    input:
+        expand("outputs/genomes/{sample}.pep", sample=SAMPLES)
+    params:
+        identity=80
+    output:
+        pav="outputs/Orthogroups.tsv"
+    shell:
+        """
+        mkdir -p outputs/proteomes
+        cp -rf outputs/genomes/*.pep outputs/proteomes
+        orthofinder -f outputs/proteomes
+        mv outputs/proteomes/OrthoFinder/R*/Orthogroups/Orthogroups.tsv outputs/Orthogroups.tsv
+        """
+
+rule convert_matrix:
+    input:
+        pav="outputs/Orthogroups.tsv"
+    output:
+        "outputs/pav_matrix.tsv"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/ConvertOrthofinderMatrix.pl outputs/genomes {input} {output} outputs/genomes/strains.txt
+        """
+
+rule heatmap_upset:
+    input:
+        pav="outputs/pav_matrix.tsv"
+    output:
+        heatmap="outputs/heatmap.svg.gz",
+        html="outputs/heatmap.svg.heatmap_plotly.html",
+        upsetr="outputs/upsetr.svg",
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} outputs/heatmap.svg
+        mv outputs/heatmap.svg.upsetr.svg {output.upsetr}
+        """
+
+rule micropan:
+    input:
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
+    output:
+        txt="outputs/rarefaction_curves.txt",
+        pdf="outputs/rarefaction_curves.pdf",
+        svg="outputs/rarefaction_curves.svg",
+        heaps="outputs/heaps.tsv"
+    shell:
+        """
+        Rscript $PANEX_PATH/R/micropan_rarefaction.R -f {input.binpav} -p {output.pdf} -a {output.heaps} -o {output.txt}
+        pdf2svg {output.pdf} {output.svg}
+        """
+
