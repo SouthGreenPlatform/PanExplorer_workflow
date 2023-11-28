@@ -72,21 +72,44 @@ wget -P $PANEX_PATH/singularity https://panexplorer.southgreen.fr/singularity/pa
 
 ## Prepare your list of genomes to be analyzed
 
-Edit a new file named "genbank_ids" listing the Genbank identifiers of complete assembled and annotated genomes.
+Edit the configuration file config.yaml to list the Genbank identifiers of complete assembled and annotated genomes.
 The file should look like this
 ```
-cat genbank_ids
-CP000235.1
-CP001759.1
-CP015994.2
-```
+#########################################################
+# Complete one of the following input data
+# Remove the other lines if not needed
+#########################################################
 
-Or edit another new file named "genbank_files" listing the path to your own assembled and annotated genomes.
-The file should look like this
-```
-cat genbank_files
-/home/myname/genbank_files_dir/CP006617.1.genbank.gb
-/home/myname/genbank_files_dir/CP001079.1.genbank.gb
+# Genbank accessions of assembly accession (GCA, GCF)
+ids:
+  - CP019090
+  - CP019092
+  - CP019085
+  - GCA_001042775.1
+  - GCA_001021915.1
+  - GCA_022406815.1
+
+# Path of genbank files
+input_genbanks:
+  - data/GCA_001518895.1.gb
+  - data/GCA_001746615.1.gb
+  - data/GCA_003382895.1.gb
+
+# Input genomes as fasta and annotation files in GFF format
+# Only applied when using Orthofinder or PGGB workflows
+input_genomes:
+  "GCA_001518895":
+    "fasta": "data/GCA_001518895.1.fasta"
+    "gff3": "data/GCA_001518895.1.gff3"
+    "name": "Xoo_PXO83"
+  "GCA_001746615":
+    "fasta": "data/GCA_001746615.1.fasta"
+    "gff3": "data/GCA_001746615.1.gff3"
+    "name": "Xoo_PXO145"
+  "GCA_003382895":
+    "fasta": "data/GCA_003382895.1.fasta"
+    "gff3": "data/GCA_003382895.1.gff3"
+    "name": "Xoo_PX079"
 ```
 
 It's best not to mix NCBI genomes with your own annotated genomes, to avoid biaises due to annotation method/software. Keep an homogeneous annotation procedure to feed the workflow.
