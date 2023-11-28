@@ -4,16 +4,22 @@ import shutil
 import re
 import subprocess
 
-with open("genbank_ids") as f:
- SAMPLES = f.read().splitlines()
+import yaml
+configfile: "config.yaml"
 
 
-with open("genbank_files") as f:
-    for line in f.readlines():
-        cmd = "grep 'ACCESSION' "+line
-        returned_value = subprocess.getoutput(cmd)
-        words = returned_value.split()
-        SAMPLES.append(words[1])
+SAMPLES = []
+with open("config.yaml", "r") as yaml_file:
+    genome_data = yaml.safe_load(yaml_file)
+    if "ids" in genome_data.keys():
+        for id in genome_data["ids"]:
+            SAMPLES.append(id)
+    if "input_genbanks" in genome_data.keys():
+        for gb_path in genome_data["input_genbanks"]:
+            cmd = "grep 'ACCESSION' "+gb_path
+            returned_value = subprocess.getoutput(cmd)
+            words = returned_value.split()
+            SAMPLES.append(words[1])
 
 
 rule final:
@@ -26,17 +32,17 @@ rule final:
   "outputs/fastani.out",
   "outputs/rarefaction_curves.txt"
 
-rule wget:
+
+rule ncbi_datasets:
     input:
-        public_genomes="genbank_ids",
-        private_genomes="genbank_files"
+        "config.yaml"
     output:
         expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
         expand("outputs/genomes/{sample}.gb", sample=SAMPLES),
         genomes="outputs/genomes/genomes.txt"
     shell:
         """
-        perl $PANEX_PATH/Perl/wget.pl {input.public_genomes} outputs/genomes {input.private_genomes}
+        perl $PANEX_PATH/Perl/get_data.pl {input} outputs/genomes
         """
 
 rule gcskew:
