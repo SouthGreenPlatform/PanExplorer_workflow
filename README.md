@@ -95,20 +95,21 @@ input_genbanks:
   - data/GCA_003382895.1.gb
 
 # Input genomes as fasta and annotation files in GFF format
-# Only applied when using Orthofinder or PGGB workflows
+# Only applied when using Orthofinder or PGGB workflows, starting from fasta and GFF
+# To be used preferentially for eukaryotes
 input_genomes:
-  "GCA_001518895":
-    "fasta": "data/GCA_001518895.1.fasta"
-    "gff3": "data/GCA_001518895.1.gff3"
-    "name": "Xoo_PXO83"
-  "GCA_001746615":
-    "fasta": "data/GCA_001746615.1.fasta"
-    "gff3": "data/GCA_001746615.1.gff3"
-    "name": "Xoo_PXO145"
-  "GCA_003382895":
-    "fasta": "data/GCA_003382895.1.fasta"
-    "gff3": "data/GCA_003382895.1.gff3"
-    "name": "Xoo_PX079"
+  "MSU7":
+    "fasta": "/share/banks/Oryza/sativa/japonica/MSU7/all.con"
+    "gff3": "/share/banks/Oryza/sativa/japonica/MSU7/all.gff3"
+    "name": "MSU7"
+  "kitaake":
+    "fasta": "/share/banks/Oryza/sativa/japonica/kitaake/Oryza_sativa_japonica_Kitaake.assembly.fna"
+    "gff3": "/share/banks/Oryza/sativa/japonica/kitaake/Oryza_sativa_japonica_Kitaake.gff3"
+    "name": "kitaake"
+  "nivara":
+    "fasta": "/share/banks/Oryza/nivara/Oryza_nivara.assembly.fna"
+    "gff3": "/share/banks/Oryza/nivara/Oryza_nivara.gff3"
+    "name": "nivara"
 ```
 
 It's best not to mix NCBI genomes with your own annotated genomes, to avoid biaises due to annotation method/software. Keep an homogeneous annotation procedure to feed the workflow.
