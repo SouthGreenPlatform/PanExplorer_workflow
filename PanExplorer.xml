@@ -12,21 +12,10 @@
 module load system/singularity/3.6.0;
 export PANEX_PATH=${__tool_directory__};
 
-touch genbank_files;
-touch genbank_ids;
-perl ${__tool_directory__}/Perl/generateConfig.pl $private_genomes genbank_files;
+perl ${__tool_directory__}/Perl/generateConfig.pl $private_genomes $input config.yaml;
 
+cat config.yaml >$logfile;
 
-#if $input==""
-touch genbank_ids;
-#else
-echo $input >genbank_ids;
-sed -i "s/,/\n/g" genbank_ids;
-sed -i "s/NZ_//g" genbank_ids;
-#end if
-
-cat genbank_ids >$logfile;
-cat genbank_files >>$logfile;
 
 
 #if $software=="pgap"
@@ -37,6 +26,8 @@ sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snak
 sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_orthofinder_heatmap_upset_COG >snakefile;
 #else if $software=="cactus"
 cp -rf \$PANEX_PATH/Snakemake_files/Snakefile_wget_cactus_heatmap_upset_COG2 snakefile;
+#else if $software=="pggb"
+cp -rf \$PANEX_PATH/Snakemake_files/Snakefile_wget_pggb_heatmap_upset_COG snakefile;
 #else
 sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG >snakefile;
 #end if
@@ -73,6 +64,7 @@ cp -rf outputs/heatmap.svg.complete.pdf.distance_matrix.hclust.newick $njtree;
     <option value="panacota">PanACoTA</option>
     <option value="orthofinder">OrthoFinder</option>
     <option value="cactus">Minigraph-Cactus</option>
+    <option value="pggb">PanGenome Graph Builder (PGGB)</option>
   </param>
  </inputs>
 
