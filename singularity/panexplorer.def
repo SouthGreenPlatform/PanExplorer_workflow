@@ -112,6 +112,10 @@ From: debian:latest
     make release
     cp -rf gffread /usr/bin/
 
+    curl -o datasets 'https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/v1/linux-amd64/datasets'
+    chmod +x datasets
+    cp -rf datasets /usr/bin/
+
     wget http://github.com/bbuchfink/diamond/releases/download/v2.1.8/diamond-linux64.tar.gz
     tar xzf diamond-linux64.tar.gz
     cp -rf ./diamond /usr/bin/OrthoFinder/bin/
