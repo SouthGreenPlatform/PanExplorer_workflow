@@ -6,22 +6,10 @@ import yaml
 configfile: "config.yaml"
 
 
-# Globals ---------------------------------------------------------------------
-input_genome=config["input_genome"]
-list_genome=input_genome.keys() 
-
-path = "outputs/genomes"
-isExist = os.path.exists(path)
-if not isExist:
-   os.mkdir(path)
-
 SAMPLES = []
-
-with open("config.yaml", "r") as yaml_file: 
+with open("config.yaml", "r") as yaml_file:
     genome_data = yaml.safe_load(yaml_file)
-    for genome_name, genome_info in genome_data["input_genome"].items():
-        fasta_file = genome_info["fasta"]
-        gff_file = genome_info["gff3"]
+    for genome_name, genome_info in genome_data["input_genomes"].items():
         name = genome_info["name"]
         SAMPLES.append(name)
 
@@ -34,7 +22,6 @@ rule all:
         "outputs/heatmap.svg.gz",
         "outputs/rarefaction_curves.txt"
 
-# Write input file for cactus-pangenome
 rule get_data:
     input:
         "config.yaml"   
@@ -45,7 +32,7 @@ rule get_data:
     run:
         with open(input[0], "r") as yaml_file, open(output[0], "w") as output_file:
             genome_data = yaml.safe_load(yaml_file)
-            for genome_name, genome_info in genome_data["input_genome"].items():
+            for genome_name, genome_info in genome_data["input_genomes"].items():
                 fasta_file = genome_info["fasta"]
                 name = genome_info["name"]
                 output_file.write(f"{genome_name}\t{genome_name}\t{fasta_file}\n")
