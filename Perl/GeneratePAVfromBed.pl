@@ -21,7 +21,7 @@ close(S);
 my %gene_lengths;
 foreach my $id(keys(%strains)){
 
-	my $gff = `ls $bed_directory/$id.gb.gff`;
+	my $gff = `ls $bed_directory/$id.*.gff`;
 	open(GFF,$gff);
 	my $current_gene_length;
 	while(my $line = <GFF>){
