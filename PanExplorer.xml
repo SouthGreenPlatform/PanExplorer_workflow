@@ -12,7 +12,7 @@
 module load system/singularity/3.6.0;
 export PANEX_PATH=${__tool_directory__};
 
-perl ${__tool_directory__}/Perl/generateConfig.pl $private_genomes $input config.yaml;
+perl ${__tool_directory__}/Perl/generateConfig.pl '$private_genomes' '$input' config.yaml;
 
 cat config.yaml >$logfile;
 
