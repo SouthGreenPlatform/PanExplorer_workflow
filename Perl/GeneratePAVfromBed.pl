@@ -20,26 +20,47 @@ close(S);
 
 my %gene_lengths;
 foreach my $id(keys(%strains)){
-	my $f = "$bed_directory/$id.gene_segments.gene_length.txt";
-	open(F,$f);
-	while(my $line =<F>){
+
+	my $gff = `ls $bed_directory/$id.gb.gff`;
+	open(GFF,$gff);
+	my $current_gene_length;
+	while(my $line = <GFF>){
 		chomp($line);
-		my ($gene,$length) = split(/\t/,$line);
-		$gene_lengths{$id}{$gene} = $length;
+		my @infos = split(/\t/,$line);
+		if ($infos[2] eq "gene" && $line =~/ID=([^;]+);*/){
+			my $chr = $infos[0];
+			my $start = $infos[3];
+			my $end = $infos[4];
+			my $gene = $1;
+			my $genelength = $end-$start;
+			$current_gene_length = $genelength;
+			$gene_lengths{$id}{$gene} = $genelength;
+		}
+		if ($infos[2] eq "CDS" && $line =~/Parent=([^;]+);*/){
+			my $gene = $1;
+			$gene_lengths{$id}{$gene} = $current_gene_length;
+			if ($line =~/protein_id=([^;]+);/){
+				$gene = $1;
+				$gene_lengths{$id}{$gene} = $current_gene_length;
+			}
+		}
 	}
-	close(F);	
+	close(GFF);
 }
+
+
 
 
 my %genes;
 my $graph = Graph::Undirected->new;
 my $num = 0;
 foreach my $id(keys(%strains)){
-	my $file = "$bed_directory/$id.gene_segments.bed";
+
+	my $file = `ls $bed_directory/$id.*.bed`;
+	chomp($file);
 	open(B,$file);
-	while(<B>){
-		my $line = $_;
-		$line =~s/\n//g;$line =~s/\r//g;
+	while(my $line = <B>){
+		chomp($line);
 		my @infos = split(/\t/,$line);
 		my $gene1 = $infos[3];
 		$genes{"$id:$gene1"} = 1;
@@ -47,7 +68,8 @@ foreach my $id(keys(%strains)){
 	close(B);
 
 	foreach my $id2(keys(%strains)){
-		my $file2 = "$bed_directory/$id2.gene_segments.bed";
+		my $file2 = `ls $bed_directory/$id2.*.bed`;
+		chomp($file2);
 		if (-e $file && -e $file2 && $file ne $file2){
 			$num++;
 			system("bedtools intersect -a $file -b $file2 -wo >$PAV.$num.intersect.out");
@@ -61,6 +83,8 @@ foreach my $id(keys(%strains)){
 				$cumul_match{"$gene1;$gene2"}+=$size_overlap;
 			}
 			close(INTER);
+
+			unlink("$PAV.$num.intersect.out");
 
 			foreach my $pair(keys(%cumul_match)){
 				my $size1 = $cumul_match{$pair};
