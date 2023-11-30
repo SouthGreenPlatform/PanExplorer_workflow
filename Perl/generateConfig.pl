@@ -26,18 +26,21 @@ if ($zip ne "None"){
 	my $head = `head -1 $zip`;
 	if ($head =~/LOCUS/){
 		push @{$data{"input_genbanks"}}, "$zip";
-		exit;
 	}
-	system("cp -rf $zip ./genomes.zip");
-	system("unzip genomes.zip");
-	unlink("genomes.zip");
-	open(LS,"ls |");
-	while(my $line = <LS>){
-		chomp($line);
-		my $concat = "$zip.genomeszip/".$line;
-		push @{$data{"input_genbanks"}}, "$concat";
+	else{
+		system("cp -rf $zip ./genomes.zip");
+		system("unzip genomes.zip");
+		unlink("genomes.zip");
+		open(LS,"ls |");
+		while(my $line = <LS>){
+			chomp($line);
+			my $concat = "$zip.genomeszip/".$line;
+			if ($concat =~/\w+/){
+				push @{$data{"input_genbanks"}}, "$concat";
+			}
+		}
+		close(LS);
 	}
-	close(LS);
 }
 #else{
 #	push @{$data{"input_genbanks"}}, "";
