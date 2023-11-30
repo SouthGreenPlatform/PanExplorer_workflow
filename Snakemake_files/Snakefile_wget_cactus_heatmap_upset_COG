@@ -76,17 +76,15 @@ rule genbank2gff3:
         "outputs/genomes/{sample}.gb"
     output:
         gff1="outputs/genomes/{sample}.gb.gff",
-        gff2="outputs/genomes/{sample}.gb.rmdup.gff"
     shell:
         """
         perl $PANEX_PATH/Perl/bp_genbank2gff3.pl -o outputs/genomes {input}
-        perl $PANEX_PATH/Perl/remove_duplicates_in_gff.pl {output.gff1} {output.gff2}
         """
 
 rule cactus:
     input:
         expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
-        expand("outputs/genomes/{sample}.gb.rmdup.gff", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gb.gff", sample=SAMPLES),
     params:
         reference=SAMPLES[0]
     output:
@@ -98,6 +96,9 @@ rule cactus:
         cactus-pangenome outputs/jobstore outputs/genomes/seqfile --outDir outputs/cactus_outdir --outName output_cactus --reference {params.reference} --workDir outputs/cactus_work --vcf --mapCores 12 --gfa clip full --viz
         zcat outputs/cactus_outdir/output_cactus.full.gfa.gz >{output.gfafull}
         """
+
+
+
 
 rule gfatools:
     input:
