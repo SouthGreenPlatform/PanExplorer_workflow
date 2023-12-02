@@ -1,0 +1,152 @@
+import glob
+import os
+import shutil
+
+import yaml
+configfile: "config.yaml"
+
+
+SAMPLES = []
+with open("config.yaml", "r") as yaml_file:
+    genome_data = yaml.safe_load(yaml_file)
+    for genome_name, genome_info in genome_data["input_genomes"].items():
+        name = genome_info["name"]
+        SAMPLES.append(name)
+
+
+rule all:
+    input:
+        "outputs/seqfile",
+        "outputs/cactus_outdir/output_cactus.sv.gfa.gz",
+        "outputs/pav_matrix.tsv",
+        "outputs/heatmap.svg.gz",
+        "outputs/rarefaction_curves.txt"
+
+rule get_data:
+    input:
+        "config.yaml"
+    output:
+        "outputs/seqfile",
+        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
+    run:
+        with open(input[0], "r") as yaml_file, open(output[0], "w") as output_file:
+            genome_data = yaml.safe_load(yaml_file)
+            for genome_name, genome_info in genome_data["input_genomes"].items():
+                fasta_file = genome_info["fasta"]
+                name = genome_info["name"]
+                gff_file = genome_info["gff3"]
+                shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
+                shutil.copy(fasta_file, "outputs/genomes/"+str(name)+".fasta")
+                output_file.write(f"{genome_name}\toutputs/genomes/"+str(name)+".fasta\n")
+
+
+rule gffread:
+    input:
+        fasta = "outputs/genomes/{sample}.fasta",
+        gff = "outputs/genomes/{sample}.gff"
+    output:
+        "outputs/genomes/{sample}.nuc"
+    shell:
+        """
+        gffread -x {output} -g {input.fasta} {input.gff}
+        """
+
+rule cactus:
+    input:
+        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
+    params:
+        reference=SAMPLES[0]
+    output:
+        gfasv="outputs/cactus_outdir/output_cactus.sv.gfa.gz",
+        gfafull="outputs/cactus_outdir/full.gfa"
+    shell:
+        """
+        mkdir outputs/cactus_work
+        cactus-pangenome outputs/jobstore outputs/seqfile --outDir outputs/cactus_outdir --outName output_cactus --reference {params.reference} --workDir outputs/cactus_work --vcf --mapCores 12 --gfa clip full --viz
+        zcat outputs/cactus_outdir/output_cactus.full.gfa.gz >{output.gfafull}
+        """
+
+
+rule gfatools:
+    input:
+        "outputs/cactus_outdir/output_cactus.sv.gfa.gz"
+    output:
+        "outputs/cactus_outdir/output_cactus.sv.gfa.pangenome.fasta"
+    shell:
+        """
+        gfatools gfa2fa -s {input} > {output}
+        """
+
+rule minigraph:
+    input:
+        cds_fasta="outputs/genomes/{sample}.nuc",
+        gfa="outputs/cactus_outdir/output_cactus.sv.gfa.gz",
+    output:
+        gaf="outputs/genomes/{sample}.nuc.pangenome.gaf",
+    shell:
+        """
+        minigraph -x lr {input.gfa} {input.cds_fasta} > {output.gaf}
+        """
+
+rule odgi:
+    input:
+        "outputs/cactus_outdir/full.gfa"
+    output:
+        og="outputs/cactus_outdir/full.gfa.og",
+        png="outputs/cactus_outdir/full.gfa.png",
+    shell:
+        """
+        odgi build -g {input} -o {output.og}
+        odgi viz -i {output.og} -o {output.png}
+        """
+
+rule gaf2bed:
+    input:
+        "outputs/genomes/{sample}.nuc.pangenome.gaf"
+    output:
+        "outputs/genomes/{sample}.nuc.pangenome.gaf.bed",
+    shell:
+        """
+        awk '{{print $6"\\t"$8"\\t"$9"\\t"$1}}' {input} >{output}
+        """
+
+rule bedtools_intersect:
+    input:
+        strains="outputs/seqfile",
+        bedfiles=expand("outputs/genomes/{sample}.nuc.pangenome.gaf.bed", sample=SAMPLES)
+    output:
+        "outputs/pav_matrix.tsv",
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input.strains} outputs/genomes {output}
+        """
+
+rule heatmap_upset:
+    input:
+        pav="outputs/pav_matrix.tsv"
+    output:
+        heatmap="outputs/heatmap.svg.gz",
+        html="outputs/heatmap.svg.heatmap_plotly.html",
+        upsetr="outputs/upsetr.svg",
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} outputs/heatmap.svg
+        mv outputs/heatmap.svg.upsetr.svg {output.upsetr}
+        """
+
+rule micropan:
+    input:
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
+    output:
+        txt="outputs/rarefaction_curves.txt",
+        pdf="outputs/rarefaction_curves.pdf",
+        svg="outputs/rarefaction_curves.svg",
+        heaps="outputs/heaps.tsv"
+    shell:
+        """
+        Rscript $PANEX_PATH/R/micropan_rarefaction.R -f {input.binpav} -p {output.pdf} -a {output.heaps} -o {output.txt}
+        pdf2svg {output.pdf} {output.svg}
+        """
