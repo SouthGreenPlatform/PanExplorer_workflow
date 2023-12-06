@@ -5,8 +5,9 @@ use strict;
 my $pav = $ARGV[0];
 my $ref = $ARGV[1];
 my $strain_info = $ARGV[2];
-my $gff_dir = $ARGV[3];
+my $gff = $ARGV[3];
 my $ordering = $ARGV[4];
+my $outfile = $ARGV[5];
 
 my $circos_exe = "circos/bin/circos";
 #my $circos_exe = "circos";
@@ -82,8 +83,8 @@ while(my $sample_name = <O>){
 	my $sample_id = $metadata{$sample_name};
 	print "$sample_name $sample_id\n";
 	my $ref_id = $metadata{$ref};
-	open(GFF,"$gff_dir/$ref_id.gb.gff");
-	open(CIRCOS_TRACK,">$gff_dir/$sample_id.circos.heatmap.txt");
+	open(GFF,$gff);
+	open(CIRCOS_TRACK,">$outfile.$sample_id.circos.heatmap.txt");
 	my $current_start;
 	my $current_stop;
 	my $current_chrom;
@@ -95,7 +96,7 @@ while(my $sample_name = <O>){
 	$r1_final.="r";	
 	$highlight_block .= qq~
 <highlight>
-file       = $gff_dir/$sample_id.circos.heatmap.txt
+file       = $outfile.$sample_id.circos.heatmap.txt
 r0         = $r0
 r1         = $r1_final
 </highlight>
@@ -131,7 +132,7 @@ r1         = $r1_final
 	close(GFF);
 	close(CIRCOS_TRACK);
 }
-open(KARYOTYPE,">$gff_dir/karyotype.txt");
+open(KARYOTYPE,">$outfile.karyotype.txt");
 foreach my $chr(keys(%max_position)){
 	my $max = $max_position{$chr};
 	print KARYOTYPE "chr - $chr 1 0 $max black";
@@ -139,12 +140,14 @@ foreach my $chr(keys(%max_position)){
 close(KARYOTYPE);
 
 open(F,"circos_templates/circos1.conf");
-open(CIRCOS_CONF,">$gff_dir/circos1.conf");
+open(CIRCOS_CONF,">$outfile.circos1.conf");
 while(<F>){
 	if (/HIGHLIGHT_BLOCK/){print CIRCOS_CONF $highlight_block;}
+	elsif (/KARYOTYPE_PATH/){print CIRCOS_CONF "karyotype = $outfile.karyotype.txt\n";}
+	elsif (/OUTPUT_PNG/){print CIRCOS_CONF "file  = $outfile\n";}
 	else{print CIRCOS_CONF $_;}
 }
 close(F);
 close(CIRCOS_CONF);
 
-system("$circos_exe -conf $gff_dir/circos1.conf");
+system("$circos_exe -conf $outfile.circos1.conf");
