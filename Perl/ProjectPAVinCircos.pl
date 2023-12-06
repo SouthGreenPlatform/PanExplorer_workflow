@@ -116,6 +116,7 @@ r1         = $r1_final
 			my $genelength = $end-$start;
 			my $gene_complete = $sample_name.":".$gene;
 			if ($hash_presence{$gene}{$sample_name}){
+				print CIRCOS_TRACK "$current_chrom $current_start $current_stop fill_color=red\n";
 			}	
 		}
 		if ($infos[2] eq "CDS" && $line =~/Parent=([^;]+);*/){
