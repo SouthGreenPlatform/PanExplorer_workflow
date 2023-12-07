@@ -26,7 +26,6 @@ rule final:
   "outputs/pav_matrix.tsv",
   "outputs/heatmap.svg.gz",
   "outputs/cog_output.txt",
-  "outputs/fastani.out",
   "outputs/rarefaction_curves.txt"
 
 
@@ -95,6 +94,19 @@ rule pggb:
         mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
         """
 
+rule odgi:
+    input:
+        gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+    output:
+        og="outputs/pggb_out/all_genomes.fa.smooth.final.gfa.og",
+        distance="outputs/pggb_out/all_genomes.fa.smooth.final.gfa.og.distance",
+    shell:
+        """
+        odgi build -g {input} -o {output.og} 
+        odgi similarity -i {output.og} -d >{output.distance}
+        """
+
+
 rule create_gene_paths:
     input:
         gff="outputs/genomes/{sample}.gb.rmdup.gff",
@@ -158,22 +170,5 @@ rule micropan:
     shell:
         """
         Rscript $PANEX_PATH/R/micropan_rarefaction.R -f {input.binpav} -p {output.pdf} -a {output.heaps} -o {output.txt}
-        pdf2svg {output.pdf} {output.svg}
-        """
-
-rule fastani:
-    input:
-        "outputs/genomes/genomes.txt"
-    output:
-        out="outputs/fastani.out",
-        matrix="outputs/fastani.out.matrix",
-        completematrix="outputs/fastani.out.matrix.complete",
-        pdf="outputs/fastani.out.pdf",
-        svg="outputs/fastani.out.svg"
-    shell:
-        """
-        fastANI --rl {input} --ql {input} -o {output.out} -t 4 --matrix
-        perl $PANEX_PATH/Perl/convertANI.pl {output.matrix} outputs/genomes/genomes2.txt >{output.completematrix}
-        Rscript $PANEX_PATH/R/heatmap_ani.R -f {output.completematrix} -o {output.pdf}
         pdf2svg {output.pdf} {output.svg}
         """

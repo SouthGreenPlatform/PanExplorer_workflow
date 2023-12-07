@@ -31,7 +31,6 @@ rule final:
   "outputs/pav_matrix.tsv",
   "outputs/heatmap.svg.gz",
   "outputs/cog_output.txt",
-  "outputs/fastani.out",
   "outputs/rarefaction_curves.txt"
 
 
@@ -193,22 +192,5 @@ rule micropan:
     shell:
         """
         Rscript $PANEX_PATH/R/micropan_rarefaction.R -f {input.binpav} -p {output.pdf} -a {output.heaps} -o {output.txt}
-        pdf2svg {output.pdf} {output.svg}
-        """
-
-rule fastani:
-    input:
-        "outputs/genomes/genomes.txt"
-    output:
-        out="outputs/fastani.out",
-        matrix="outputs/fastani.out.matrix",
-        completematrix="outputs/fastani.out.matrix.complete",
-        pdf="outputs/fastani.out.pdf",
-        svg="outputs/fastani.out.svg"
-    shell:
-        """
-        fastANI --rl {input} --ql {input} -o {output.out} -t 4 --matrix
-        perl $PANEX_PATH/Perl/convertANI.pl {output.matrix} outputs/genomes/genomes2.txt >{output.completematrix}
-        Rscript $PANEX_PATH/R/heatmap_ani.R -f {output.completematrix} -o {output.pdf}
         pdf2svg {output.pdf} {output.svg}
         """
