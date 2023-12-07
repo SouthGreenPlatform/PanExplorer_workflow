@@ -41,11 +41,10 @@ foreach my $id(keys(%strains)){
 			my $start = $infos[3];
 			my $end = $infos[4];
 			my $genelength = $end-$start;
-			$current_gene_length = $genelength;
-			$gene_lengths{$id}{$gene} = $current_gene_length;
+			$gene_lengths{$id}{$gene} += $genelength;
 			if ($line =~/protein_id=([^;]+);/){
 				$gene = $1;
-				$gene_lengths{$id}{$gene} = $current_gene_length;
+				$gene_lengths{$id}{$gene} += $genelength;
 			}
 		}
 	}
