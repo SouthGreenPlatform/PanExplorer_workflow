@@ -38,6 +38,10 @@ foreach my $id(keys(%strains)){
 		}
 		if ($infos[2] eq "CDS" && $line =~/Parent=([^;]+);*/){
 			my $gene = $1;
+			my $start = $infos[3];
+			my $end = $infos[4];
+			my $genelength = $end-$start;
+			$current_gene_length = $genelength;
 			$gene_lengths{$id}{$gene} = $current_gene_length;
 			if ($line =~/protein_id=([^;]+);/){
 				$gene = $1;
