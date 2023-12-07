@@ -38,8 +38,8 @@ if ($hashtable{"input_genbanks"}){
 	foreach my $gb(@gbs){
         	print LIST "$gb\n";
 	}
-	close(LIST);
 }
+close(LIST);
 
 
 system("wget https://ftp.ncbi.nlm.nih.gov/genomes/GENOME_REPORTS/prokaryotes.txt");
@@ -69,6 +69,12 @@ while(my $line =<F>){
 		#print "$genbank $line aaa $grep\n";exit;
 		my @infos = split(/\t/,$grep);
 	        my $status = $infos[15];
+		my $assembly_accession = $infos[18];
+
+		if (!$assembly_accession){
+			$assembly_accession = $genbank;
+		}
+
         	if ($status !~/Complete Genome/ && $status !~/Chromosome/){
 	                #next;
         	}
@@ -83,10 +89,16 @@ while(my $line =<F>){
         	my $genome_fasta = "$ftp_path/$name"."_genomic.fna.gz";
 	        my @particules = split(/_/,$name);
 
-        	`wget -O $outdir/$genbank.fasta.gz $genome_fasta`;
-		`gunzip $outdir/$genbank.fasta.gz`;
-		`wget -O $outdir/$genbank.gb.gz $gbff`;
-	        system("gunzip $outdir/$genbank.gb.gz");
+		system("datasets download genome accession --include-gbff --filename $outdir/$assembly_accession.zip $assembly_accession");
+		system("unzip -o $outdir/$assembly_accession.zip");
+		system("cp -rf ncbi_dataset/data/$assembly_accession/$assembly_accession*genomic.fna $outdir/$genbank.fasta");
+		system("cp -rf ncbi_dataset/data/$assembly_accession/genomic.gbff $outdir/$genbank.gb");
+
+
+        	#`wget -O $outdir/$genbank.fasta.gz $genome_fasta`;
+		#`gunzip $outdir/$genbank.fasta.gz`;
+		#`wget -O $outdir/$genbank.gb.gz $gbff`;
+	        #system("gunzip $outdir/$genbank.gb.gz");
 
 
 		################################################################
