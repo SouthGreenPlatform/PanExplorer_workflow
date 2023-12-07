@@ -89,16 +89,16 @@ while(my $line =<F>){
         	my $genome_fasta = "$ftp_path/$name"."_genomic.fna.gz";
 	        my @particules = split(/_/,$name);
 
-		system("datasets download genome accession --include-gbff --filename $outdir/$assembly_accession.zip $assembly_accession");
-		system("unzip -o $outdir/$assembly_accession.zip");
-		system("cp -rf ncbi_dataset/data/$assembly_accession/$assembly_accession*genomic.fna $outdir/$genbank.fasta");
-		system("cp -rf ncbi_dataset/data/$assembly_accession/genomic.gbff $outdir/$genbank.gb");
+		#system("datasets download genome accession --include-gbff --filename $outdir/$assembly_accession.zip $assembly_accession");
+		#system("unzip -o $outdir/$assembly_accession.zip");
+		#system("cp -rf ncbi_dataset/data/$assembly_accession/$assembly_accession*genomic.fna $outdir/$genbank.fasta");
+		#system("cp -rf ncbi_dataset/data/$assembly_accession/genomic.gbff $outdir/$genbank.gb");
 
 
-        	#`wget -O $outdir/$genbank.fasta.gz $genome_fasta`;
-		#`gunzip $outdir/$genbank.fasta.gz`;
-		#`wget -O $outdir/$genbank.gb.gz $gbff`;
-	        #system("gunzip $outdir/$genbank.gb.gz");
+        	`wget -O $outdir/$genbank.fasta.gz $genome_fasta`;
+		`gunzip $outdir/$genbank.fasta.gz`;
+		`wget -O $outdir/$genbank.gb.gz $gbff`;
+	        system("gunzip $outdir/$genbank.gb.gz");
 
 
 		################################################################
