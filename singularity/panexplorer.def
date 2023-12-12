@@ -11,7 +11,7 @@ From: debian:latest
 %post
     echo "Hello from inside the container"
     apt-get update
-    apt-get install -y bash wget r-base-core r-cran-svglite r-cran-upsetr r-cran-optparse r-cran-dendextend r-cran-gplots r-bioc-ctc ncbi-blast+ ncbi-blast+-legacy roary prokka snakemake python3 cd-hit mafft mcl phylip python3-pip libstatistics-linefit-perl bioperl libstatistics-distributions-perl pdf2svg python3-biopython r-cran-heatmaply python3-pandas python3-numpy python3-seaborn python3-xarray python3-plotly pipx autoconf libgsl-dev fastani python3-virtualenv cmake samtools curl make g++-11 pybind11-dev libbz2-dev bc libatomic-ops-dev autoconf libgsl-dev zlib1g-dev libzstd-dev libjemalloc-dev libhts-dev build-essential pkg-config time pigz bcftools libcairo2-dev unzip parallel
+    apt-get install -y bash wget r-base-core r-cran-svglite r-cran-upsetr r-cran-optparse r-cran-dendextend r-cran-gplots r-bioc-ctc ncbi-blast+ ncbi-blast+-legacy roary prokka snakemake python3 cd-hit mafft mcl phylip python3-pip libstatistics-linefit-perl bioperl libstatistics-distributions-perl pdf2svg python3-biopython r-cran-heatmaply python3-pandas python3-numpy python3-seaborn python3-xarray python3-plotly pipx autoconf libgsl-dev fastani python3-virtualenv cmake samtools curl make g++-11 pybind11-dev libbz2-dev bc libatomic-ops-dev autoconf libgsl-dev zlib1g-dev libzstd-dev libjemalloc-dev libhts-dev build-essential pkg-config time pigz bcftools libcairo2-dev unzip parallel circos multiqc
 
     wget https://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh
     chmod +x Miniconda3-py38_4.8.3-Linux-x86_64.sh
@@ -58,7 +58,9 @@ From: debian:latest
 
     git clone https://github.com/marschall-lab/GFAffix.git     && cd GFAffix     && git pull     && git checkout d630eb7d9827340f5f292e57cb3cb5e31e6f86f0     && cargo install --force --path .     && mv /root/.cargo/bin/gfaffix /usr/local/bin/gfaffix     && cd ../     && rm -rf GFAffix # buildkit
 
-    pipx install multiqc==1.16 # buildkit
+#    pipx install multiqc==1.16 # buildkit
+#    cp -rf /root/.local/bin/multiqc /usr/local/bin
+#    chmod 777 /usr/local/bin/multiqc
 
     wget https://github.com/vgteam/vg/releases/download/v1.52.0/vg && chmod +x vg && mv vg /usr/local/bin/vg # buildkit
 
@@ -161,6 +163,7 @@ From: debian:latest
 
     conda install -y -c bioconda minimap2
 
+
     #conda install -y -c bioconda liftoff
 
     #git clone https://github.com/agshumate/Liftoff liftoff 
@@ -183,6 +186,12 @@ From: debian:latest
     cd ..
     cp -rf cactus-bin-v2.6.9 /usr/bin/
     chmod -R 777 /usr/bin/cactus-bin-v2.6.9
+
+    git clone https://github.com/vigsterkr/circos.git
+    cd circos
+    ./install-unix
+    cd ..
+    cp -rf circos /usr/local/bin/
 
     #wget https://github.com/ParBLiSS/FastANI/archive/master.zip
     #unzip master.zip
@@ -207,6 +216,6 @@ From: debian:latest
 #    conda install -c bioconda orthofinder
 
 %environment
-    export PATH=$PATH:/usr/games:/usr/bin/OrthoFinder:/usr/bin/OrthoFinder/bin:/usr/bin/cactus-bin-v2.6.9/bin:/usr/bin/cactus-bin-v2.6.9/venv-cactus-v2.6.9/bin
+    export PATH=$PATH:/usr/games:/usr/bin/OrthoFinder:/usr/bin/OrthoFinder/bin:/usr/bin/cactus-bin-v2.6.9/bin:/usr/bin/cactus-bin-v2.6.9/venv-cactus-v2.6.9/bin:/usr/local/bin/circos/bin
     export PYTHONPATH=$PYTHONPATH:/usr/bin/cactus-bin-v2.6.9/lib
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
