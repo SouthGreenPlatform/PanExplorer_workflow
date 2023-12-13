@@ -2,60 +2,43 @@ import glob
 import os
 import shutil
 
-with open("genbank_ids") as f:
- SAMPLES = f.read().splitlines()
+import yaml
+configfile: "config.yaml"
 
-numsample=0
-with open("genbank_files") as f:
-    for line in f.readlines():
-        numsample=numsample+1
-        cmd = "grep 'ACCESSION' "+line
-        returned_value = subprocess.getoutput(cmd)
-        words = returned_value.split()
-        #SAMPLES.append(numsample)
-        SAMPLES.append(words[1])
-
+SAMPLES = []
+with open("config.yaml", "r") as yaml_file:
+    genome_data = yaml.safe_load(yaml_file)
+    if "ids" in genome_data.keys():
+        for id in genome_data["ids"]:
+            SAMPLES.append(id)
+    if "input_genbanks" in genome_data.keys():
+        for gb_path in genome_data["input_genbanks"]:
+            cmd = "grep 'ACCESSION' "+gb_path
+            returned_value = subprocess.getoutput(cmd)
+            words = returned_value.split()
+            SAMPLES.append(words[1])
 
 rule final:
  input:
-  "outputs/GCskew.txt",
   "outputs/pav_matrix.tsv",
   "outputs/heatmap.svg",
-  "outputs/cog_output.txt"
+  "outputs/rarefaction_curves.txt"
 
-rule wget:
+
+rule ncbi_datasets:
     input:
-        public_genomes="genbank_ids",
-        private_genomes="genbank_files"
+        "config.yaml"
     output:
         expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
         expand("outputs/genomes/{sample}.gb", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.prt", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.nuc", sample=SAMPLES),
         expand("outputs/genomes/{sample}.pep", sample=SAMPLES),
-        expand("outputs/genomes/{sample}.prt", sample=SAMPLES)
+        genomes="outputs/genomes/genomes.txt",
+        strains="outputs/genomes/strains.txt"
     shell:
         """
-        perl $PANEX_PATH/Perl/wget.pl {input.public_genomes} outputs/genomes {input.private_genomes}
-        """
-
-
-rule gcskew:
-    input:
-        "outputs/genomes/{sample}.fasta"
-    output:
-        "outputs/genomes/{sample}.fasta.gcskew.txt"
-    shell:
-        """
-        python3 $PANEX_PATH/SkewIT/src/gcskew.py -i {input} -o {input}.gcskew.txt -k 1000 -w 1000
-        """
-
-rule concat_gcskew:
-    input:
-        expand("outputs/genomes/{sample}.fasta.gcskew.txt", sample=SAMPLES)
-    output:
-        out2="outputs/GCskew.txt"
-    shell:
-        """
-         cat {input} >>{output.out2}
+        perl $PANEX_PATH/Perl/get_data.pl {input} outputs/genomes
         """
 
 rule genbank2gff3:
