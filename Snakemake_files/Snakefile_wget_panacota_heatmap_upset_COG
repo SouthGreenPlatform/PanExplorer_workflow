@@ -79,7 +79,8 @@ rule genbank2gff3:
 
 rule panacota:
     input:
-        expand("outputs/genomes/{sample}.prt", sample=SAMPLES)
+        expand("outputs/genomes/{sample}.prt", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gb.gff", sample=SAMPLES)
     output:
         pav="outputs/panacota/PanGenome-mydataset.All.prt.lst"
     params:
