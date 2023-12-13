@@ -42,10 +42,6 @@ if ($hashtable{"input_genbanks"}){
 close(LIST);
 
 
-system("wget https://ftp.ncbi.nlm.nih.gov/genomes/GENOME_REPORTS/prokaryotes.txt");
-system("wget https://ftp.ncbi.nlm.nih.gov/genomes/GENOME_REPORTS/eukaryotes.txt");
-
-#system("cat $input $private_genomes >$outdir/list.txt");
 
 my $concat = "";
 open(O2,">$outdir/genbanks.txt");
@@ -65,76 +61,14 @@ while(my $line =<F>){
 	chomp($line);
 	my $genbank = $line;
 	if (!-e "$genbank"){
-		my $grep = `grep '$line' prokaryotes.txt`;
-		#print "$genbank $line aaa $grep\n";exit;
-		my @infos = split(/\t/,$grep);
-	        my $status = $infos[15];
-		my $assembly_accession = $infos[18];
 
-		if (!$assembly_accession){
-			$assembly_accession = $genbank;
-		}
-
-        	if ($status !~/Complete Genome/ && $status !~/Chromosome/){
-	                #next;
-        	}
-	        my $ftp_path = $infos[$#infos -2];
-
-        	$ftp_path =~s/ftp:/http:/g;
-	        my @table = split(/\//,$ftp_path);
-        	my $name = $table[$#table];
-	        my $prot_file = "$ftp_path/$name"."_protein.faa.gz";
-        	my $gbff = "$ftp_path/$name"."_genomic.gbff.gz";
-	        my $gff = "$ftp_path/$name"."_genomic.gff.gz";
-        	my $genome_fasta = "$ftp_path/$name"."_genomic.fna.gz";
-	        my @particules = split(/_/,$name);
-
-		#system("datasets download genome accession --include-gbff --filename $outdir/$assembly_accession.zip $assembly_accession");
-		#system("unzip -o $outdir/$assembly_accession.zip");
-		#system("cp -rf ncbi_dataset/data/$assembly_accession/$assembly_accession*genomic.fna $outdir/$genbank.fasta");
-		#system("cp -rf ncbi_dataset/data/$assembly_accession/genomic.gbff $outdir/$genbank.gb");
+		my $assembly_accession = $genbank;
+		system("datasets download genome accession --include-gbff --filename $outdir/$assembly_accession.zip $assembly_accession");
+		system("unzip -o $outdir/$assembly_accession.zip");
+		system("cp -rf ncbi_dataset/data/$assembly_accession/$assembly_accession*genomic.fna $outdir/$genbank.fasta");
+		system("cp -rf ncbi_dataset/data/$assembly_accession/genomic.gbff $outdir/$genbank.gb");
 
 
-        	`wget -O $outdir/$genbank.fasta.gz $genome_fasta`;
-		`gunzip $outdir/$genbank.fasta.gz`;
-		`wget -O $outdir/$genbank.gb.gz $gbff`;
-	        system("gunzip $outdir/$genbank.gb.gz");
-
-
-		################################################################
-		# for eukaryotes
-		################################################################
-		if (!$grep){
-			$grep = `grep '$line' eukaryotes.txt`;
-			my @infos = split(/\t/,$grep);
-			my $gca = $infos[8];
-			if ($gca =~/GCA_(\d\d\d)(\d\d\d)(\d\d\d)/){
-				my $part1 = $1;
-				$ftp_path = "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/$1/$2/$3";
-				`wget -O $outdir/$gca.index.html $ftp_path`;
-				my $grep_name = `grep '$gca' $outdir/$gca.index.html`;
-				unlink("$outdir/$gca.index.html");
-				my $name;
-				if ($grep_name =~/href=\"(.*)\"/){
-					$name = $1;
-					$name=~s/\///g;
-				}
-				$ftp_path = $ftp_path."/$name";
-				my $prot_file = "$ftp_path/$name"."_protein.faa.gz";
-				my $gbff = "$ftp_path/$name"."_genomic.gbff.gz";
-				my $gff = "$ftp_path/$name"."_genomic.gff.gz";
-				my $genome_fasta = "$ftp_path/$name"."_genomic.fna.gz";
-				my @particules = split(/_/,$name);
-
-                `wget -O $outdir/$genbank.fasta.gz $genome_fasta`;
-                `gunzip $outdir/$genbank.fasta.gz`;
-                `wget -O $outdir/$genbank.gb.gz $gbff`;
-		`wget -O $outdir/$genbank.faa.gz $prot_file`;
-                system("gunzip $outdir/$genbank.gb.gz");
-		system("gunzip $outdir/$genbank.faa.gz");
-
-			}
-		}
 	}
 	else{
 		my $genbank_file = $genbank;
