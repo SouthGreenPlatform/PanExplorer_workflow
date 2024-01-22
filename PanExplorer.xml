@@ -51,6 +51,12 @@ cp -rf outputs/rarefaction_curves.svg $rarefaction_curves_svg;
 cp -rf outputs/heaps.tsv $heaps;
 cp -rf outputs/heatmap.svg.complete.pdf.distance_matrix.txt $distance_matrix;
 cp -rf outputs/heatmap.svg.complete.pdf.distance_matrix.hclust.newick $njtree;
+
+#if $software=="pggb"
+cp -rf outputs/all_genomes.vcf $vcf;
+#else
+touch $vcf;
+#end if
 ]]></command>
 
 
@@ -86,6 +92,7 @@ cp -rf outputs/heatmap.svg.complete.pdf.distance_matrix.hclust.newick $njtree;
  <data format="svg" name="rarefaction_curves_svg" label="Rarefaction curves"/>
  <data format="txt" name="heaps" label="Heaps law alpha"/>
  <data format="txt" name="distance_matrix" label="Accessory based distance matrix"/>
+ <data format="vcf" name="vcf" label="VCF file"/>
  <data format="txt" name="logfile" label="Logfile"/>
  <data format="txt" name="roary_log" label="Roary Logfile"/>
 </outputs>

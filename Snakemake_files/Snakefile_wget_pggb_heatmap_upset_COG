@@ -83,6 +83,7 @@ rule pggb:
         gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
         png1="outputs/pggb_out/all_genomes.fa.lay.draw.png",
         png2="outputs/pggb_out/all_genomes.fa.og.viz_multiqc.png",
+        vcf="outputs/all_genomes.vcf",
     shell:
         """
         samtools faidx outputs/genomes/all_genomes.fa
@@ -91,6 +92,7 @@ rule pggb:
         mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output.gfa}
         mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
         mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
+        mv outputs/pggb_out/all_genomes.*vcf {output.vcf}
         """
 
 rule odgi:
