@@ -1,8 +1,6 @@
 import glob
 import os
 import shutil
-import re
-import subprocess
 
 import yaml
 configfile: "config.yaml"
@@ -16,35 +14,15 @@ with open("config.yaml", "r") as yaml_file:
             SAMPLES.append(id)
     if "input_genbanks" in genome_data.keys():
         for gb_path in genome_data["input_genbanks"]:
-
-            cmd = "grep 'ACCESSION' "+gb_path
-            returned_value = subprocess.getoutput(cmd)
-            words = returned_value.split()
-            name = words[1]
-            #words = returned_value.split()
-            #SAMPLES.append(words[1])
-            words = gb_path.split("/")
-            genbank_file_name = words[-1]
-            x = genbank_file_name.replace(".", "_")
-            cmd = "sed -i 's/ACCESSION   "+name+"/ACCESSION   "+x+"/g' "+gb_path
-            subprocess.getoutput(cmd)
-
-            cmd_locus = "grep 'LOCUS' "+gb_path
-            returned_value = subprocess.getoutput(cmd_locus)
-            words_locus = returned_value.split()
-            name_locus = words_locus[1]
-            cmd = "sed -i 's/LOCUS       "+name_locus+"/LOCUS       "+x+"/' "+gb_path
-            subprocess.getoutput(cmd)
-
             cmd = "grep 'ACCESSION' "+gb_path
             returned_value = subprocess.getoutput(cmd)
             words = returned_value.split()
             SAMPLES.append(words[1])
 
 
+
 rule final:
  input:
-  "outputs/pav_matrix.csv",
   "outputs/GCskew.txt",
   "outputs/pav_matrix.tsv",
   "outputs/heatmap.svg.gz",
@@ -59,11 +37,13 @@ rule ncbi_datasets:
     output:
         expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
         expand("outputs/genomes/{sample}.gb", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.prt", sample=SAMPLES),
         genomes="outputs/genomes/genomes.txt"
     shell:
         """
         perl $PANEX_PATH/Perl/get_data.pl {input} outputs/genomes
         """
+
 
 rule gcskew:
     input:
@@ -97,30 +77,31 @@ rule genbank2gff3:
         perl $PANEX_PATH/Perl/remove_duplicates_in_gff.pl {output.gff1} {output.gff2}
         """
 
-rule roary:
+rule panacota:
     input:
-        expand("outputs/genomes/{sample}.gb.rmdup.gff", sample=SAMPLES)
+        expand("outputs/genomes/{sample}.prt", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gb.gff", sample=SAMPLES)
+    output:
+        pav="outputs/panacota/PanGenome-mydataset.All.prt.lst"
     params:
         identity=80
-    output:
-        pav="outputs/pav_matrix.csv",
-        newick="outputs/accessory_binary_genes.fa.newick"
     shell:
         """
-        roary -f outputs/roary_outdir -i {params.identity} outputs/genomes/*gb.rmdup.gff
-        cp -rf outputs/roary_outdir/gene_presence_absence.csv {output.pav}
-        cp -rf outputs/roary_outdir/accessory_binary_genes.fa.newick {output.newick}
+        cat outputs/genomes/*prt >outputs/genomes/mydataset.All.prt
+        PanACoTA pangenome -i 0.{params.identity} -l outputs/genomes/mydataset.All.prt -n mydataset -d outputs/genomes -o outputs/panacota
+        mv outputs/panacota/PanGenome-mydataset.All.prt-clust-*-mode1.lst {output}
         """
 
 rule convert_matrix:
     input:
-        pav="outputs/pav_matrix.csv"
+        pav="outputs/panacota/PanGenome-mydataset.All.prt.lst"
     output:
         "outputs/pav_matrix.tsv"
     shell:
         """
-        perl $PANEX_PATH/Perl/ConvertRoaryMatrix.pl outputs/genomes {input} {output} outputs/genomes/strains.txt        
+        perl $PANEX_PATH/Perl/ConvertPanacotaMatrix.pl outputs/genomes {input} {output} outputs/genomes/strains.txt 
         """
+
 
 rule cog:
     input:
@@ -134,7 +115,7 @@ rule cog:
         """
         perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} {output.cogstat2} {output.cogofclusters} outputs/genomes/strains.txt
         """
-
+        
 rule heatmap_upset:
     input:
         pav="outputs/pav_matrix.tsv"
@@ -179,4 +160,3 @@ rule fastani:
         Rscript $PANEX_PATH/R/heatmap_ani.R -f {output.completematrix} -o {output.pdf}
         pdf2svg {output.pdf} {output.svg}
         """
-

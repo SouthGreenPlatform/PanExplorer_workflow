@@ -16,7 +16,27 @@ with open("config.yaml", "r") as yaml_file:
             cmd = "grep 'ACCESSION' "+gb_path
             returned_value = subprocess.getoutput(cmd)
             words = returned_value.split()
+            name = words[1]
+            #words = returned_value.split()
+            #SAMPLES.append(words[1])
+            words = gb_path.split("/")
+            genbank_file_name = words[-1]
+            x = genbank_file_name.replace(".", "_")
+            cmd = "sed -i 's/ACCESSION   "+name+"/ACCESSION   "+x+"/g' "+gb_path
+            subprocess.getoutput(cmd)
+
+            cmd_locus = "grep 'LOCUS' "+gb_path
+            returned_value = subprocess.getoutput(cmd_locus)
+            words_locus = returned_value.split()
+            name_locus = words_locus[1]
+            cmd = "sed -i 's/LOCUS       "+name_locus+"/LOCUS       "+x+"/' "+gb_path
+            subprocess.getoutput(cmd)
+
+            cmd = "grep 'ACCESSION' "+gb_path
+            returned_value = subprocess.getoutput(cmd)
+            words = returned_value.split()
             SAMPLES.append(words[1])
+
 
 
 rule final:
