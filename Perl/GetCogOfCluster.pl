@@ -80,6 +80,7 @@ closedir(DIR);
 my %functions;
 my %accessory_clusters;
 my %genes_of_cluster;
+my %cluster_of_gene;
 open(S,">$pav_matrix.selection_prot.fa");
 open(O,$pav_matrix);
 <O>;
@@ -104,8 +105,10 @@ while(<O>){
 		my @genenames = split(/,/,$infos[$i]);
 		foreach my $genename(@genenames){
 			if ($genename=~/\w+/){
+				#$genename =~s/\|/_/g;
 				print S $proteins{$genename};
-				my $function = `grep $genename $prot_dir/*func`;
+				$cluster_of_gene{$genename} = $cluster;
+				my $function = `grep '$genename' $prot_dir/*func`;
                                 $function =~s/\n//g;$function =~s/\r//g;
                                 my @t = split(/$genename/,$function);
                                 if ($t[1] =~/-\s+(.*)/){
@@ -121,18 +124,83 @@ while(<O>){
 close(O);
 close(S);
 
-my $is_plus = `which rpsblast+`;
-my $is_not_plus = `which rpsblast`;
-my $software = "rpsblast";
-if ($is_plus){$software = "rpsblast+";}
-system("$software -query $pav_matrix.selection_prot.fa -db $dirname/../COG/Cog -out $pav_matrix.selection.rps-blast.out -evalue 1e-2 -outfmt '7 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs'");
 
-system("perl $dirname/../COG/bac-genomics-scripts/cdd2cog/cdd2cog.pl -r $pav_matrix.selection.rps-blast.out -c $dirname/../COG/cddid.tbl -f $dirname/../COG/fun.txt -w $dirname/../COG/whog -a");
+#########################################################################################################################################
+# Test if COG are already provided in Genbank files. If provided, rpsblast is not launched, we get the COG information from Genbank files
+#########################################################################################################################################
+my %cog_of_genes;
+open(LS,"ls $prot_dir/*gb |");
+while(my $gb_file = <LS>){
+	chomp($gb_file);
+	open(GB,$gb_file);
+	my $current_cog;
+	my $current_gene;
+	while(my $l=<GB>){
+		if ($l=~/(COG\d+)/){
+			$current_cog = $1;
+		}
+		if ($l =~/protein_id=\"(.*)\"/ && $current_cog){
+			$current_gene = $1;
+			$cog_of_genes{$current_gene} .= ",$current_cog";
+		}
+		if ($l =~/locus_tag=\"(.*)\"/ && $current_cog){
+                        $current_gene = $1;
+			$cog_of_genes{$current_gene} .= ",$current_cog";
+                }
+	}
+	close(GB);
+}
+close(LS);
+
+my %count_letter;
+if (scalar keys(%cog_of_genes) > 1){
+	open(WHOG,"$dirname/../COG/whog");
+	my %letters_of_cog;
+	while(my $l=<WHOG>){
+		if ($l=~/\[(\w+)\] (COG\d+) /){
+			my $letter = $1;
+			my $cogid = $2;
+			$letters_of_cog{$cogid} = $letter;
+		}
+	}
+	close(WHOG);
+
+	my %cogs_of_cluster;
+	foreach my $gene(keys(%cog_of_genes)){
+		my $cluster = $cluster_of_gene{$gene};
+		my $cogs = $cog_of_genes{$gene};
+		$cogs_of_cluster{$cluster} = $cogs;	
+	}
+	open(COG_CLUST,">$cog_clusters");	
+	foreach my $cluster(sort {$a<=>$b} keys(%cogs_of_cluster)){
+		my $cogids = $cogs_of_cluster{$cluster};
+		my @ids = split(/,/,$cogids);
+		foreach my $id(@ids){
+			if ($id =~/\w+/ && $cluster){
+				my $letter = $letters_of_cog{$id};
+				#$letter =~s//\t/g;
+				print COG_CLUST "$cluster	$id	$letter\n";
+			}
+		}
+	}
+	close(COG_CLUST);
+}
+else{
+
+	my $is_plus = `which rpsblast+`;
+	my $is_not_plus = `which rpsblast`;
+	my $software = "rpsblast";
+	if ($is_plus){$software = "rpsblast+";}
+	system("$software -query $pav_matrix.selection_prot.fa -db $dirname/../COG/Cog -out $pav_matrix.selection.rps-blast.out -evalue 1e-2 -outfmt '7 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs'");
+
+	system("perl $dirname/../COG/bac-genomics-scripts/cdd2cog/cdd2cog.pl -r $pav_matrix.selection.rps-blast.out -c $dirname/../COG/cddid.tbl -f $dirname/../COG/fun.txt -w $dirname/../COG/whog -a");
+	system("cp -rf results/protein-id_cog.txt $cog_clusters");
+	system("rm -rf results");
+}
 
 open(COG,">$cog_outfile");
 my %cogs;
-my %count_letter;
-open(C,"results/protein-id_cog.txt");
+open(C,$cog_clusters);
 while(<C>){
 	my $line = $_;
 	$line =~s/\n//g;$line =~s/\r//g;
@@ -158,9 +226,8 @@ while(<C>){
 	}
 }
 close(C);
-system("cp -rf results/protein-id_cog.txt $cog_clusters");
-system("rm -rf results");
 close(COG);
+
 
 
 my %cogs_of_clusters;
