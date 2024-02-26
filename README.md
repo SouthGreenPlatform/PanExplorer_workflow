@@ -81,9 +81,6 @@ Edit the configuration file config.yaml to list the Genbank identifiers of compl
 
 # Genbank accessions of assembly accession (GCA, GCF)
 ids:
-  - CP019090
-  - CP019092
-  - CP019085
   - GCA_001042775.1
   - GCA_001021915.1
   - GCA_022406815.1
