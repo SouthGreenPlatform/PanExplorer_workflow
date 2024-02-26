@@ -178,8 +178,10 @@ if (scalar keys(%cog_of_genes) > 1){
 		foreach my $id(@ids){
 			if ($id =~/\w+/ && $cluster){
 				my $letter = $letters_of_cog{$id};
+				my @letters = split(//,$letter);
+				my $letters_string = join("\t",@letters);
 				#$letter =~s//\t/g;
-				print COG_CLUST "$cluster	$id	$letter\n";
+				print COG_CLUST "$cluster	$id	$letters_string\n";
 			}
 		}
 	}
