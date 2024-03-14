@@ -62,6 +62,7 @@ rule orthofinder:
     shell:
         """
         mkdir -p outputs/proteomes
+        sed -i '/^\w/ s/\./N/' outputs/genomes/*.pep
         cp -rf outputs/genomes/*.pep outputs/proteomes
         orthofinder -f outputs/proteomes
         mv outputs/proteomes/OrthoFinder/R*/Orthogroups/Orthogroups.tsv outputs/Orthogroups.tsv
