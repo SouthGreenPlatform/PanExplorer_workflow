@@ -16,14 +16,20 @@ my %allgenes;
 my %coding_positions;
 open(LENGTH,">$out.gene_length.txt");
 open(F,$gff3);
-while(<F>){
-		my $line = $_;
-		$line =~s/\n//g;$line =~s/\r//g;
+while(my $line = <F>){
+		chomp($line);
 		my @infos = split(/\t/,$line);
 		#if ($infos[2] eq "gene" && /CITME_006g014440/){
-		if ($infos[2] eq "CDS" && /Parent=([^;]+);*/){
-		#if ($infos[2] eq "exon" && /Parent=([^;]+)$/){
-			my $chr = $infos[0];
+		if ($infos[2] eq "CDS"){
+			my $chr;
+			# case eukaryotes
+			if ($line =~/Parent=([^;]+);*/){
+				$chr = $infos[0];
+			}
+			# case prokaryotes/prokka
+			elsif ($line =~/ID=([^;]+);*/){
+				$chr = $infos[0];
+			}
 			my $start = $infos[3];
 			my $end = $infos[4];
 			my $gene = $1;
