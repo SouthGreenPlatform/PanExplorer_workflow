@@ -119,7 +119,7 @@ while(my $line = <GFA>){
 					}
 				}
 				elsif ($segment_including_strand =~/\-/){
-					my $pos_in_segment = $size;
+					my $pos_in_segment = $size+1;
 					for (my $k = $start_segment; $k <= $end_segment; $k++){
 						$pos_in_segment--;
 						if ($coding_positions{$chrom}{$k}){
