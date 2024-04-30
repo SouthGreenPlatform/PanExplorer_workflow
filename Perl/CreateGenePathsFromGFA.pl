@@ -93,6 +93,7 @@ while(my $line = <GFA>){
 			my $cumul = 0;
 			LOOP_SEGMENT: foreach my $segment(@segments){
 				if ($segment eq ""){next;}
+				my $segment_including_strand = $segment;
 				$segment =~s/\+//g;
 				$segment =~s/\-//g;
 				my $size = length($segments{$segment});
@@ -100,19 +101,36 @@ while(my $line = <GFA>){
 				$end_segment = $start_segment+$size-1;
 				$cumul+=$size;
 				my $current_gene;
-				my $pos_in_segment = 0;
-				for (my $k = $start_segment; $k <= $end_segment; $k++){
-					$pos_in_segment++;
-					#print "$k\n";
+
+				if ($segment_including_strand =~/\+/){
+					my $pos_in_segment = 0;
+					for (my $k = $start_segment; $k <= $end_segment; $k++){
+						$pos_in_segment++;
+						#print "$k\n";
 					
-					if ($coding_positions{$chrom}{$k}){
-						my $info_gene = $coding_positions{$chrom}{$k};
-						chop($info_gene);
-						my @genes = split(/,/,$info_gene);
-						foreach my $gene(@genes){
-							$segments_of_gene{$gene} .= "s$segment:$pos_in_segment|";
+						if ($coding_positions{$chrom}{$k}){
+							my $info_gene = $coding_positions{$chrom}{$k};
+							chop($info_gene);
+							my @genes = split(/,/,$info_gene);
+							foreach my $gene(@genes){
+								$segments_of_gene{$gene} .= "s$segment:$pos_in_segment|";
+							}
+						}				
+					}
+				}
+				elsif ($segment_including_strand =~/\-/){
+					my $pos_in_segment = $size;
+					for (my $k = $start_segment; $k <= $end_segment; $k++){
+						$pos_in_segment--;
+						if ($coding_positions{$chrom}{$k}){
+							my $info_gene = $coding_positions{$chrom}{$k};
+							chop($info_gene);
+							my @genes = split(/,/,$info_gene);
+							foreach my $gene(@genes){
+								$segments_of_gene{$gene} .= "s$segment:$pos_in_segment|";
+							}
 						}
-					}				
+					}
 				}
 			
 			}
@@ -149,6 +167,10 @@ foreach my $gene(keys(%segments_of_gene)){
 		my @positions = split(/-/,$pos);
 		my $start = $positions[0];
 		my $end = $positions[$#positions];
+		if ($start > $end){
+			$start = $positions[$#positions];
+			$end = $positions[0];
+		}
 		print O ">$segmentname:$start-$end";
 		print BED "$segmentname	$start	$end	$gene\n";
 	}

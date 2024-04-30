@@ -68,7 +68,7 @@ while(my $line =<F>){
 		system("cp -rf ncbi_dataset/data/$assembly_accession/$assembly_accession*genomic.fna $outdir/$genbank.fasta");
 		system("cp -rf ncbi_dataset/data/$assembly_accession/genomic.gbff $outdir/$genbank.gb");
 
-
+		
 	}
 	else{
 		my $genbank_file = $genbank;
@@ -108,6 +108,9 @@ while(my $line =<F>){
 		close(FASTA);
 	}
 	#my $get_organism_line = `head -10 $outdir/$genbank.gb | grep DEFINITION `;
+	
+	# remove single quote in genbank file
+	`sed -i "s/'//g" $outdir/$genbank.gb`;
 	my $get_organism_line = `head -10 $outdir/$genbank.gb | grep -A 1 DEFINITION `;
 
 	# if several lines for DEFINITION, concatenate the lines
