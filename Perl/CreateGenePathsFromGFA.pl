@@ -34,7 +34,7 @@ while(my $line = <F>){
 			my $end = $infos[4];
 			my $gene = $1;
 			$gene =~s/\n//g;$gene =~s/\r//g;
-			if (/protein_id=([^;]+);/){
+			if ($line =~/protein_id=([^;]+);/){
 				$gene = $1;
 			}
 			$coordinates{$chr}.= "$gene:$start-$end|";
