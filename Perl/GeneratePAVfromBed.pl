@@ -93,7 +93,7 @@ foreach my $id(keys(%strains)){
 			}
 			close(INTER);
 
-			unlink("$PAV.$num.intersect.out");
+			#unlink("$PAV.$num.intersect.out");
 
 			foreach my $pair(keys(%cumul_match)){
 				my $size1 = $cumul_match{$pair};
