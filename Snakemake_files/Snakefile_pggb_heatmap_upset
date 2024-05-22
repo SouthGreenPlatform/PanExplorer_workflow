@@ -77,11 +77,13 @@ rule bedtools_intersect:
     input:
         samples="outputs/seqfile",
         bedfiles=expand("outputs/genomes/{sample}.gene_segments.bed", sample=SAMPLES)
+    params:
+        identity=30
     output:
         "outputs/pav_matrix.tsv",
     shell:
         """
-        perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input.samples} outputs/genomes {output}
+        perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input.samples} outputs/genomes {output} {params.identity}
         """
 
 rule heatmap_upset:

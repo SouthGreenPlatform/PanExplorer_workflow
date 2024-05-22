@@ -12,7 +12,7 @@
 module load system/singularity/3.6.0;
 export PANEX_PATH=${__tool_directory__};
 
-perl ${__tool_directory__}/Perl/generateConfig.pl '$private_genomes' '$input' config.yaml;
+perl ${__tool_directory__}/Perl/generateConfig.pl '$private_genomes' '$input' config.yaml '$private_genomes_fasta';
 
 cat config.yaml >$logfile;
 
@@ -23,34 +23,38 @@ sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snak
 #else if $software=="roary"
 sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG >snakefile;
 #else if $software=="orthofinder"
-sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_orthofinder_heatmap_upset_COG >snakefile;
+sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_orthofinder_heatmap_upset >snakefile;
 #else if $software=="cactus"
 cp -rf \$PANEX_PATH/Snakemake_files/Snakefile_wget_cactus_heatmap_upset_COG2 snakefile;
 #else if $software=="pggb"
-cp -rf \$PANEX_PATH/Snakemake_files/Snakefile_wget_pggb_heatmap_upset_COG snakefile;
+sed "s/identity\=30/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_pggb_heatmap_upset_COG >snakefile;
 #else
 sed "s/identity\=80/identity\=$min_identity/g" \$PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG >snakefile;
 #end if
 
 singularity exec \$PANEX_PATH/panexplorer.sif snakemake --cores 1 -s snakefile >>$logfile 2>&1;
 
+
 cp -rf outputs/upsetr.svg $upset;
 cp -rf outputs/pav_matrix.tsv $output;
-cp -rf outputs/GCskew.txt $gcfile;
 cp -rf outputs/heatmap.svg.gz $heatmap;
-cp -rf outputs/cog_output.txt $cogfile;
-cp -rf outputs/cog_stats.txt $outcog_stat;
-cp -rf outputs/cog_stats2.txt $outcog_stat2;
-cp -rf outputs/cog_of_clusters.txt $outcog_clusters;
-cp -rf outputs/genomes/genes.txt $genes;
 cp -rf outputs/heatmap.svg.heatmap_plotly.html $heatmap_html;
-cp -rf outputs/fastani.out.matrix.complete $fastani;
-cp -rf outputs/fastani.out.svg $ani_svg;
 cp -rf outputs/rarefaction_curves.txt $rarefaction_curves;
 cp -rf outputs/rarefaction_curves.svg $rarefaction_curves_svg;
 cp -rf outputs/heaps.tsv $heaps;
 cp -rf outputs/heatmap.svg.complete.pdf.distance_matrix.txt $distance_matrix;
 cp -rf outputs/heatmap.svg.complete.pdf.distance_matrix.hclust.newick $njtree;
+
+#if $software!="orthofinder"
+cp -rf outputs/GCskew.txt $gcfile;
+cp -rf outputs/cog_output.txt $cogfile;
+cp -rf outputs/cog_stats.txt $outcog_stat;
+cp -rf outputs/cog_stats2.txt $outcog_stat2;
+cp -rf outputs/cog_of_clusters.txt $outcog_clusters;
+cp -rf outputs/genomes/genes.txt $genes;
+cp -rf outputs/fastani.out.matrix.complete $fastani;
+cp -rf outputs/fastani.out.svg $ani_svg;
+#end if
 
 #if $software=="pggb"
 cp -rf outputs/all_genomes.vcf $vcf;
@@ -62,7 +66,8 @@ touch $vcf;
 
   <inputs>
   <param name="input" type="text" multiple="true" label="List of genbank identifiers" help="Coma separated list (ex: CP000235.1,CP001079.1,CP001759.1,CP015994.2)"/>
-  <param name="private_genomes" type="data" format="zip" label="Zip of genbank files" optional="true"/>
+  <param name="private_genomes" type="data" format="zip" label="Zip of genbank or GFF files" optional="true"/>
+  <param name="private_genomes_fasta" type="data" format="zip" label="Zip of Fasta files" optional="true"/>
   <param name="min_identity" type="text" value="80" label="Minimum percentage identity for BlastP" />
   <param type="select" name="software" label="Choose the pan-genome software">
     <option value="pgap">PGAP</option>

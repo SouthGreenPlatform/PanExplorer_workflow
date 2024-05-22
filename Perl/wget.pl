@@ -224,6 +224,9 @@ while(my $line =<F>){
         my $complement = 0;
         my $end_gene = "no";
         my $protein = "";
+
+	#`sed -i "s/'//g" $outdir/$genbank.gb`;
+
 	my $has_translation = `grep -c 'translation=' $outdir/$genbank.gb`;
 	$has_translation =~s/\n//g;$has_translation =~s/\r//g;
         open(G,"$outdir/$genbank.gb");
