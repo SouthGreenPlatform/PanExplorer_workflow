@@ -5,6 +5,7 @@ use strict;
 my $file = $ARGV[0];
 my $metadata = $ARGV[1];
 
+
 my %strains;
 open(F,$metadata);
 while(<F>){
@@ -17,6 +18,7 @@ close(F);
 
 my %ANIs;
 my %genomes;
+my %genome_names;
 my $num_line = 0;
 open(F,$file);
 <F>;
@@ -27,6 +29,11 @@ while(<F>){
 	my @infos = split(/\t/,$line);
 	my $genome = $infos[0];
 	$genome = $strains{$genome};
+	$genome_names{$genome}++;
+	if ($genome_names{$genome} > 1){
+		$genome = $genome . ".". $genome_names{$genome};
+	}
+
 	$genomes{$num_line} = $genome;
 	for (my $i = 1; $i <= $#infos; $i++){
 		$ANIs{$i}{$num_line} = $infos[$i];
@@ -36,6 +43,7 @@ while(<F>){
 close(F);
 
 print "Genomes";
+
 foreach my $i(sort keys(%ANIs)){
 	print "\t".$genomes{$i};
 }
