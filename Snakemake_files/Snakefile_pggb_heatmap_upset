@@ -53,7 +53,7 @@ rule pggb:
         """
         cat outputs/genomes/*fasta >outputs/genomes/all_genomes.fa
         samtools faidx outputs/genomes/all_genomes.fa
-        reference=$(head -1 outputs/genomes/strains.txt | awk '{{print $2}}')
+        reference=$(head -1 outputs/genomes/all_genomes.fa | awk '{{print $2}}')
         pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out -V $reference -m
         mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output.gfa}
         mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
