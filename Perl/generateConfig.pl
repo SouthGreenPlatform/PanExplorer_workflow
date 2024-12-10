@@ -17,11 +17,14 @@ $list =~s/NZ_//g;
 my @list_ids = split(/,/,$list);
 
 my %data = ();
-foreach my $id(@list_ids){
-	push @{$data{"ids"}}, "$id";
+# case list of accessions
+if ($list ne 'None'){
+	foreach my $id(@list_ids){
+		push @{$data{"ids"}}, "$id";
+	}
 }
 # case fasta+gff
-if ($zip ne "None" && $zip_fasta ne "None"){
+elsif ($zip ne "None" && $zip_fasta ne "None"){
 	system("rm -rf $zip.genomeszip");
 	mkdir("$zip.genomeszip");
 	chdir("$zip.genomeszip");
