@@ -1,20 +1,36 @@
 <tool id="PanExplorer2" name="PanExplorer2" version="2.0">
   <description> Bacterial pan-genome analysis </description>
-  <!--<requirements>
+  <requirements>
+  <!--
  <requirement type="package" version="2.2.26">blast-legacy</requirement>
  <requirement type="package" version="7.480">mafft</requirement>
  <requirement type="package" version="14.137">mcl</requirement>
  <requirement type="package" version="3.697">phylip</requirement>
  <requirement type="package" version="1.7.2">perl-bioperl</requirement>
-   </requirements>
--->
+ -->
+    <requirement type="package" version="1.30">perl-yaml</requirement>
+    <requirement type="package" version="3.8.7">singularity</requirement>
+ 
+ </requirements>
+
     <command><![CDATA[
-module load system/singularity/3.6.0;
+
 export PANEX_PATH=${__tool_directory__};
 
-perl ${__tool_directory__}/Perl/generateConfig.pl '$private_genomes' '$input' config.yaml '$private_genomes_fasta';
+
+#if str($mode.mode) == "accessions":
+	    perl ${__tool_directory__}/Perl/generateConfig.pl 'None' '$input' config.yaml 'None';
+#else if str($mode.mode) == "genbanks":
+	    perl ${__tool_directory__}/Perl/generateConfig.pl '$private_genomes' 'None' config.yaml 'None';
+#else if str($mode.mode) == "fasta":
+            perl ${__tool_directory__}/Perl/generateConfig.pl '$private_genomes' 'None' config.yaml '$private_genomes_fasta';
+#end if
 
 cat config.yaml >$logfile;
+
+
+
+if [ ! -f \$PANEX_PATH/panexplorer.sif ]; then wget -O \$PANEX_PATH/panexplorer.sif https://panexplorer.southgreen.fr/singularity/panexplorer.sif >>$logfile 2>&1;fi;
 
 
 
@@ -65,18 +81,40 @@ touch $vcf;
 
 
   <inputs>
-  <param name="input" type="text" multiple="true" label="List of genbank identifiers" help="Coma separated list (ex: CP000235.1,CP001079.1,CP001759.1,CP015994.2)"/>
-  <param name="private_genomes" type="data" format="zip" label="Zip of genbank or GFF files" optional="true"/>
-  <param name="private_genomes_fasta" type="data" format="zip" label="Zip of Fasta files" optional="true"/>
+	  <conditional name="mode">
+                <param name = "mode" type="select" label="What is your inputs?">
+                        <option value="accessions">Prokaryote genomes: List of Genbank assembly accessions (GCA)</option>
+                        <option value="genbanks">Prokaryote genomes: Genbank files</option>
+                        <option value="fasta">Eukaryote genomes: FASTA + GFF files</option>
+                </param>
+                <when value="accessions">
+			<param name="input" type="text" multiple="true" label="List of genbank identifiers" help="Coma separated list (ex: GCA_000007385.1,GCA_000010025.1,GCA_000019585.2)"/>
+			<param type="select" name="software" label="Choose the pan-genome software">
+				<option value="roary">Roary</option>
+				<option value="panacota">PanACoTA</option>
+				<option value="pggb">PanGenome Graph Builder (PGGB)</option>
+			</param>
+                </when>
+                <when value="genbanks">
+			<param name="private_genomes" type="data" format="zip" label="Zip of genbank files" optional="true"/>
+			<param type="select" name="software" label="Choose the pan-genome software">
+                                <option value="roary">Roary</option>
+                                <option value="panacota">PanACoTA</option>
+                                <option value="pggb">PanGenome Graph Builder (PGGB)</option>
+                        </param>
+		</when>
+		<when value="fasta">
+			<param name="private_genomes_fasta" type="data" format="zip" label="Zip of Fasta files" optional="true"/>
+			<param name="private_genomes" type="data" format="zip" label="Zip of GFF files" optional="true"/>
+			<param type="select" name="software" label="Choose the pan-genome software">
+				<option value="orthofinder">OrthoFinder</option>
+				<option value="cactus">Minigraph-Cactus</option>
+				<option value="pggb">PanGenome Graph Builder (PGGB)</option>
+			</param>
+                </when>
+	</conditional>
+
   <param name="min_identity" type="text" value="80" label="Minimum percentage identity for BlastP" />
-  <param type="select" name="software" label="Choose the pan-genome software">
-    <option value="pgap">PGAP</option>
-    <option value="roary">Roary</option>
-    <option value="panacota">PanACoTA</option>
-    <option value="orthofinder">OrthoFinder</option>
-    <option value="cactus">Minigraph-Cactus</option>
-    <option value="pggb">PanGenome Graph Builder (PGGB)</option>
-  </param>
  </inputs>
 
  <outputs>
@@ -101,5 +139,64 @@ touch $vcf;
  <data format="txt" name="logfile" label="Logfile"/>
  <data format="txt" name="roary_log" label="Roary Logfile"/>
 </outputs>
+<tests>
+        <test>
+            <param name="input" value="GCA_000007385.1,GCA_000010025.1,GCA_000019585.2"/>
+            <param name="min_identity" value="80"/>
+            <param name="software" value="panacota"/>
+            <param name="private_genomes" value=""/>
+            <param name="private_genomes_fasta" value=""/>
+            <output name="distance_matrix" value="Accessory_based_distance_matrix.txt"/>
+            <output name="fastani" value="ANI.txt"/>
+        </test>
+ </tests>
+ <help>
+
+PanExplorer
+=======
+
+	 PanExplorer workflow is a snakemake worklow that can be run in the backend of the PanExplorer web application.
+
+	 Homepage: https://panexplorer.southgreen.fr/
+
+	 It allows to perform a pan-genome analysis using published and annotated bacteria genomes, using different tools that can be invoked: Roary, PGAP, PanACoTA.
+
+	 Pangenome graph builder softwares have been implemented recently in the pipeline: Minigraph-Cactus and PGGB (PanGenome Graph Builder)
+
+	 It provides a presence/absence matrix of genes, an UpsetR Diagram for synthetizing the matrix information and a COG assignation summary for each strain.
+	 
+Please visit the GitHub page for the PanExplorer workflow at: https://github.com/SouthGreenPlatform/PanExplorer_workflow
+
+
+Inputs
+------
+
+	 Inputs can be provided as one of the following:
+
+	 * **List of genbank assembly identifiers** comma-separated(ex: GCA_000007385.1,GCA_000010025.1,GCA_000019585.2)
+	 * **Zip of genbank files** They must include the gene annotation and the complete sequence data
+	 * **Zip of FASTA file of genomes + Zip of GFF annotation files**: In order to make the association between sequence and annotation, they must be named with the same basename as follows: genome1.fasta, genome1.gff, myspeciesXXX.fasta, myspeciesXXX.gff...
+
+	
+
+Outputs
+------
+
+	 Among the outputs:
+
+	 * **Pangenome presence absence matrix** Pangene presence/absence matrix indicating the PAV (Presence Absence Variation) of clustered genes.
+	 * **PanBased NJ tree** Distance tree based on PAV data
+	 * **Heaps law alpha** Estimating if a pan-genome is open or closed based on a Heaps law model.
+	 * **Rarefaction curves** A rarefaction curve is the cumulative number of gene clusters we observe as more and more genomes are being considered
+	 * **ANI** Average Nucleotide Identity between genomes
+	 * **ANI heatmap** image as SVG
+	 * **VCF file** If a pan-genome graph software has been selected, it provides a VCF of variations among all samples.
+
+
+
+    </help>
+    <citations>
+        <citation type="doi">10.1093/bioinformatics/btac504</citation>
+    </citations>
 
 </tool>
