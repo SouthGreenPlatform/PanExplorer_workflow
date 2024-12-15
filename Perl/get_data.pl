@@ -180,7 +180,7 @@ while(my $line =<F>){
 		elsif (/>([^\s]+)/){
 			$seqid = $1;
 			$seqid =~s/\.\d+$//g;
-			print PanSN ">$strain#$seqid\n";
+			print PanSN ">$strain#1#$seqid\n";
 		}
         }
         close(GENOME);
