@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: debian:latest
+From: ghcr.io/pangenome/pggb:latest
 
 %labels
     software=pggb
@@ -11,7 +11,9 @@ From: debian:latest
 %post
     echo "Hello from inside the container"
     apt-get update
-    apt-get install -y bash wget r-base-core r-cran-svglite r-cran-upsetr r-cran-optparse r-cran-dendextend r-cran-gplots r-bioc-ctc ncbi-blast+ ncbi-blast+-legacy roary prokka snakemake python3 cd-hit mafft mcl phylip python3-pip libstatistics-linefit-perl bioperl libstatistics-distributions-perl pdf2svg python3-biopython r-cran-heatmaply python3-pandas python3-numpy python3-seaborn python3-xarray python3-plotly pipx autoconf libgsl-dev fastani python3-virtualenv cmake samtools curl make g++-11 pybind11-dev libbz2-dev bc libatomic-ops-dev autoconf libgsl-dev zlib1g-dev libzstd-dev libjemalloc-dev libhts-dev build-essential pkg-config time pigz bcftools libcairo2-dev unzip parallel circos multiqc
+    apt-get install -y bash wget r-base-core r-cran-svglite r-cran-ape r-cran-upsetr r-cran-optparse r-cran-dendextend r-cran-gplots r-bioc-ctc ncbi-blast+ ncbi-blast+-legacy roary prokka snakemake python3 cd-hit mafft mcl phylip python3-pip libstatistics-linefit-perl bioperl libstatistics-distributions-perl pdf2svg r-cran-heatmaply python3-numpy python3-plotly pipx autoconf libgsl-dev fastani python3-virtualenv cmake samtools curl make g++-11 pybind11-dev libbz2-dev bc libatomic-ops-dev autoconf libgsl-dev zlib1g-dev libzstd-dev libjemalloc-dev libhts-dev build-essential pkg-config time pigz bcftools libcairo2-dev unzip parallel circos multiqc
+
+    pip3 install biopython pandas seaborn xarray 
 
     wget https://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh
     chmod +x Miniconda3-py38_4.8.3-Linux-x86_64.sh
@@ -47,34 +49,6 @@ From: debian:latest
 ################################
 # pggb
 ################################
-
-    git clone --recursive https://github.com/ekg/wfmash.git && cd wfmash && cmake -H. -Bbuild && cmake --build build -- -j 3 && cp build/bin/wfmash /usr/local/bin/wfmash     && cp build/lib/libwfa2cpp.so.0 /usr/local/lib/     && cp build/lib/libwfa2cpp.so /usr/local/lib/     && cp build/lib/libwfa2.so.0 /usr/local/lib/     && cp build/lib/libwfa2.so /usr/local/lib/     && cd ../     && rm -rf wfmash # buildkit 
-
-    git clone --recursive https://github.com/ekg/seqwish     && cd seqwish     && git pull     && git checkout f44b402f0c2e02988d431d9b2e5eba9727cf93a9     && git submodule update --init --recursive     && cmake -H. -Bbuild && cmake --build build -- -j $(nproc)     && cp bin/seqwish /usr/local/bin/seqwish     && cd ../     && rm -rf seqwish # buildkit
-
-    git clone --recursive https://github.com/pangenome/smoothxg     && cd smoothxg     && git pull     && git checkout aaa0b283e13ca57c4e6e4e67a03451925f5342f1     && git submodule update --init --recursive     && cmake -H. -Bbuild && cmake --build build -- -j $(nproc)     && cp bin/smoothxg /usr/local/bin/smoothxg     && cp deps/odgi/bin/odgi /usr/local/bin/odgi     && cd ../     && rm -rf odgi # buildkit
-
-    /bin/sh -c curl https://sh.rustup.rs -sSf | sh -s -- -y # buildkit
-
-    git clone https://github.com/marschall-lab/GFAffix.git     && cd GFAffix     && git pull     && git checkout d630eb7d9827340f5f292e57cb3cb5e31e6f86f0     && cargo install --force --path .     && mv /root/.cargo/bin/gfaffix /usr/local/bin/gfaffix     && cd ../     && rm -rf GFAffix # buildkit
-
-#    pipx install multiqc==1.16 # buildkit
-#    cp -rf /root/.local/bin/multiqc /usr/local/bin
-#    chmod 777 /usr/local/bin/multiqc
-
-    wget https://github.com/vgteam/vg/releases/download/v1.52.0/vg && chmod +x vg && mv vg /usr/local/bin/vg # buildkit
-
-    git clone https://github.com/pangenome/vcfbub     && cd vcfbub     && git pull     && git checkout 26a1f0cb216a423f8547c4ad0e0ce38cb9d324b9     && cargo install --force --path .     && mv /root/.cargo/bin/vcfbub /usr/local/bin/vcfbub     && cd ../     && rm -rf vcfbub 
- 
-    git clone --recursive https://github.com/vcflib/vcflib.git     && cd vcflib     && git checkout 7c1a31a430d339adcb9a0c2fd3fd02d3b30e3549     && mkdir -p build     && cd build     && cmake -DZIG=OFF -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . -- -j $(nproc)     && mv vcfwave /usr/local/bin/vcfwave     && mv vcfuniq /usr/local/bin/vcfuniq     && cd ../     && rm -rf vcflib # buildkit
-
-:    pipx install igraph==0.10.4 # buildkit
-
-    #pipx install pycairo==1.23.0 # buildkit
-
-    #git clone https://github.com/ekg/fastix.git     && cd fastix     && git pull     && git checkout 331c1159ea16625ee79d1a82522e800c99206834     && cargo install --force --path . &&     mv /root/.cargo/bin/fastix /usr/local/bin/fastix     && cd ../     && rm -rf fastix # buildkit
-
-    #git clone https://github.com/ekg/pafplot.git     && cd pafplot     && git pull     && git checkout 7dda24c0aeba8556b600d53d748ae3103ec85501     && cargo install --force --path .     && mv /root/.cargo/bin/pafplot /usr/local/bin/     && cd ../     && rm -rf pafplot # buildkit
 
     git clone https://github.com/pangenome/pggb.git
     sed -i "s/which time/\/usr\/bin\/which time/g" pggb/pggb
