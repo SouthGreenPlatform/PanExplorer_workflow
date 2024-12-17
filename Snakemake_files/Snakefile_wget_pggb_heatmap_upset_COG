@@ -146,7 +146,7 @@ rule bedtools_intersect:
         strains="outputs/genomes/strains.txt",
         bedfiles=expand("outputs/genomes/{sample}.gene_segments.bed", sample=SAMPLES)
     params:
-        identity=30
+        identity=config['identity']
     output:
         "outputs/pav_matrix.tsv",
     shell:
