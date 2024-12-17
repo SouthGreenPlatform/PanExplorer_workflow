@@ -81,7 +81,7 @@ rule orthofinder:
     input:
         expand("outputs/genomes/{sample}.pep", sample=SAMPLES)
     params:
-        identity=80
+        identity=config['identity']
     output:
         pav="outputs/Orthogroups.tsv"
     shell:
