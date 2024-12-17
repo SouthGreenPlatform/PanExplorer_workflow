@@ -102,7 +102,7 @@ rule panacota:
     output:
         pav="outputs/panacota/PanGenome-mydataset.All.prt.lst"
     params:
-        identity=80
+        identity=config['identity']
     shell:
         """
         cat outputs/genomes/*prt >outputs/genomes/mydataset.All.prt
