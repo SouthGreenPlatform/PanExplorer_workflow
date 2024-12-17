@@ -80,7 +80,7 @@ rule pgap:
     input:
         expand("outputs/genomes/{sample}.pep", sample=SAMPLES)
     params:
-        identity=80
+        identity=config['identity']
     output:
         pav="outputs/pav_matrix.csv",
         newick="outputs/accessory_binary_genes.fa.newick"
