@@ -81,7 +81,11 @@ foreach my $id(keys(%strains)){
 		chomp($file2);
 		if (-e $file && -e $file2 && $file ne $file2){
 			$num++;
-			system("bedtools intersect -a $file -b $file2 -wo >$PAV.$num.intersect.out");
+
+   			system("awk {'if (\$3>10)print $_'} $file >$file.light");
+      			system("awk {'if (\$3>10)print $_'} $file2 >$file2.light");
+			#system("bedtools intersect -a $file -b $file2 -wo >$PAV.$num.intersect.out");
+   			system("bedtools intersect -a $file.light -b $file2.light -wo >$PAV.$num.intersect.out");
 			my %cumul_match;
 			my %cumul_match2;
 			open(INTER,"$PAV.$num.intersect.out");
