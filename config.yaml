@@ -31,3 +31,5 @@ input_genomes:
     "fasta": "/share/banks/Oryza/nivara/Oryza_nivara.assembly.fna"
     "gff3": "/share/banks/Oryza/nivara/Oryza_nivara.gff3"
     "name": "nivara"
+
+identity: 80
