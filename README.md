@@ -107,6 +107,8 @@ input_genomes:
     "fasta": "/share/banks/Oryza/nivara/Oryza_nivara.assembly.fna"
     "gff3": "/share/banks/Oryza/nivara/Oryza_nivara.gff3"
     "name": "nivara"
+
+identity: 80
 ```
 
 It's best not to mix NCBI genomes with your own annotated genomes, to avoid biaises due to annotation method/software. Keep an homogeneous annotation procedure to feed the workflow.
