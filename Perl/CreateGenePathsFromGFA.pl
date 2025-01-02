@@ -75,7 +75,7 @@ while(my $line = <GFA>){
 		}
 		elsif ($line =~/^P/){
 			my ($type,$strain_chrom,$pathP) = split(/\t/,$line);
-			my ($stra,$chromP) = split(/#/,$strain_chrom);
+			my ($stra,$haplo,$chromP) = split(/#/,$strain_chrom);
 			$path = $pathP;
 			$chrom = $chromP;
 			@segments = split(/,/,$path);
