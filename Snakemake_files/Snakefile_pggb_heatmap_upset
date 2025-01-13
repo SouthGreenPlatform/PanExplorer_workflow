@@ -36,7 +36,7 @@ rule get_data:
                 fasta_file = genome_info["fasta"]
                 name = genome_info["name"]
                 output_file.write(f"{genome_name}\t{genome_name}\t{fasta_file}\n")
-                cmd = "sed 's/>/>"+str(name)+"#/g' "+fasta_file+" >outputs/genomes/"+str(name)+".fasta"
+                cmd = "sed 's/>/>"+str(name)+"#1#/g' "+fasta_file+" >outputs/genomes/"+str(name)+".fasta"
                 os.system(cmd)
                 gff_file = genome_info["gff3"]
                 shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
