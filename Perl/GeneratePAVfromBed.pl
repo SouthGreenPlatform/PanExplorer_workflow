@@ -72,7 +72,7 @@ foreach my $id(keys(%strains)){
 		chomp($line);
 		my @infos = split(/\t/,$line);
 		my $gene1 = $infos[3];
-		$genes{"$id:$gene1"} = 1;
+		$genes{"$id!$gene1"} = 1;
 	}
 	close(B);
 
@@ -109,9 +109,9 @@ foreach my $id(keys(%strains)){
 				my $percentage_overlap_gene2 = ($size_match_gene/$gene2_length)*100;
 				#print "$pair $size_match_gene $percentage_overlap_gene1 $percentage_overlap_gene2\n";
 				if ($percentage_overlap_gene1 > $threshold_coverage && $percentage_overlap_gene2 > $threshold_coverage){
-					$graph->add_edge("$id:$gene1","$id2:$gene2");
-					delete($genes{"$id:$gene1"});
-					delete($genes{"$id2:$gene2"});
+					$graph->add_edge("$id!$gene1","$id2!$gene2");
+					delete($genes{"$id!$gene1"});
+					delete($genes{"$id2!$gene2"});
 				}
 			}
 		}
@@ -133,7 +133,7 @@ foreach my $component (@cc){
         my @genes = @$component;
 	my %h;
 	foreach my $gene(@genes){
-		my ($id,$genename) = split(/:/,$gene);
+		my ($id,$genename) = split(/!/,$gene);
 		$h{$id}.="$genename,";
 	}	
 	foreach my $id(sort keys(%strains)){
@@ -152,7 +152,7 @@ foreach my $component (@cc){
 foreach my $gene(keys(%genes)){
 	$clnum++;
 	print OUT $clnum;
-	my ($id,$genename) = split(/:/,$gene);
+	my ($id,$genename) = split(/!/,$gene);
 	my %h;
 	$h{$id}.="$genename,";
 	foreach my $id(sort keys(%strains)){
