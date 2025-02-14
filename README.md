@@ -66,7 +66,7 @@ tar -xzvf Cog_LE.tar.gz -C $PANEX_PATH/COG
 4- Get the singularity container
 
 ```
-wget -P $PANEX_PATH/singularity https://panexplorer.southgreen.fr/singularity/panexplorer.sif
+singularity pull docker://dereeper/panexplorer_workflow:v2
 ```
 
 
@@ -120,25 +120,25 @@ It's best not to mix NCBI genomes with your own annotated genomes, to avoid biai
 Creating a pangenome using Roary
 
 ```
-singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG
+singularity exec panexplorer_workflow_v2.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG
 ```
 
 Creating a pangenome using PanACoTA
 
 ```
-singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG
+singularity exec panexplorer_workflow_v2.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_panacota_heatmap_upset_COG
 ```
 
 Creating a pangenome graph using Minigraph/Cactus and derived pangenes matrix
 
 ```
-singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_cactus_heatmap_upset_COG
+singularity exec panexplorer_workflow_v2.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_cactus_heatmap_upset_COG
 ```
 
 Creating a pangenome graph using PanGenomeGraph Builder (PGGB) and derived pangenes matrix
 
 ```
-singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_pggb_heatmap_upset_COG
+singularity exec panexplorer_workflow_v2.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_pggb_heatmap_upset_COG
 ```
 
 **For eukaryotes**
