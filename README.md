@@ -146,7 +146,7 @@ singularity exec panexplorer_workflow_v2.sif snakemake --cores 1 -s $PANEX_PATH/
 Creating a pangenome using Orthofinder
 
 ```
-singularity exec $PANEX_PATH/singularity/panexplorer.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_orthofinder_heatmap_upset
+singularity exec panexplorer_workflow_v2.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_orthofinder_heatmap_upset
 ```
 
 ## Graphical outputs
