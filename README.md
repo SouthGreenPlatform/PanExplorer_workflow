@@ -60,7 +60,10 @@ export PANEX_PATH=$PWD
 
 ```
 wget https://ftp.ncbi.nlm.nih.gov/pub/mmdb/cdd/little_endian/Cog_LE.tar.gz
+wget https://ftp.ncbi.nlm.nih.gov/pub/mmdb/cdd/cddid.tbl.gz
+gunzip cddid.tbl.gz
 tar -xzvf Cog_LE.tar.gz -C $PANEX_PATH/COG
+mv cddid.tbl $PANEX_PATH/COG/cddid.tbl
 ```
 
 4- Get the singularity container
