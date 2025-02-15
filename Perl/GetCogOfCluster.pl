@@ -137,7 +137,7 @@ while(my $gb_file = <LS>){
 	my $current_gene;
 	while(my $l=<GB>){
 		if ($l=~/(COG\d+)/){
-			$current_cog = $1;
+			#$current_cog = $1;
 		}
 		if ($l =~/protein_id=\"(.*)\"/ && $current_cog){
 			$current_gene = $1;
