@@ -65,7 +65,7 @@ while(my $line =<F>){
 		my $assembly_accession = $genbank;
 		system("datasets download genome accession --include genome,gbff --filename $outdir/$assembly_accession.zip $assembly_accession");
 		system("unzip -o $outdir/$assembly_accession.zip");
-		system("cp -rf ncbi_dataset/data/$assembly_accession/$assembly_accession*genomic.fna $outdir/$genbank.fasta");
+		system("cp -rf ncbi_dataset/data/$assembly_accession/*genomic.fna $outdir/$genbank.fasta");
 		system("cp -rf ncbi_dataset/data/$assembly_accession/genomic.gbff $outdir/$genbank.gb");
 
 		
