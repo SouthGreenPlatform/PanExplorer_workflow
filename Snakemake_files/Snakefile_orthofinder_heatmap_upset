@@ -16,7 +16,7 @@ with open("config.yaml", "r") as yaml_file:
 
 rule final:
  input:
-  expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+  expand("outputs/genomes/{sample}.fasta.gz", sample=SAMPLES),
   expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
   expand("outputs/genomes/{sample}.pep", sample=SAMPLES),
   "outputs/pav_matrix.tsv",
@@ -28,7 +28,7 @@ rule get_data:
         "config.yaml"
     output:
         "outputs/genomes/strains.txt",
-        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.fasta.gz", sample=SAMPLES),
         expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
     run:
         with open(input[0], "r") as yaml_file, open(output[0], "w") as output_file:
@@ -38,18 +38,20 @@ rule get_data:
                 name = genome_info["name"]
                 gff_file = genome_info["gff3"]
                 shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
-                shutil.copy(fasta_file, "outputs/genomes/"+str(name)+".fasta")
+                shutil.copy(fasta_file, "outputs/genomes/"+str(name)+".fasta.gz")
                 output_file.write(f"{name}\t{name}\n")
 
 rule gffread:
     input:
-        fasta = "outputs/genomes/{sample}.fasta",
+        fastagz = "outputs/genomes/{sample}.fasta.gz",
         gff = "outputs/genomes/{sample}.gff"
     output:
-        "outputs/genomes/{sample}.pep"
+        fasta = "outputs/genomes/{sample}.fasta",
+        pep = "outputs/genomes/{sample}.pep"
     shell:
         """
-        gffread -y {output} -g {input.fasta} {input.gff}
+        gunzip {input.fastagz}
+        gffread -y {output.pep} -g {output.fasta} {input.gff}
         """
 
 rule orthofinder:
