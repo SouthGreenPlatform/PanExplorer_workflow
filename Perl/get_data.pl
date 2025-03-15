@@ -67,7 +67,7 @@ while(my $line =<F>){
 		system("unzip -o $outdir/$assembly_accession.zip");
 		system("cp -rf ncbi_dataset/data/$assembly_accession/*genomic.fna $outdir/$genbank.fasta");
 		system("cp -rf ncbi_dataset/data/$assembly_accession/genomic.gbff $outdir/$genbank.gb");
-
+                sleep(5); 
 		
 	}
 	else{
