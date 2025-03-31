@@ -46,7 +46,7 @@ rule final:
   "outputs/pav_matrix.tsv",
   "outputs/cog_output.txt",
   "outputs/rarefaction_curves.txt",
-  "outputs/heatmap.svg.heatmap_plotly.html" 
+  "outputs/vntr_matrix.tsv"
 
 rule ncbi_datasets:
     input:
@@ -188,11 +188,12 @@ rule bedtools_intersect_vntr:
     params:
         identity=config['identity']
     output:
-        "outputs/heatmap.svg.heatmap_plotly.html"
+        "outputs/vntr_matrix.tsv"
     shell:
         """
         perl $PANEX_PATH/Perl/GeneratePAVfromBed3.pl {input.strains} outputs/trf {output}.tmp 1
         perl $PANEX_PATH/Perl/ConvertVntrMatrix.pl {output}.tmp {output} {input.strains} 
+        cp -rf outputs/vntr_matrix.tsv outputs/heatmap.svg.heatmap_plotly.html
         """
 
 rule cog:
@@ -213,7 +214,7 @@ rule heatmap_upset:
         pav="outputs/pav_matrix.tsv"
     output:
         heatmap="outputs/heatmap.svg.gz",
-        html="outputs/heatmap.svg.heatmap_plotly.html",
+        html="outputs/heatmap.svg.heatmap_plotly.2.html",
         upsetr="outputs/upsetr.svg",
         binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
     shell:
