@@ -45,8 +45,8 @@ rule final:
   "outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
   "outputs/pav_matrix.tsv",
   "outputs/cog_output.txt",
-  "outputs/rarefaction_curves.txt", 
-  "outputs/vntr_matrix.tsv"
+  "outputs/rarefaction_curves.txt",
+  "outputs/heatmap.svg.heatmap_plotly.html" 
 
 rule ncbi_datasets:
     input:
