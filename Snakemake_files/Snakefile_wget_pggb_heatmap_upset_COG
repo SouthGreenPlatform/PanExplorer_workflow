@@ -178,7 +178,7 @@ rule create_VNTR_paths:
         bed="outputs/trf/{sample}.vntr_segments.bed",
     shell:
         """
-        perl /projects/xl/Xantho_pangenomics/PanExplorer_workflow/Perl/TransferBedOnGFAGraph.pl {input.gfa} {input.bed} {output.basename}
+        perl $PANEX_PATH/Perl/TransferBedOnGFAGraph.pl {input.gfa} {input.bed} {output.basename}
         """
 
 rule bedtools_intersect_vntr:
@@ -191,8 +191,8 @@ rule bedtools_intersect_vntr:
         "outputs/heatmap.svg.heatmap_plotly.html"
     shell:
         """
-        perl /projects/xl/Xantho_pangenomics/PanExplorer_workflow/Perl/GeneratePAVfromBed3.pl {input.strains} outputs/trf {output}.tmp 1
-        perl /projects/xl/Xantho_pangenomics/PanExplorer_workflow/Perl/ConvertVntrMatrix.pl {output}.tmp {output} {input.strains} 
+        perl $PANEX_PATH/Perl/GeneratePAVfromBed3.pl {input.strains} outputs/trf {output}.tmp 1
+        perl $PANEX_PATH/Perl/ConvertVntrMatrix.pl {output}.tmp {output} {input.strains} 
         """
 
 rule cog:
