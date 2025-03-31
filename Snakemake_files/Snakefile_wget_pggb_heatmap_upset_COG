@@ -44,10 +44,9 @@ rule final:
   "outputs/GCskew.txt",
   "outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
   "outputs/pav_matrix.tsv",
-  "outputs/heatmap.svg.gz",
   "outputs/cog_output.txt",
-  "outputs/rarefaction_curves.txt"
-
+  "outputs/rarefaction_curves.txt", 
+  "outputs/vntr_matrix.tsv"
 
 rule ncbi_datasets:
     input:
@@ -108,7 +107,7 @@ rule pggb:
         """
         samtools faidx outputs/genomes/all_genomes.fa
         reference=$(head -1 outputs/genomes/strains.txt | awk '{{print $2}}')
-        pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out -V $reference -m -M -t 8
+        pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out -V $reference -m -M
         mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output.gfa}
         mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
         mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
@@ -154,6 +153,47 @@ rule bedtools_intersect:
         perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input.strains} outputs/genomes {output} {params.identity}
         """
 
+rule trf:
+    input:
+        fasta="outputs/genomes/{sample}.fasta",
+        gff="outputs/genomes/{sample}.gb.gff",
+    output:
+        out="outputs/genomes/{sample}.fasta.trf.txt",
+        outbed="outputs/genomes/{sample}.fasta.trf.bed",
+        log="outputs/genomes/{sample}.fasta.trf.log",
+    shell:
+        """
+        trf {input.fasta} 2 3 5 80 20 50 12 -h -f 2>{output.log} 1>{output.out}
+        mv {wildcards.sample}.fasta.2.3.5.80.20.50.12.dat {output.out}
+        pathname=$(grep -v '#' -m 1 {input.gff} | awk {{'print $1'}} )
+        grep -P '^\d' {output.out} | awk -v pathname="$pathname" -F ' ' '{{print pathname"\t"$1"\t"$2"\trepeat"NR"_"$14"_"$4}}' >{output.outbed}
+        """
+
+rule create_VNTR_paths:
+    input:
+        bed="outputs/genomes/{sample}.fasta.trf.bed",
+        gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+    output:
+        basename="outputs/trf/{sample}.vntr_segments",
+        bed="outputs/trf/{sample}.vntr_segments.bed",
+    shell:
+        """
+        perl /projects/xl/Xantho_pangenomics/PanExplorer_workflow/Perl/TransferBedOnGFAGraph.pl {input.gfa} {input.bed} {output.basename}
+        """
+
+rule bedtools_intersect_vntr:
+    input:
+        strains="outputs/genomes/strains.txt",
+        bedfiles=expand("outputs/trf/{sample}.vntr_segments.bed", sample=SAMPLES)
+    params:
+        identity=config['identity']
+    output:
+        "outputs/heatmap.svg.heatmap_plotly.html"
+    shell:
+        """
+        perl /projects/xl/Xantho_pangenomics/PanExplorer_workflow/Perl/GeneratePAVfromBed3.pl {input.strains} outputs/trf {output}.tmp 1
+        perl /projects/xl/Xantho_pangenomics/PanExplorer_workflow/Perl/ConvertVntrMatrix.pl {output}.tmp {output} {input.strains} 
+        """
 
 rule cog:
     input:
