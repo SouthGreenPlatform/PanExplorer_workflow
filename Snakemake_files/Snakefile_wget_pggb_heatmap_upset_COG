@@ -151,6 +151,7 @@ rule bedtools_intersect:
     shell:
         """
         perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input.strains} outputs/genomes {output} {params.identity}
+        cp outputs/pav_matrix.tsv outputs/pav_matrix.tsv.bkp
         """
 
 rule trf:
@@ -158,9 +159,9 @@ rule trf:
         fasta="outputs/genomes/{sample}.fasta",
         gff="outputs/genomes/{sample}.gb.gff",
     output:
-        out="outputs/genomes/{sample}.fasta.trf.txt",
-        outbed="outputs/genomes/{sample}.fasta.trf.bed",
-        log="outputs/genomes/{sample}.fasta.trf.log",
+        out="outputs/trf_bed/{sample}.fasta.trf.txt",
+        outbed="outputs/trf_bed/{sample}.fasta.trf.bed",
+        log="outputs/trf_bed/{sample}.fasta.trf.log",
     shell:
         """
         trf {input.fasta} 2 3 5 80 20 50 12 -h -f 2>{output.log} 1>{output.out}
@@ -171,7 +172,7 @@ rule trf:
 
 rule create_VNTR_paths:
     input:
-        bed="outputs/genomes/{sample}.fasta.trf.bed",
+        bed="outputs/trf_bed/{sample}.fasta.trf.bed",
         gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
     output:
         basename="outputs/trf/{sample}.vntr_segments",
@@ -214,7 +215,7 @@ rule heatmap_upset:
         pav="outputs/pav_matrix.tsv"
     output:
         heatmap="outputs/heatmap.svg.gz",
-        html="outputs/heatmap.svg.heatmap_plotly.2.html",
+        html="outputs/heatmap.svg.heatmap_plotly.html",
         upsetr="outputs/upsetr.svg",
         binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
     shell:
