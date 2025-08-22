@@ -74,7 +74,7 @@ open(F,$matrix);
 my $first_line = <F>;
 $first_line =~s/\n//g;$first_line =~s/\r//g;
 my @infos_first_line = split(/\t/,$first_line);
-$first_line =~s/ClutserID/Repeat\tFlanking/g;
+$first_line =~s/ClutserID/ID\tRepeat\tFlanking/g;
 print O "$first_line\n";
 my $n = 0;
 my $monomorphic = 0;
@@ -86,7 +86,8 @@ while(my $line = <F>){
 	my %alleles;
 	my $concat = "";
 	my $concat_flanking = "";
-	my %repeats;	
+	my %repeats;
+	my %flanking_sequences;	
 	for (my $i = 1; $i <= $#infos; $i++){
 		if ($infos[$i] !~/-/){
 			my ($repeat_name,$repeat,$nb_repeat) = split(/_/,$infos[$i]);
@@ -100,12 +101,17 @@ while(my $line = <F>){
 			
 			my $ref_subhash = $flankings{$repeat_name}{$genome_name};
 			my %subhash = %$ref_subhash;
-			my $flankings = join(",",keys(%subhash));
-			$concat_flanking .= $flankings;
+			foreach my $flank(keys(%subhash)){
+				$flanking_sequences{$flank} = 1;
+			}
 		}
 		else{
 			$concat .= "\t".$infos[$i];
 		}
+	}
+	my $concat_flanking = join(",",keys(%flanking_sequences));
+	foreach my $flank(keys(%flanking_sequences)){
+		
 	}
 	# different patterns
 	if (scalar keys(%hash) > 1){
@@ -114,7 +120,7 @@ while(my $line = <F>){
 	}
 	# monomorphic
 	elsif (scalar keys(%alleles) == 1){
-		print O join(",",keys(%repeats))."\t".$concat_flanking."$concat\n";
+		#print O $infos[0]. "\t". join(",",keys(%repeats))."\t".$concat_flanking."$concat\n";
 		$monomorphic++;
 	}
 	# found several times for the same sample
@@ -122,7 +128,7 @@ while(my $line = <F>){
 		#print O join(",",keys(%repeats)).":".$concat_flanking."$concat\n";	
 	}
 	else{
-		print O join(",",keys(%repeats)).":".$concat_flanking."$concat\n";
+		print O $infos[0]. "\t". join(",",keys(%repeats))."\t".$concat_flanking."$concat\n";
 		$n++;
 	}
 }
