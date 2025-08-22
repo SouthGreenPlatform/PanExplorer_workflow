@@ -16,13 +16,17 @@ with open("config.yaml", "r") as yaml_file:
             cmd = "grep 'ACCESSION' "+gb_path
             returned_value = subprocess.getoutput(cmd)
             words = returned_value.split()
-            name = words[1]
+            name=""
+            if len(words) > 1:
+                name = words[1]
             #words = returned_value.split()
             #SAMPLES.append(words[1])
             words = gb_path.split("/")
             genbank_file_name = words[-1]
             x = genbank_file_name.replace(".", "_")
             cmd = "sed -i 's/ACCESSION   "+name+"/ACCESSION   "+x+"/g' "+gb_path
+            subprocess.getoutput(cmd)
+            cmd = "sed -i 's/DEFINITION  .*$/DEFINITION  Genus species "+x+"/g' "+gb_path
             subprocess.getoutput(cmd)
 
             cmd_locus = "grep 'LOCUS' "+gb_path
@@ -35,7 +39,8 @@ with open("config.yaml", "r") as yaml_file:
             cmd = "grep 'ACCESSION' "+gb_path
             returned_value = subprocess.getoutput(cmd)
             words = returned_value.split()
-            SAMPLES.append(words[1])
+            #SAMPLES.append(words[1])
+            SAMPLES.append(x)
 
 
 
@@ -46,6 +51,7 @@ rule final:
   "outputs/pav_matrix.tsv",
   "outputs/cog_output.txt",
   "outputs/rarefaction_curves.txt",
+  "outputs/fastani.out",
   "outputs/vntr_matrix.tsv"
 
 rule ncbi_datasets:
@@ -111,7 +117,7 @@ rule pggb:
         mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output.gfa}
         mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
         mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
-        mv outputs/pggb_out/all_genomes.*vcf {output.vcf}
+        perl /projects/xl/Xantho_pangenomics/PGGB_65Xo/PanExplorer_workflow/Perl/makeVCFdiploid.pl outputs/pggb_out/all_genomes.*vcf {output.vcf}
         """
 
 rule odgi:
@@ -166,8 +172,7 @@ rule trf:
         """
         trf {input.fasta} 2 3 5 80 20 50 12 -h -f 2>{output.log} 1>{output.out}
         mv {wildcards.sample}.fasta.2.3.5.80.20.50.12.dat {output.out}
-        pathname=$(grep -v '#' -m 1 {input.gff} | awk {{'print $1'}} )
-        grep -P '^\d' {output.out} | awk -v pathname="$pathname" -F ' ' '{{print pathname"\t"$1"\t"$2"\trepeat"NR"_"$14"_"$4}}' >{output.outbed}
+        perl $PANEX_PATH/Perl/Trf2Bed.pl {output.out} {output.outbed}
         """
 
 rule create_VNTR_paths:
@@ -193,7 +198,7 @@ rule bedtools_intersect_vntr:
     shell:
         """
         perl $PANEX_PATH/Perl/GeneratePAVfromBed3.pl {input.strains} outputs/trf {output}.tmp 1
-        perl $PANEX_PATH/Perl/ConvertVntrMatrix.pl {output}.tmp {output} {input.strains} 
+        perl $PANEX_PATH/Perl/ConvertVntrMatrix.pl {output}.tmp {output} {input.strains} outputs/trf_bed outputs/genomes 
         cp -rf outputs/vntr_matrix.tsv outputs/heatmap.svg.heatmap_plotly.html
         """
 
@@ -235,5 +240,22 @@ rule micropan:
     shell:
         """
         Rscript $PANEX_PATH/R/micropan_rarefaction.R -f {input.binpav} -p {output.pdf} -a {output.heaps} -o {output.txt}
+        pdf2svg {output.pdf} {output.svg}
+        """
+
+rule fastani:
+    input:
+        "outputs/genomes/genomes.txt"
+    output:
+        out="outputs/fastani.out",
+        matrix="outputs/fastani.out.matrix",
+        completematrix="outputs/fastani.out.matrix.complete",
+        pdf="outputs/fastani.out.pdf",
+        svg="outputs/fastani.out.svg"
+    shell:
+        """
+        fastANI --rl {input} --ql {input} -o {output.out} -t 4 --matrix
+        perl $PANEX_PATH/Perl/convertANI.pl {output.matrix} outputs/genomes/genomes2.txt >{output.completematrix}
+        Rscript $PANEX_PATH/R/heatmap_ani.R -f {output.completematrix} -o {output.pdf}
         pdf2svg {output.pdf} {output.svg}
         """
