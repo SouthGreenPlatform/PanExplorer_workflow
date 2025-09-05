@@ -117,7 +117,7 @@ rule pggb:
         mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output.gfa}
         mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
         mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
-        perl /projects/xl/Xantho_pangenomics/PGGB_65Xo/PanExplorer_workflow/Perl/makeVCFdiploid.pl outputs/pggb_out/all_genomes.*vcf {output.vcf}
+        perl $PANEX_PATH/Perl/makeVCFdiploid.pl outputs/pggb_out/all_genomes.*vcf {output.vcf}
         """
 
 rule odgi:
