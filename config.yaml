@@ -33,3 +33,6 @@ input_genomes:
     "name": "nivara"
 
 identity: 80
+
+# roary param
+generate_core_genes_alignment: True
