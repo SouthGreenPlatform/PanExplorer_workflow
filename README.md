@@ -112,6 +112,9 @@ input_genomes:
     "name": "nivara"
 
 identity: 80
+
+# roary param
+generate_core_genes_alignment: False
 ```
 
 It's best not to mix NCBI genomes with your own annotated genomes, to avoid biaises due to annotation method/software. Keep an homogeneous annotation procedure to feed the workflow.
