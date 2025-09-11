@@ -101,13 +101,15 @@ rule roary:
     input:
         expand("outputs/genomes/{sample}.gb.rmdup.gff", sample=SAMPLES)
     params:
-        identity=config['identity']
+        identity=config['identity'],
+        generate_core_genes_alignment=" -n -e " if config['generate_core_genes_alignment'] else ""
     output:
         pav="outputs/pav_matrix.csv",
         newick="outputs/accessory_binary_genes.fa.newick"
     shell:
         """
-        roary -f outputs/roary_outdir -i {params.identity} outputs/genomes/*gb.rmdup.gff
+        echo {params.generate_core_genes_alignment}
+        roary -f outputs/roary_outdir -i {params.identity} outputs/genomes/*gb.rmdup.gff {params.generate_core_genes_alignment}
         cp -rf outputs/roary_outdir/gene_presence_absence.csv {output.pav}
         cp -rf outputs/roary_outdir/accessory_binary_genes.fa.newick {output.newick}
         """
