@@ -53,20 +53,10 @@ git clone https://github.com/SouthGreenPlatform/PanExplorer_workflow.git
 
 ```
 cd PanExplorer_workflow
-export PANEX_PATH=$PWD
+export PANEX_PATH=/usr/local/bin/PanExplorer_workflow;
 ```
 
-3- Get preformatted RPS-BLAST+ database of the CDD COG distribution
-
-```
-wget https://ftp.ncbi.nlm.nih.gov/pub/mmdb/cdd/little_endian/Cog_LE.tar.gz
-wget https://ftp.ncbi.nlm.nih.gov/pub/mmdb/cdd/cddid.tbl.gz
-gunzip cddid.tbl.gz
-tar -xzvf Cog_LE.tar.gz -C $PANEX_PATH/COG
-mv cddid.tbl $PANEX_PATH/COG/cddid.tbl
-```
-
-4- Get the singularity container
+3- Get the singularity container
 
 ```
 singularity pull docker://dereeper/panexplorer_workflow:v2
