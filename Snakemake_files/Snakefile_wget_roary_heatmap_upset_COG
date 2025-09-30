@@ -99,20 +99,26 @@ rule genbank2gff3:
 
 rule roary:
     input:
-        expand("outputs/genomes/{sample}.gb.rmdup.gff", sample=SAMPLES)
+        gff=expand("outputs/genomes/{sample}.gb.rmdup.gff", sample=SAMPLES),
+        fasta=expand("outputs/genomes/{sample}.fasta", sample=SAMPLES)
     params:
         identity=config['identity'],
-        generate_core_genes_alignment=" -n -e " if config['generate_core_genes_alignment'] else ""
     output:
         pav="outputs/pav_matrix.csv",
         newick="outputs/accessory_binary_genes.fa.newick"
-    shell:
-        """
-        echo {params.generate_core_genes_alignment}
-        roary -f outputs/roary_outdir -i {params.identity} outputs/genomes/*gb.rmdup.gff {params.generate_core_genes_alignment}
-        cp -rf outputs/roary_outdir/gene_presence_absence.csv {output.pav}
-        cp -rf outputs/roary_outdir/accessory_binary_genes.fa.newick {output.newick}
-        """
+    run:
+        sizes = [os.path.getsize(f) for f in input.fasta]
+        generate_core_genes_alignment = config['generate_core_genes_alignment']
+        generate_core_bool = generate_core_genes_alignment == True
+        total_size = sum(sizes)
+        if total_size <= 20_000_000 and generate_core_bool:
+            shell(f"roary -f outputs/roary_outdir -i {params.identity} outputs/genomes/*gb.rmdup.gff -n -e")
+        else:
+            shell(f"roary -f outputs/roary_outdir -i {params.identity} outputs/genomes/*gb.rmdup.gff")
+
+
+        shell("cp -rf outputs/roary_outdir/gene_presence_absence.csv {output.pav}")
+        shell("cp -rf outputs/roary_outdir/accessory_binary_genes.fa.newick {output.newick}")
 
 rule convert_matrix:
     input:
