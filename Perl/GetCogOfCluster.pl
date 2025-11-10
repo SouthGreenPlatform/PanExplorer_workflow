@@ -13,7 +13,6 @@ my $cog_clusters = $ARGV[5];
 my $strain_info_file = $ARGV[6];
 
 
-
 my %cogs_categories = (
         "J"=>"INFORMATION STORAGE AND PROCESSING",
         "A"=>"INFORMATION STORAGE AND PROCESSING",
@@ -41,6 +40,9 @@ my %cogs_categories = (
         "R"=>"POORLY CHARACTERIZED",
         "S"=>"POORLY CHARACTERIZED"
 );
+
+my $use_func_files = `ls $prot_dir/*func | wc -l`;
+$use_func_files =~s/\n//g;$use_func_files =~s/\r//g;
 
 my %strain_names;
 open(S,$strain_info_file);
@@ -77,6 +79,7 @@ while(<DIR>) {
 }
 closedir(DIR);
 
+my %cogs_of_cluster;
 my %functions;
 my %accessory_clusters;
 my %genes_of_cluster;
@@ -84,7 +87,9 @@ my %cluster_of_gene;
 open(S,">$pav_matrix.selection_prot.fa");
 open(O,$pav_matrix);
 <O>;
+my $n = 0;
 while(<O>){
+	$n++;
         my $line = $_;
         $line =~s/\n//g;$line =~s/\r//g;
         my @infos = split(/\t/,$line);
@@ -108,15 +113,17 @@ while(<O>){
 				#$genename =~s/\|/_/g;
 				print S $proteins{$genename};
 				$cluster_of_gene{$genename} = $cluster;
-				my $function = `grep '$genename' $prot_dir/*func`;
-                                $function =~s/\n//g;$function =~s/\r//g;
-                                my @t = split(/$genename/,$function);
-                                if ($t[1] =~/-\s+(.*)/){
-                                        $function = $1;
-                                        $function =~s/'//g;
-                                }
-                                $functions{$cluster} = $function;
-				last LINE;
+				if ($use_func_files > 0){
+					my $function = `grep '$genename' $prot_dir/*func`;
+        	                        $function =~s/\n//g;$function =~s/\r//g;
+                	                my @t = split(/$genename/,$function);
+                        	        if ($t[1] =~/-\s+(.*)/){
+                                	        $function = $1;
+                                        	$function =~s/'//g;
+                                	}
+	                                $functions{$cluster} = $function;
+					last LINE;
+				}
 			}
 		}
         }
@@ -129,33 +136,69 @@ close(S);
 # Test if COG are already provided in Genbank files. If provided, rpsblast is not launched, we get the COG information from Genbank files
 #########################################################################################################################################
 my %cog_of_genes;
-open(LS,"ls $prot_dir/*gb |");
-while(my $gb_file = <LS>){
-	chomp($gb_file);
-	open(GB,$gb_file);
-	my $current_cog;
-	my $current_gene;
-	while(my $l=<GB>){
-		if ($l=~/(COG\d+)/){
-			#$current_cog = $1;
-		}
-		if ($l =~/protein_id=\"(.*)\"/ && $current_cog){
-			$current_gene = $1;
-			$cog_of_genes{$current_gene} .= ",$current_cog";
-		}
-		if ($l =~/locus_tag=\"(.*)\"/ && $current_cog){
-                        $current_gene = $1;
-			$cog_of_genes{$current_gene} .= ",$current_cog";
-                }
-	}
-	close(GB);
-}
-close(LS);
+if ($use_func_files > 0){
 
+	######################################
+	# for bacteria, use genbank files
+	######################################
+	open(LS,"ls $prot_dir/*gb |");
+	while(my $gb_file = <LS>){
+		chomp($gb_file);
+		open(GB,$gb_file);
+		my $current_cog;
+		my $current_gene;
+		while(my $l=<GB>){
+			if ($l=~/(COG\d+)/){
+				#$current_cog = $1;
+			}
+			if ($l =~/protein_id=\"(.*)\"/ && $current_cog){
+				$current_gene = $1;
+				$cog_of_genes{$current_gene} .= ",$current_cog";
+			}
+			if ($l =~/locus_tag=\"(.*)\"/ && $current_cog){
+                        	$current_gene = $1;
+				$cog_of_genes{$current_gene} .= ",$current_cog";
+        	        }
+		}
+		close(GB);
+	}
+	close(LS);
+}
+
+else{
+	######################################
+        # for eucaryotes, use GFF files
+        ######################################
+	open(LS,"ls $prot_dir/*gff |");
+	while(my $file = <LS>){
+		chomp($file);
+		open(GFF,$file);
+		my $current_GO;
+		my $current_gene;
+		while(my $l=<GFF>){
+			if ($l =~/ID=([^;]+);.*=(GO:[^;]+);/){
+				$current_gene = $1;
+				$current_gene =~s/:/_/g;
+				if ($l=~/=(GO:\d+[^;]+);/){
+					$current_GO = $1;
+					$cog_of_genes{$current_gene} .= ",$current_GO";
+				}
+				if ($l=~/Note=([^;]+);/){
+					my $function = $1;
+					$function =~s/'//g;
+					$functions{$current_gene} = $function;
+				}
+			}
+		}
+		close(GFF);
+	}
+	close(LS);
+}
+
+my %letters_of_cog;
 my %count_letter;
 if (scalar keys(%cog_of_genes) > 1){
 	open(WHOG,"$dirname/../COG/whog");
-	my %letters_of_cog;
 	while(my $l=<WHOG>){
 		if ($l=~/\[(\w+)\] (COG\d+) /){
 			my $letter = $1;
@@ -165,12 +208,15 @@ if (scalar keys(%cog_of_genes) > 1){
 	}
 	close(WHOG);
 
-	my %cogs_of_cluster;
 	foreach my $gene(keys(%cog_of_genes)){
 		my $cluster = $cluster_of_gene{$gene};
 		my $cogs = $cog_of_genes{$gene};
-		$cogs_of_cluster{$cluster} = $cogs;	
+		my $function = $functions{$gene};
+		$cogs_of_cluster{$cluster} = $cogs;
+		$functions{$cluster} = $function;	
 	}
+}
+if (scalar keys(%cogs_of_cluster) > 1) {
 	open(COG_CLUST,">$cog_clusters");	
 	foreach my $cluster(sort {$a<=>$b} keys(%cogs_of_cluster)){
 		my $cogids = $cogs_of_cluster{$cluster};
