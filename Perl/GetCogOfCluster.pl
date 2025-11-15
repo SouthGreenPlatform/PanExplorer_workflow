@@ -137,7 +137,6 @@ close(S);
 #########################################################################################################################################
 my %cog_of_genes;
 if ($use_func_files > 0){
-
 	######################################
 	# for bacteria, use genbank files
 	######################################
@@ -176,10 +175,11 @@ else{
 		my $current_GO;
 		my $current_gene;
 		while(my $l=<GFF>){
-			if ($l =~/ID=([^;]+);.*=(GO:[^;]+);/){
+			$l =~s/\n//g;$l =~s/\r//g;
+			if ($l =~/ID=([^;]+);.*=(GO:[^;]+);*/){
 				$current_gene = $1;
 				$current_gene =~s/:/_/g;
-				if ($l=~/=(GO:\d+[^;]+);/){
+				if ($l=~/=(GO:\d+[^;]+);*/){
 					$current_GO = $1;
 					$cog_of_genes{$current_gene} .= ",$current_GO";
 				}
@@ -222,7 +222,7 @@ if (scalar keys(%cogs_of_cluster) > 1) {
 		my $cogids = $cogs_of_cluster{$cluster};
 		my @ids = split(/,/,$cogids);
 		foreach my $id(@ids){
-			if ($id =~/\w+/ && $cluster){
+			if ($id =~/\w+/ && $cluster =~/\w+/){
 				my $letter = $letters_of_cog{$id};
 				my @letters = split(//,$letter);
 				my $letters_string = join("\t",@letters);
