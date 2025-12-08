@@ -127,7 +127,7 @@ rule convert_matrix:
         "outputs/pav_matrix.tsv"
     shell:
         """
-        perl Perl/ConvertRoaryMatrix.pl outputs/genomes {input} {output} outputs/genomes/strains.txt  outputs/roary_outdir/fixed_input_files      
+        perl $PANEX_PATH/Perl/ConvertRoaryMatrix.pl outputs/genomes {input} {output} outputs/genomes/strains.txt  outputs/roary_outdir/fixed_input_files      
         """
 
 rule cog:
