@@ -6,6 +6,7 @@ my $indir = $ARGV[0];
 my $matrix = $ARGV[1];
 my $out = $ARGV[2];
 my $strain_names = $ARGV[3];
+my $gene_info_dir = $ARGV[4];
 
 my %strains_of_gb;
 open(F,$strain_names);
@@ -34,6 +35,24 @@ while(<D>){
         close(F);
 }
 close(D);
+
+my %corr;
+open(D,"ls $gene_info_dir/*rmdup.gff |");
+while(<D>){
+	my $file = $_;
+	open(F,"$file");
+	while(<F>){
+		my @infos = split(/\t/,$_);
+		if ($infos[2] eq 'CDS' && /ID=([^;]*);.*Name=([^;]*);/){
+			my $id = $1;
+			my $name = $2;
+			$corr{$id} = $name;
+		}
+	}
+	close(F);
+}
+close(D);
+
 
 my $cl_num = 0;
 my $nb_strains = 1;
