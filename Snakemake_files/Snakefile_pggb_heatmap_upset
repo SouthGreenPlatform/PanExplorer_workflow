@@ -20,6 +20,7 @@ rule all:
         "outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
         "outputs/pav_matrix.tsv",
         "outputs/heatmap.svg.gz",
+        "outputs/cog_of_clusters.txt",
         "outputs/rarefaction_curves.txt"
 
 rule get_data:
@@ -98,6 +99,19 @@ rule heatmap_upset:
         """
         perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} outputs/heatmap.svg
         mv outputs/heatmap.svg.upsetr.svg {output.upsetr}
+        """
+
+rule cog:
+    input:
+        pav="outputs/pav_matrix.tsv"
+    output:
+        cog="outputs/cog_output.txt",
+        cogstat="outputs/cog_stats.txt",
+        cogstat2="outputs/cog_stats2.txt",
+        cogofclusters="outputs/cog_of_clusters.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} {output.cogstat2} {output.cogofclusters} outputs/genomes/strains.txt
         """
 
 rule micropan:
