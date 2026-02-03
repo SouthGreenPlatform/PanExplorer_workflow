@@ -4,6 +4,7 @@ use strict;
 
 my $in = $ARGV[0];
 my $out = $ARGV[1];
+my $ref = $ARGV[2];
 
 open(I,$in);
 open(O,">$out");
@@ -11,11 +12,6 @@ while(<I>){
 	if (!/^#/){
 		my $line = $_;
 		$line =~s/\n//g;$line =~s/\r//g;
-
-		# remove lines with missing data
-		if ($line =~/\.\/\./){
-			next;
-		}
 		my @infos = split(/\t/,$line);
 		print O "ref";
 		for (my $i = 1; $i <= $#infos; $i++){
@@ -27,6 +23,14 @@ while(<I>){
 				print O "\t$val";
 			}
 		}
+		print O "\t0/0";
+		print O "\n";
+	}
+	elsif (/^#CHROM/){
+		my $line = $_;
+		$line =~s/\n//g;$line =~s/\r//g;
+		print O $line;
+		print O "\t$ref";
 		print O "\n";
 	}
 	else{
