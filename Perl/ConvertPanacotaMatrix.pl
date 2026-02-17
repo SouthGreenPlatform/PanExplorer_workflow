@@ -33,6 +33,7 @@ while(<D>){
         while(<F>){
 		if (/>(.*)/){
                         my $prot_id = $1;
+						$prot_id =~s/://g;
                         $prot_num++;
                         my $new_id = "$strain"."_".$prot_num;
 			$corr{$new_id} = $prot_id;
