@@ -31,7 +31,7 @@ if (is.null(opt$out)){
 #svglite(opt$out,width = 31, height = 28)
 pdf(opt$out,width = 31,height = 28)
 
-mydata <- read.table(opt$file, header=TRUE,sep="\t", row.names="Gene")
+mydata <- read.table(opt$file, header=TRUE,sep="\t", row.names="Gene", check.names = FALSE)
 
 iris <- mydata
 
