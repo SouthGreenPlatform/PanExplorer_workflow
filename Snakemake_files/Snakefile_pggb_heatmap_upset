@@ -86,7 +86,7 @@ rule bedtools_intersect:
         "outputs/pav_matrix.tsv",
     shell:
         """
-        perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input.samples} outputs/genomes {output} {params.identity}
+        perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input.samples} outputs/genomes {output} 20
         """
 
 rule heatmap_upset:
