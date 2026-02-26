@@ -65,7 +65,7 @@ while(my $line =<F>){
 		my $assembly_accession = $genbank;
 		my $nb_tries = 0;
         while(! -e "$outdir/$assembly_accession.zip" && $nb_tries <=5 ){
-            system("datasets download genome accession --api-key 9dd2835d3f49969cf0182b2a9bd8b1256e08 --include genome,gbff --filename $outdir/$assembly_accession.zip $assembly_accession");
+            system("datasets download genome accession --no-progressbar --include genome,gbff --filename $outdir/$assembly_accession.zip $assembly_accession");
             system("unzip -o $outdir/$assembly_accession.zip");
             system("cp -rf ncbi_dataset/data/$assembly_accession*/*genomic.fna $outdir/$genbank.fasta");
             system("cp -rf ncbi_dataset/data/$assembly_accession*/genomic.gbff $outdir/$genbank.gb");
