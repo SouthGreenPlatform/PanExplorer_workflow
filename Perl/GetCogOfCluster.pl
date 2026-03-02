@@ -88,13 +88,14 @@ open(S,">$pav_matrix.selection_prot.fa");
 open(O,$pav_matrix);
 <O>;
 my $n = 0;
+my %selection_protein;
 while(<O>){
 	$n++;
         my $line = $_;
         $line =~s/\n//g;$line =~s/\r//g;
         my @infos = split(/\t/,$line);
         my $cluster = $infos[0];
-        print S ">$cluster\n";
+	#print S ">$cluster\n";
 	for (my $i=1; $i <= $#infos; $i++){
 		my @genenames = split(/,/,$infos[$i]);
 		foreach my $genename(@genenames){
@@ -111,25 +112,26 @@ while(<O>){
 		foreach my $genename(@genenames){
 			if ($genename=~/\w+/){
 				#$genename =~s/\|/_/g;
-				print S $proteins{$genename};
+				#print S $proteins{$genename};
+				$selection_protein{$cluster} = $proteins{$genename};
+				#print S ">$cluster\n";print S $proteins{$genename}."\n";
 				$cluster_of_gene{$genename} = $cluster;
-				if ($use_func_files > 0){
-					my $function = `grep '$genename' $prot_dir/*func`;
-        	                        $function =~s/\n//g;$function =~s/\r//g;
-                	                my @t = split(/$genename/,$function);
-                        	        if ($t[1] =~/-\s+(.*)/){
-                                	        $function = $1;
-                                        	$function =~s/'//g;
-                                	}
-	                                $functions{$cluster} = $function;
-					last LINE;
-				}
+				#if ($use_func_files > 0){
+				#	my $function = `grep '$genename' $prot_dir/*func`;
+				#        $function =~s/\n//g;$function =~s/\r//g;
+				#        my @t = split(/$genename/,$function);
+				#        if ($t[1] =~/-\s+(.*)/){
+				# 	        $function = $1;
+				#        	$function =~s/'//g;
+				#	}
+				#        $functions{$cluster} = $function;
+				#	last LINE;
+				#}
 			}
 		}
         }
 }
 close(O);
-close(S);
 
 
 #########################################################################################################################################
@@ -148,15 +150,18 @@ if ($use_func_files > 0){
 		my $current_gene;
 		while(my $l=<GB>){
 			if ($l=~/(COG\d+)/){
-				#$current_cog = $1;
+				$current_cog = $1;
+			}
+			if ($l =~/     CDS             /){
+				$current_cog = "";
 			}
 			if ($l =~/protein_id=\"(.*)\"/ && $current_cog){
 				$current_gene = $1;
-				$cog_of_genes{$current_gene} .= ",$current_cog";
+				$cog_of_genes{$current_gene}{$current_cog} = 1;
 			}
 			if ($l =~/locus_tag=\"(.*)\"/ && $current_cog){
                         	$current_gene = $1;
-				$cog_of_genes{$current_gene} .= ",$current_cog";
+				$cog_of_genes{$current_gene}{$current_cog} = 1;
         	        }
 		}
 		close(GB);
@@ -195,6 +200,9 @@ else{
 	close(LS);
 }
 
+
+
+
 my %letters_of_cog;
 my %count_letter;
 if (scalar keys(%cog_of_genes) > 1){
@@ -210,41 +218,67 @@ if (scalar keys(%cog_of_genes) > 1){
 
 	foreach my $gene(keys(%cog_of_genes)){
 		my $cluster = $cluster_of_gene{$gene};
-		my $cogs = $cog_of_genes{$gene};
+		my @cogs;
+		if ($cog_of_genes{$gene}){
+			my $ref_hash = $cog_of_genes{$gene};
+			my %subhash = %$ref_hash;
+			@cogs = keys(%subhash);
+		}
+		
 		my $function = $functions{$gene};
-		$cogs_of_cluster{$cluster} = $cogs;
+		foreach my $cog(@cogs){
+			$cogs_of_cluster{$cluster}{$cog}++;
+		}
 		$functions{$cluster} = $function;	
 	}
 }
+
 if (scalar keys(%cogs_of_cluster) > 1) {
 	open(COG_CLUST,">$cog_clusters");	
-	foreach my $cluster(sort {$a<=>$b} keys(%cogs_of_cluster)){
-		my $cogids = $cogs_of_cluster{$cluster};
-		my @ids = split(/,/,$cogids);
+	foreach my $cluster(sort {$a<=>$b} keys(%genes_of_cluster)){
+		if ($cogs_of_cluster{$cluster}){
+		#my $cogids = $cogs_of_cluster{$cluster};
+		my $ref_hash = $cogs_of_cluster{$cluster};
+		my %subhash = %$ref_hash;
+		my @ids = keys(%subhash);
+
+		my @genes = split(",",$genes_of_cluster{$cluster});
+		#print "$cluster ".scalar @ids."\n";
+		#my @ids = split(/,/,$cogids);
 		foreach my $id(@ids){
+
 			if ($id =~/\w+/ && $cluster =~/\w+/){
 				my $letter = $letters_of_cog{$id};
 				my @letters = split(//,$letter);
 				my $letters_string = join("\t",@letters);
+				my $nb_times = $cogs_of_cluster{$cluster}{$id} . "/" . scalar @genes;
 				#$letter =~s//\t/g;
 				print COG_CLUST "$cluster	$id	$letters_string\n";
 			}
 		}
+		}
+		else{
+			my $protein = $selection_protein{$cluster};
+			print S ">$cluster\n";
+			print S "$protein\n";
+		}
 	}
 	close(COG_CLUST);
 }
-else{
+close(S);
 
-	my $is_plus = `which rpsblast+`;
-	my $is_not_plus = `which rpsblast`;
-	my $software = "rpsblast";
-	if ($is_plus){$software = "rpsblast+";}
-	system("$software -query $pav_matrix.selection_prot.fa -db $dirname/../COG/Cog -out $pav_matrix.selection.rps-blast.out -evalue 1e-2 -outfmt '7 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs'");
+# if COG not found
+my $is_plus = `which rpsblast+`;
+my $is_not_plus = `which rpsblast`;
+my $software = "rpsblast";
+if ($is_plus){$software = "rpsblast+";}
+system("$software -query $pav_matrix.selection_prot.fa -db $dirname/../COG/Cog -out $pav_matrix.selection.rps-blast.out -evalue 1e-2 -outfmt '7 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs'");
 
-	system("perl $dirname/../COG/bac-genomics-scripts/cdd2cog/cdd2cog.pl -r $pav_matrix.selection.rps-blast.out -c $dirname/../COG/cddid.tbl -f $dirname/../COG/fun.txt -w $dirname/../COG/whog -a");
-	system("cp -rf results/protein-id_cog.txt $cog_clusters");
-	system("rm -rf results");
-}
+
+system("perl $dirname/../COG/bac-genomics-scripts/cdd2cog/cdd2cog.pl -r $pav_matrix.selection.rps-blast.out -c $dirname/../COG/cddid.tbl -f $dirname/../COG/fun.txt -w $dirname/../COG/whog -a");
+system("cat results/protein-id_cog.txt >>$cog_clusters");
+system("rm -rf results");
+
 
 open(COG,">$cog_outfile");
 my %cogs;
