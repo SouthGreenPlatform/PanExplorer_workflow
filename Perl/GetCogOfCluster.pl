@@ -69,6 +69,7 @@ while(<DIR>) {
 	while(<F>){
 		if (/>(.*)/){
 			$id = $1;
+			$id =~s/://g;
 			$strain_of_prot{$id} = $strain;
 		}
 		else{
@@ -111,6 +112,7 @@ while(<O>){
 		my @genenames = split(/,/,$infos[$i]);
 		foreach my $genename(@genenames){
 			if ($genename=~/\w+/){
+				
 				#$genename =~s/\|/_/g;
 				#print S $proteins{$genename};
 				$selection_protein{$cluster} = $proteins{$genename};
@@ -151,17 +153,27 @@ if ($use_func_files > 0){
 		while(my $l=<GB>){
 			if ($l=~/(COG\d+)/){
 				$current_cog = $1;
+				if ($current_gene){
+					$cog_of_genes{$current_gene}{$current_cog} = 1;
+				}
 			}
 			if ($l =~/     CDS             /){
 				$current_cog = "";
+				$current_gene = "";
 			}
-			if ($l =~/protein_id=\"(.*)\"/ && $current_cog){
+			if ($l =~/protein_id=\"(.*)\"/){
 				$current_gene = $1;
-				$cog_of_genes{$current_gene}{$current_cog} = 1;
+				$current_gene =~s/://g;
+				if ($current_cog){
+					$cog_of_genes{$current_gene}{$current_cog} = 1;
+				}
 			}
-			if ($l =~/locus_tag=\"(.*)\"/ && $current_cog){
+			if ($l =~/locus_tag=\"(.*)\"/){
                         	$current_gene = $1;
-				$cog_of_genes{$current_gene}{$current_cog} = 1;
+				$current_gene =~s/://g;
+				if ($current_cog){
+					$cog_of_genes{$current_gene}{$current_cog} = 1;
+				}
         	        }
 		}
 		close(GB);
