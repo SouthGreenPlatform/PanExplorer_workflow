@@ -116,7 +116,7 @@ while(<O>){
 				#$genename =~s/\|/_/g;
 				#print S $proteins{$genename};
 				$selection_protein{$cluster} = $proteins{$genename};
-				#print S ">$cluster\n";print S $proteins{$genename}."\n";
+				print S ">$cluster\n";print S $proteins{$genename}."\n";
 				$cluster_of_gene{$genename} = $cluster;
 				#if ($use_func_files > 0){
 				#	my $function = `grep '$genename' $prot_dir/*func`;
@@ -279,17 +279,20 @@ if (scalar keys(%cogs_of_cluster) > 1) {
 }
 close(S);
 
+
 # if COG not found
-my $is_plus = `which rpsblast+`;
-my $is_not_plus = `which rpsblast`;
-my $software = "rpsblast";
-if ($is_plus){$software = "rpsblast+";}
-system("$software -query $pav_matrix.selection_prot.fa -db $dirname/../COG/Cog -out $pav_matrix.selection.rps-blast.out -evalue 1e-2 -outfmt '7 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs'");
-
-
-system("perl $dirname/../COG/bac-genomics-scripts/cdd2cog/cdd2cog.pl -r $pav_matrix.selection.rps-blast.out -c $dirname/../COG/cddid.tbl -f $dirname/../COG/fun.txt -w $dirname/../COG/whog -a");
-system("cat results/protein-id_cog.txt >>$cog_clusters");
-system("rm -rf results");
+if (scalar keys(%cogs_of_cluster) < 1) {
+	my $is_plus = `which rpsblast+`;
+	my $is_not_plus = `which rpsblast`;
+	my $software = "rpsblast";
+	if ($is_plus){$software = "rpsblast+";}
+	system("$software -query $pav_matrix.selection_prot.fa -db $dirname/../COG/Cog -out $pav_matrix.selection.rps-blast.out -evalue 1e-2 -outfmt '7 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs'");
+	
+	
+	system("perl $dirname/../COG/bac-genomics-scripts/cdd2cog/cdd2cog.pl -r $pav_matrix.selection.rps-blast.out -c $dirname/../COG/cddid.tbl -f $dirname/../COG/fun.txt -w $dirname/../COG/whog -a");
+	system("cat results/protein-id_cog.txt >>$cog_clusters");
+	system("rm -rf results");
+}
 
 
 open(COG,">$cog_outfile");
