@@ -81,6 +81,7 @@ while(<DIR>) {
 closedir(DIR);
 
 my %cogs_of_cluster;
+my %keggs_of_cluster;
 my %functions;
 my %accessory_clusters;
 my %genes_of_cluster;
@@ -140,6 +141,7 @@ close(O);
 # Test if COG are already provided in Genbank files. If provided, rpsblast is not launched, we get the COG information from Genbank files
 #########################################################################################################################################
 my %cog_of_genes;
+my %kegg_of_genes;
 if ($use_func_files > 0){
 	######################################
 	# for bacteria, use genbank files
@@ -149,6 +151,7 @@ if ($use_func_files > 0){
 		chomp($gb_file);
 		open(GB,$gb_file);
 		my $current_cog;
+		my $current_kegg;
 		my $current_gene;
 		while(my $l=<GB>){
 			if ($l=~/(COG\d+)/){
@@ -160,6 +163,7 @@ if ($use_func_files > 0){
 			if ($l =~/     CDS             /){
 				$current_cog = "";
 				$current_gene = "";
+				$current_kegg = "";
 			}
 			if ($l =~/protein_id=\"(.*)\"/){
 				$current_gene = $1;
@@ -167,12 +171,24 @@ if ($use_func_files > 0){
 				if ($current_cog){
 					$cog_of_genes{$current_gene}{$current_cog} = 1;
 				}
+				if ($current_kegg){
+                                        $kegg_of_genes{$current_gene}{$current_kegg} = 1;
+                                }
+			}
+			if ($l =~/KEGG:(K\d+)/){
+				$current_kegg = $1;
+				if ($current_gene){
+					$kegg_of_genes{$current_gene}{$current_kegg} = 1;
+				}
 			}
 			if ($l =~/locus_tag=\"(.*)\"/){
                         	$current_gene = $1;
 				$current_gene =~s/://g;
 				if ($current_cog){
 					$cog_of_genes{$current_gene}{$current_cog} = 1;
+				}
+				if ($current_kegg){
+					$kegg_of_genes{$current_gene}{$current_kegg} = 1;
 				}
         	        }
 		}
@@ -244,6 +260,37 @@ if (scalar keys(%cog_of_genes) > 1){
 		$functions{$cluster} = $function;	
 	}
 }
+if (scalar keys(%kegg_of_genes) > 1){
+	foreach my $gene(keys(%kegg_of_genes)){
+		my $cluster = $cluster_of_gene{$gene};
+                my @keggs;
+                if ($kegg_of_genes{$gene}){
+                        my $ref_hash = $kegg_of_genes{$gene};
+                        my %subhash = %$ref_hash;
+                        @keggs = keys(%subhash);
+                }
+
+                foreach my $kegg(@keggs){
+                        $keggs_of_cluster{$cluster}{$kegg}++;
+                }
+	}
+}
+
+if (scalar keys(%keggs_of_cluster) > 1) {
+	open(COG_STAT,">$cog_stats");
+	foreach my $cluster(sort {$a<=>$b} keys(%genes_of_cluster)){
+		if ($keggs_of_cluster{$cluster}){
+			my $ref_hash = $keggs_of_cluster{$cluster};
+			my %subhash = %$ref_hash;
+			my @ids = keys(%subhash);
+			foreach my $id(@ids){
+				print COG_STAT "$cluster $id\n";
+			}
+		}
+	}
+	close(COG_STAT);
+
+}
 
 if (scalar keys(%cogs_of_cluster) > 1) {
 	open(COG_CLUST,">$cog_clusters");	
@@ -279,17 +326,16 @@ if (scalar keys(%cogs_of_cluster) > 1) {
 }
 close(S);
 
+
+# if COG not found
 if (scalar keys(%cogs_of_cluster) < 1) {
-	# if COG not found
 	my $is_plus = `which rpsblast+`;
 	my $is_not_plus = `which rpsblast`;
 	my $software = "rpsblast";
 	if ($is_plus){$software = "rpsblast+";}
-	#system("$software -query $pav_matrix.selection_prot.fa -db $dirname/../COG/Cog -out $pav_matrix.selection.rps-blast.out -evalue 1e-2 -outfmt '7 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs' >>rpsblast.log 2>&1");
-
-	system("$software -query $pav_matrix.selection_prot.fa -db /usr/local/bin/PanExplorer_workflow/COG/Cog -out $pav_matrix.selection.rps-blast.out -evalue 1e-2 -outfmt '7 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs' >>rpsblast.log 2>&1");
-
-
+	system("$software -query $pav_matrix.selection_prot.fa -db $dirname/../COG/Cog -out $pav_matrix.selection.rps-blast.out -evalue 1e-2 -outfmt '7 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs'");
+	
+	
 	system("perl $dirname/../COG/bac-genomics-scripts/cdd2cog/cdd2cog.pl -r $pav_matrix.selection.rps-blast.out -c $dirname/../COG/cddid.tbl -f $dirname/../COG/fun.txt -w $dirname/../COG/whog -a");
 	system("cat results/protein-id_cog.txt >>$cog_clusters");
 	system("rm -rf results");
@@ -364,22 +410,22 @@ close(CC);
 
 my @cat_of_cat = ("INFORMATION STORAGE AND PROCESSING","METABOLISM","CELLULAR PROCESSES AND SIGNALING","POORLY CHARACTERIZED");
 my @cog_categories = ("D","M","N","O","T","U","V","W","Y","Z","A","B","J","K","L","C","E","F","G","H","I","P","Q","R","S");
-open(COG_STAT,">$cog_stats");
+#open(COG_STAT,">$cog_stats");
 open(COG_STAT2,">$cog_stats2");
-print COG_STAT "COG\t".join("\t",@cog_categories)."\n";
+#print COG_STAT "COG\t".join("\t",@cog_categories)."\n";
 print COG_STAT2 "COG\t".join("\t",@cat_of_cat)."\n";
 foreach my $strain(keys(%count_letter)){
 	my $strain_name = $strain_names{$strain};
-	print COG_STAT "$strain_name";
+	#print COG_STAT "$strain_name";
 	print COG_STAT2 "$strain_name";
 	my $ref_subhash = $count_letter{$strain};
 	my %subhash = %$ref_subhash;
 	foreach my $letter(@cog_categories){
 		my $n = 0;
 		if ($count_letter{$strain}{$letter}){$n = $count_letter{$strain}{$letter};}
-		print COG_STAT "\t".$n;
+		#print COG_STAT "\t".$n;
 	}
-	print COG_STAT "\n";
+	#print COG_STAT "\n";
 
 	foreach my $cat(@cat_of_cat){
 		my $n = 0;
@@ -388,6 +434,6 @@ foreach my $strain(keys(%count_letter)){
 	}
 	print COG_STAT2 "\n";
 }
-close(COG_STAT);
+#close(COG_STAT);
 close(COG_STAT2);
 
