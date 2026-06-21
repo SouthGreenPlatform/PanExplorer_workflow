@@ -276,8 +276,9 @@ if (scalar keys(%kegg_of_genes) > 1){
 	}
 }
 
+open(COG_STAT,">$cog_stats");
 if (scalar keys(%keggs_of_cluster) > 1) {
-	open(COG_STAT,">$cog_stats");
+	
 	foreach my $cluster(sort {$a<=>$b} keys(%genes_of_cluster)){
 		if ($keggs_of_cluster{$cluster}){
 			my $ref_hash = $keggs_of_cluster{$cluster};
@@ -288,9 +289,8 @@ if (scalar keys(%keggs_of_cluster) > 1) {
 			}
 		}
 	}
-	close(COG_STAT);
-
 }
+close(COG_STAT);
 
 if (scalar keys(%cogs_of_cluster) > 1) {
 	open(COG_CLUST,">$cog_clusters");	
