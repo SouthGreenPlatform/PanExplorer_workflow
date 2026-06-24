@@ -7,7 +7,7 @@ my $dirname = dirname(__FILE__);
 my $pav_matrix = $ARGV[0];
 my $prot_dir = $ARGV[1];
 my $cog_outfile = $ARGV[2];
-my $cog_stats = $ARGV[3];
+my $kegg = $ARGV[3];
 my $cog_stats2 = $ARGV[4];
 my $cog_clusters = $ARGV[5];
 my $strain_info_file = $ARGV[6];
@@ -276,7 +276,7 @@ if (scalar keys(%kegg_of_genes) > 1){
 	}
 }
 
-open(COG_STAT,">$cog_stats");
+open(KEGG,">$kegg");
 if (scalar keys(%keggs_of_cluster) > 1) {
 	
 	foreach my $cluster(sort {$a<=>$b} keys(%genes_of_cluster)){
@@ -285,12 +285,12 @@ if (scalar keys(%keggs_of_cluster) > 1) {
 			my %subhash = %$ref_hash;
 			my @ids = keys(%subhash);
 			foreach my $id(@ids){
-				print COG_STAT "$cluster $id\n";
+				print KEGG "$cluster\t$id\n";
 			}
 		}
 	}
 }
-close(COG_STAT);
+close(KEGG);
 
 if (scalar keys(%cogs_of_cluster) > 1) {
 	open(COG_CLUST,">$cog_clusters");	
