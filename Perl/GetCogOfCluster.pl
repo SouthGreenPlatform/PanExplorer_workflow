@@ -451,4 +451,65 @@ close(COG);
 
 
 my %cogs_of_clusters;
-my %c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+my %cogcats_of_clusters;
+open(C,$cog_clusters);
+while(<C>){
+        my $line = $_;
+        $line =~s/\n//g;$line =~s/\r//g;
+        my @infos = split(/\t/,$line);
+        my $cluster = $infos[0];
+        my $cog = $infos[1];
+        my $cog_category = $infos[2];
+        $cogs_of_clusters{$cluster}{$cog} = 1;
+        $cogcats_of_clusters{$cluster} = $cog_category;
+}
+close(C);
+
+open(CC,">$cog_clusters.2");
+foreach my $cluster(sort{$a<=>$b} keys(%genes_of_cluster)){
+        my $cog_category = "Unknown";
+        my $cog_list = "Unknown";
+        if ($cogcats_of_clusters{$cluster}){
+                $cog_category = $cogcats_of_clusters{$cluster};
+                my $ref_cogs_of_clusters = $cogs_of_clusters{$cluster};
+                $cog_list = join(",",keys(%$ref_cogs_of_clusters));
+        }
+	my $function = "Unknown";
+	if ($functions{$cluster}){
+		$function = $functions{$cluster};
+	}
+        if ($accessory_clusters{$cluster}){
+                print CC "$cluster\t$cog_list\t$cog_category\t$function\n";
+        }
+}
+close(CC);
+
+my @cat_of_cat = ("INFORMATION STORAGE AND PROCESSING","METABOLISM","CELLULAR PROCESSES AND SIGNALING","POORLY CHARACTERIZED");
+my @cog_categories = ("D","M","N","O","T","U","V","W","Y","Z","A","B","J","K","L","C","E","F","G","H","I","P","Q","R","S");
+#open(COG_STAT,">$cog_stats");
+open(COG_STAT2,">$cog_stats2");
+#print COG_STAT "COG\t".join("\t",@cog_categories)."\n";
+print COG_STAT2 "COG\t".join("\t",@cat_of_cat)."\n";
+foreach my $strain(keys(%count_letter)){
+	my $strain_name = $strain_names{$strain};
+	#print COG_STAT "$strain_name";
+	print COG_STAT2 "$strain_name";
+	my $ref_subhash = $count_letter{$strain};
+	my %subhash = %$ref_subhash;
+	foreach my $letter(@cog_categories){
+		my $n = 0;
+		if ($count_letter{$strain}{$letter}){$n = $count_letter{$strain}{$letter};}
+		#print COG_STAT "\t".$n;
+	}
+	#print COG_STAT "\n";
+
+	foreach my $cat(@cat_of_cat){
+		my $n = 0;
+		if ($count_letter{$strain}{$cat}){$n = $count_letter{$strain}{$cat};}			
+		print COG_STAT2 "\t".$n;
+	}
+	print COG_STAT2 "\n";
+}
+#close(COG_STAT);
+close(COG_STAT2);
+
