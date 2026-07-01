@@ -278,17 +278,93 @@ if (scalar keys(%kegg_of_genes) > 1){
 
 open(KEGG,">$kegg");
 if (scalar keys(%keggs_of_cluster) > 1) {
-	
+
+	my $DIR_KEGG = "/usr/local/bin/PanExplorer_workflow/KEGG";
+	my %pathways;
+	my %pathways_of_ko;
+	open(KO_TO_PATHWAY,"$DIR_KEGG/ko_pathways.txt");
+	while(<KO_TO_PATHWAY>){
+		my $line = $_;
+		$line =~s/\n//g;$line =~s/\r//g;
+		if ($line =~/path:ko/){next;}
+		my ($ko,$pathway) = split("\t",$line);
+		my ($ko,$koid) = split(":",$ko);
+		my ($map,$mapid) = split(":",$pathway);
+		$pathways{$mapid}{$koid} = 1;
+		$pathways_of_ko{$koid}{$mapid} = 1;
+	}
+	close(KO_TO_PATHWAY);
+
+	my %pathway_names;
+	open(PATHWAYS,"$DIR_KEGG/pathways.txt");
+	while(<PATHWAYS>){
+		my $line = $_;
+		$line =~s/\n//g;$line =~s/\r//g;
+		my ($mapid,$pathway_name) = split("\t",$line);
+		$pathway_names{$mapid} = $pathway_name;
+	}
+	close(PATHWAYS);
+
+	open(KO_TO_MODULE,"$DIR_KEGG/ko_modules.txt");
+        while(<KO_TO_MODULE>){
+                my $line = $_;
+                $line =~s/\n//g;$line =~s/\r//g;
+                my ($ko,$module) = split("\t",$line);
+                my ($ko,$koid) = split(":",$ko);
+                my ($module,$moduleid) = split(":",$module);
+                $pathways{$moduleid}{$koid} = 1;
+                $pathways_of_ko{$koid}{$moduleid} = 1;
+        }
+        close(KO_TO_PATHWAY);
+
+        my %module_names;
+        open(MODULES,"$DIR_KEGG/modules.txt");
+        while(<MODULES>){
+                my $line = $_;
+                $line =~s/\n//g;$line =~s/\r//g;
+                my ($id,$module_name) = split("\t",$line);
+                $pathway_names{$id} = $module_name;
+        }
+        close(MODULES);
+
+	my %kegg_infos;
 	foreach my $cluster(sort {$a<=>$b} keys(%genes_of_cluster)){
 		if ($keggs_of_cluster{$cluster}){
 			my $ref_hash = $keggs_of_cluster{$cluster};
 			my %subhash = %$ref_hash;
 			my @ids = keys(%subhash);
-			foreach my $id(@ids){
-				print KEGG "$cluster\t$id\n";
+			foreach my $koid(@ids){
+				
+				if ($pathways_of_ko{$koid}){
+					my $ref_hash = $pathways_of_ko{$koid};
+					my %subhash = %$ref_hash;
+					foreach my $mapid(keys(%subhash)){
+						my $pathway = $pathway_names{$mapid};
+						$kegg_infos{$mapid}{$koid} = $cluster;
+					}
+				}
+				else{
+					my $mapid = "No mapid";
+					$pathway_names{$mapid} = "No associated pathway";
+					$pathways{$mapid}{$koid} = 1;
+					$kegg_infos{$mapid}{$koid} = $cluster;
+				}	
 			}
 		}
 	}
+
+	foreach my $mapid(keys(%kegg_infos)){
+
+		#if ($mapid =~/^ko/){next;}
+		my $ref_hash = $pathways{$mapid};
+		my %subhash = %$ref_hash;
+		foreach my $koid(keys(%subhash)){
+			my $pathway_name = $pathway_names{$mapid};
+			my $cluster = $kegg_infos{$mapid}{$koid};
+			print KEGG "$mapid	$pathway_name	$koid	$cluster\n";
+		}
+	}
+
 }
 close(KEGG);
 
@@ -375,65 +451,4 @@ close(COG);
 
 
 my %cogs_of_clusters;
-my %cogcats_of_clusters;
-open(C,$cog_clusters);
-while(<C>){
-        my $line = $_;
-        $line =~s/\n//g;$line =~s/\r//g;
-        my @infos = split(/\t/,$line);
-        my $cluster = $infos[0];
-        my $cog = $infos[1];
-        my $cog_category = $infos[2];
-        $cogs_of_clusters{$cluster}{$cog} = 1;
-        $cogcats_of_clusters{$cluster} = $cog_category;
-}
-close(C);
-
-open(CC,">$cog_clusters.2");
-foreach my $cluster(sort{$a<=>$b} keys(%genes_of_cluster)){
-        my $cog_category = "Unknown";
-        my $cog_list = "Unknown";
-        if ($cogcats_of_clusters{$cluster}){
-                $cog_category = $cogcats_of_clusters{$cluster};
-                my $ref_cogs_of_clusters = $cogs_of_clusters{$cluster};
-                $cog_list = join(",",keys(%$ref_cogs_of_clusters));
-        }
-	my $function = "Unknown";
-	if ($functions{$cluster}){
-		$function = $functions{$cluster};
-	}
-        if ($accessory_clusters{$cluster}){
-                print CC "$cluster\t$cog_list\t$cog_category\t$function\n";
-        }
-}
-close(CC);
-
-my @cat_of_cat = ("INFORMATION STORAGE AND PROCESSING","METABOLISM","CELLULAR PROCESSES AND SIGNALING","POORLY CHARACTERIZED");
-my @cog_categories = ("D","M","N","O","T","U","V","W","Y","Z","A","B","J","K","L","C","E","F","G","H","I","P","Q","R","S");
-#open(COG_STAT,">$cog_stats");
-open(COG_STAT2,">$cog_stats2");
-#print COG_STAT "COG\t".join("\t",@cog_categories)."\n";
-print COG_STAT2 "COG\t".join("\t",@cat_of_cat)."\n";
-foreach my $strain(keys(%count_letter)){
-	my $strain_name = $strain_names{$strain};
-	#print COG_STAT "$strain_name";
-	print COG_STAT2 "$strain_name";
-	my $ref_subhash = $count_letter{$strain};
-	my %subhash = %$ref_subhash;
-	foreach my $letter(@cog_categories){
-		my $n = 0;
-		if ($count_letter{$strain}{$letter}){$n = $count_letter{$strain}{$letter};}
-		#print COG_STAT "\t".$n;
-	}
-	#print COG_STAT "\n";
-
-	foreach my $cat(@cat_of_cat){
-		my $n = 0;
-		if ($count_letter{$strain}{$cat}){$n = $count_letter{$strain}{$cat};}			
-		print COG_STAT2 "\t".$n;
-	}
-	print COG_STAT2 "\n";
-}
-#close(COG_STAT);
-close(COG_STAT2);
-
+my %c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
