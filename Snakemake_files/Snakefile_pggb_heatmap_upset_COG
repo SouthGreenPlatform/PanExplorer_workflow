@@ -1,0 +1,258 @@
+import glob
+import os
+import shutil
+
+import yaml
+configfile: "config.yaml"
+
+SAMPLES = []
+with open("config.yaml", "r") as yaml_file:
+    genome_data = yaml.safe_load(yaml_file)
+    for genome_name, genome_info in genome_data["input_genomes"].items():
+        name = genome_info["name"]
+        SAMPLES.append(name)
+
+print(SAMPLES)
+
+rule final:
+ input:
+  expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+  expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
+  expand("outputs/genomes/{sample}.pep", sample=SAMPLES),
+  "outputs/genomes/strains.txt",
+  "outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+  "outputs/pav_matrix.tsv",
+  "outputs/defense_matrix.tsv",
+  "outputs/rarefaction_curves.txt",
+
+
+rule get_data:
+    input:
+        "config.yaml"
+    output:
+        "outputs/genomes/strains.txt",
+        expand("outputs/genomes/{sample}.fasta.gz", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
+    run:
+        with open(input[0], "r") as yaml_file, open(output[0], "w") as output_file:
+            genome_data = yaml.safe_load(yaml_file)
+            for genome_name, genome_info in genome_data["input_genomes"].items():
+                fasta_file = genome_info["fasta"]
+                name = genome_info["name"]
+                gff_file = genome_info["gff3"]
+                shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
+                shutil.copy(fasta_file, "outputs/genomes/"+str(name)+".fasta.gz")
+                output_file.write(f"{name}\t{name}\n")
+
+rule gffread:
+    input:
+        fastagz = "outputs/genomes/{sample}.fasta.gz",
+        gff = "outputs/genomes/{sample}.gff"
+    output:
+        fasta = "outputs/genomes/{sample}.fasta",
+        pep = "outputs/genomes/{sample}.pep"
+    shell:
+        """
+        gunzip {input.fastagz}
+        gffread -y {output.pep} -g {output.fasta} {input.gff}
+        """
+
+
+rule pggb:
+    input:
+        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+        expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
+    output:
+        gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+        png1="outputs/pggb_out/all_genomes.fa.lay.draw.png",
+        png2="outputs/pggb_out/all_genomes.fa.og.viz_multiqc.png",
+        vcf="outputs/all_genomes.vcf",
+    shell:
+        """
+        for f in outputs/genomes/*.fasta; do s=$(basename "$f" .fasta); awk -v s="$s" '/^>/{{print ">" s "#1#" substr($0,2); next}}1' "$f"; done > outputs/genomes/all_genomes.fa
+        samtools faidx outputs/genomes/all_genomes.fa
+        reference=$(head -1 outputs/genomes/strains.txt | awk '{{print $2}}')
+        pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out -V $reference -m -M
+        mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output.gfa}
+        mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
+        mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
+        perl $PANEX_PATH/Perl/makeVCFdiploid.pl outputs/pggb_out/all_genomes.*vcf {output.vcf} $reference
+        """
+
+rule odgi:
+    input:
+        gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+    output:
+        og="outputs/pggb_out/all_genomes.fa.smooth.final.gfa.og",
+        distance="outputs/pggb_out/all_genomes.fa.smooth.final.gfa.og.distance",
+    shell:
+        """
+        odgi build -g {input} -o {output.og}
+        odgi similarity -i {output.og} -d >{output.distance}
+        """
+
+
+rule create_gene_paths:
+    input:
+        gff="outputs/genomes/{sample}.gff",
+        gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+    output:
+        basename="outputs/genomes/{sample}.gene_segments",
+        gene_length="outputs/genomes/{sample}.gene_segments.gene_length.txt",
+        bed="outputs/genomes/{sample}.gene_segments.bed",
+    shell:
+        """
+        perl $PANEX_PATH/Perl/CreateGenePathsFromGFA.pl {input.gfa} {input.gff} {output.basename}
+        """
+
+
+rule bedtools_intersect:
+    input:
+        strains="outputs/genomes/strains.txt",
+        bedfiles=expand("outputs/genomes/{sample}.gene_segments.bed", sample=SAMPLES)
+    params:
+        identity=config['identity']
+    output:
+        "outputs/pav_matrix.tsv",
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input.strains} outputs/genomes {output} 20
+        cp outputs/pav_matrix.tsv outputs/pav_matrix.tsv.bkp
+        """
+
+rule trf:
+    input:
+        fasta="outputs/genomes/{sample}.fasta",
+        gff="outputs/genomes/{sample}.gb.gff",
+    output:
+        out="outputs/trf_bed/{sample}.fasta.trf.txt",
+        outbed="outputs/trf_bed/{sample}.fasta.trf.bed",
+        log="outputs/trf_bed/{sample}.fasta.trf.log",
+    shell:
+        """
+        trf {input.fasta} 2 3 5 80 20 50 12 -h -f 2>{output.log} 1>{output.out}
+        mv {wildcards.sample}.fasta.2.3.5.80.20.50.12.dat {output.out}
+        perl $PANEX_PATH/Perl/Trf2Bed.pl {output.out} {output.outbed}
+        """
+
+rule create_VNTR_paths:
+    input:
+        bed="outputs/trf_bed/{sample}.fasta.trf.bed",
+        gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+    output:
+        basename="outputs/trf/{sample}.vntr_segments",
+        bed="outputs/trf/{sample}.vntr_segments.bed",
+    shell:
+        """
+        perl $PANEX_PATH/Perl/TransferBedOnGFAGraph.pl {input.gfa} {input.bed} {output.basename}
+        """
+
+rule bedtools_intersect_vntr:
+    input:
+        strains="outputs/genomes/strains.txt",
+        bedfiles=expand("outputs/trf/{sample}.vntr_segments.bed", sample=SAMPLES)
+    params:
+        identity=config['identity']
+    output:
+        "outputs/vntr_matrix.tsv"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GeneratePAVfromBed3.pl {input.strains} outputs/trf {output}.tmp 1
+        perl $PANEX_PATH/Perl/ConvertVntrMatrix.pl {output}.tmp {output} {input.strains} outputs/trf_bed outputs/genomes
+        cp -rf outputs/vntr_matrix.tsv outputs/heatmap.svg.heatmap_plotly.html
+        """
+
+rule create_feature_paths:
+    input:
+        gff="outputs/genomes/{sample}.gff",
+        gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+    output:
+        basename1="outputs/BGC/{sample}.feature_segments",
+        basename2="outputs/defense/{sample}.feature_segments", 
+        basename3="outputs/antiSMASH/{sample}.feature_segments",
+        bed1="outputs/BGC/{sample}.feature_segments.bed",
+        bed2="outputs/defense/{sample}.feature_segments.bed",
+        bed3="outputs/antiSMASH/{sample}.feature_segments.bed",
+    shell:
+        """
+        perl Perl/CreateFeaturePathsFromGFA.pl {input.gfa} {input.gff} {output.basename1} BGC
+        perl Perl/CreateFeaturePathsFromGFA.pl {input.gfa} {input.gff} {output.basename2} 'Defense system'
+        perl Perl/CreateFeaturePathsFromGFA.pl {input.gfa} {input.gff} {output.basename3} antiSMASH
+        """
+
+rule bedtools_intersect_feature:
+    input:
+        strains="outputs/genomes/strains.txt",
+        bedfiles1=expand("outputs/BGC/{sample}.feature_segments.bed", sample=SAMPLES),
+        bedfiles2=expand("outputs/defense/{sample}.feature_segments.bed", sample=SAMPLES),
+        bedfiles3=expand("outputs/antiSMASH/{sample}.feature_segments.bed", sample=SAMPLES),
+    params:
+        identity=config['identity']
+    output:
+        output1="outputs/defense_matrix.tsv",
+        output2="outputs/BGC_matrix.tsv",
+        output3="outputs/antiSMASH_matrix.tsv",
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GeneratePAVfromBed3.pl {input.strains} outputs/defense {output.output1} 1
+        perl $PANEX_PATH/Perl/GeneratePAVfromBed3.pl {input.strains} outputs/BGC {output.output2} 1
+        perl $PANEX_PATH/Perl/GeneratePAVfromBed3.pl {input.strains} outputs/antiSMASH {output.output3} 1
+        """
+
+rule cog:
+    input:
+        pav="outputs/pav_matrix.tsv"
+    output:
+        cog="outputs/cog_output.txt",
+        keggofclusters="outputs/kegg_of_clusters.txt",
+        cogstat2="outputs/cog_stats2.txt",
+        cogofclusters="outputs/cog_of_clusters.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.keggofclusters} {output.cogstat2} {output.cogofclusters} outputs/genomes/strains.txt
+        """
+
+rule heatmap_upset:
+    input:
+        pav="outputs/pav_matrix.tsv"
+    output:
+        heatmap="outputs/heatmap.svg.gz",
+        html="outputs/heatmap.svg.heatmap_plotly.html",
+        upsetr="outputs/upsetr.svg",
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
+    shell:
+        """
+        perl $PANEX_PATH/Perl/GenerateHeatmapFromPAV.pl {input.pav} outputs/heatmap.svg
+        mv outputs/heatmap.svg.upsetr.svg {output.upsetr}
+        """
+
+rule micropan:
+    input:
+        binpav="outputs/heatmap.svg.pangenes_01matrix.txt"
+    output:
+        txt="outputs/rarefaction_curves.txt",
+        pdf="outputs/rarefaction_curves.pdf",
+        svg="outputs/rarefaction_curves.svg",
+        heaps="outputs/heaps.tsv"
+    shell:
+        """
+        Rscript $PANEX_PATH/R/micropan_rarefaction.R -f {input.binpav} -p {output.pdf} -a {output.heaps} -o {output.txt}
+        pdf2svg {output.pdf} {output.svg}
+        """
+
+rule fastani:
+    input:
+        "outputs/genomes/genomes.txt"
+    output:
+        out="outputs/fastani.out",
+        matrix="outputs/fastani.out.matrix",
+        completematrix="outputs/fastani.out.matrix.complete",
+        pdf="outputs/fastani.out.pdf",
+        svg="outputs/fastani.out.svg"
+    shell:
+        """
+        fastANI --rl {input} --ql {input} -o {output.out} -t 4 --matrix
+        perl $PANEX_PATH/Perl/convertANI.pl {output.matrix} outputs/genomes/genomes2.txt >{output.completematrix}
+        Rscript $PANEX_PATH/R/heatmap_ani.R -f {output.completematrix} -o {output.pdf}
+        pdf2svg {output.pdf} {output.svg}
+        """
