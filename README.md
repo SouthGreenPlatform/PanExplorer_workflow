@@ -137,20 +137,19 @@ Creating a pangenome graph using PanGenomeGraph Builder (PGGB) and derived pange
 singularity exec panexplorer_workflow_v2.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_pggb_heatmap_upset_COG
 ```
 
-
-For running the workflow using Docker:
-
-```
-sudo pull dereeper/panexplorer_workflow:v2
-sudo docker run -v $(pwd):/workflow -w /workflow  dereeper/panexplorer_workflow:v2 snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG
-```
-
 **For eukaryotes**
 
 Creating a pangenome using Orthofinder
 
 ```
 singularity exec panexplorer_workflow_v2.sif snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_orthofinder_heatmap_upset
+```
+
+For running the workflow using Docker:
+
+```
+sudo pull dereeper/panexplorer_workflow:v2
+sudo docker run -v $(pwd):/workflow -w /workflow  dereeper/panexplorer_workflow:v2 snakemake --cores 1 -s $PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG
 ```
 
 ## Graphical outputs
