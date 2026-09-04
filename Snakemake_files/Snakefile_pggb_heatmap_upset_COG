@@ -190,9 +190,9 @@ rule create_feature_paths:
         bed3="outputs/antiSMASH/{sample}.feature_segments.bed",
     shell:
         """
-        perl Perl/CreateFeaturePathsFromGFA.pl {input.gfa} {input.gff} {output.basename1} BGC
-        perl Perl/CreateFeaturePathsFromGFA.pl {input.gfa} {input.gff} {output.basename2} 'Defense system'
-        perl Perl/CreateFeaturePathsFromGFA.pl {input.gfa} {input.gff} {output.basename3} antiSMASH
+        perl $PANEX_PATH/Perl/CreateFeaturePathsFromGFA.pl {input.gfa} {input.gff} {output.basename1} BGC
+        perl $PANEX_PATH/Perl/CreateFeaturePathsFromGFA.pl {input.gfa} {input.gff} {output.basename2} 'Defense system'
+        perl $PANEX_PATH/Perl/CreateFeaturePathsFromGFA.pl {input.gfa} {input.gff} {output.basename3} antiSMASH
         """
 
 rule bedtools_intersect_feature:
