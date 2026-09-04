@@ -24,7 +24,7 @@ rule final:
   "outputs/pav_matrix.tsv",
   "outputs/defense_matrix.tsv",
   "outputs/rarefaction_curves.txt",
-  "outputs/crispr_pav.tsv",
+  "outputs/crispr_matrix.tsv",
 
 
 rule get_data:
