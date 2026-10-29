@@ -225,7 +225,7 @@ rule cog:
         productofclusters="outputs/products_of_clusters.txt"
     shell:
         """
-        perl Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.keggofclusters} {output.cogstat2} {output.cogofclusters} {output.productofclusters} outputs/genomes/strains.txt
+        perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.keggofclusters} {output.cogstat2} {output.cogofclusters} {output.productofclusters} outputs/genomes/strains.txt
         """
 
 rule heatmap_upset:
