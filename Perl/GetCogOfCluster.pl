@@ -10,8 +10,9 @@ my $cog_outfile = $ARGV[2];
 my $kegg = $ARGV[3];
 my $cog_stats2 = $ARGV[4];
 my $cog_clusters = $ARGV[5];
-my $strain_info_file = $ARGV[6];
-my $function_clusters = $ARGV[7];
+my $function_clusters = $ARGV[6];
+my $strain_info_file = $ARGV[7];
+
 
 my %cogs_categories = (
         "J"=>"INFORMATION STORAGE AND PROCESSING",
