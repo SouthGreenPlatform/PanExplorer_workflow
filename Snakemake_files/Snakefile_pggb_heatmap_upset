@@ -110,10 +110,11 @@ rule cog:
         cog="outputs/cog_output.txt",
         keggofclusters="outputs/kegg_of_clusters.txt",
         cogstat2="outputs/cog_stats2.txt",
-        cogofclusters="outputs/cog_of_clusters.txt"
+        cogofclusters="outputs/cog_of_clusters.txt",
+        productofclusters="outputs/products_of_clusters.txt"
     shell:
         """
-        perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.keggofclusters} {output.cogstat2} {output.cogofclusters} outputs/genomes/strains.txt
+        perl Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.keggofclusters} {output.cogstat2} {output.cogofclusters} {output.productofclusters} outputs/genomes/strains.txt
         """
 
 rule micropan:
