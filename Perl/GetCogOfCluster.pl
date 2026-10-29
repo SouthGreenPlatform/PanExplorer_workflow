@@ -11,7 +11,7 @@ my $kegg = $ARGV[3];
 my $cog_stats2 = $ARGV[4];
 my $cog_clusters = $ARGV[5];
 my $strain_info_file = $ARGV[6];
-
+my $function_clusters = $ARGV[7];
 
 my %cogs_categories = (
         "J"=>"INFORMATION STORAGE AND PROCESSING",
@@ -142,6 +142,7 @@ close(O);
 #########################################################################################################################################
 my %cog_of_genes;
 my %kegg_of_genes;
+my %product_of_genes;
 if ($use_func_files > 0){
 	######################################
 	# for bacteria, use genbank files
@@ -191,6 +192,10 @@ if ($use_func_files > 0){
 					$kegg_of_genes{$current_gene}{$current_kegg} = 1;
 				}
         	        }
+			if ($l =~/product=\"(.*)\"/){
+				my $product = $1;
+				$product_of_genes{$current_gene} = $product;
+			}
 		}
 		close(GB);
 	}
@@ -219,7 +224,7 @@ else{
 				if ($l=~/Note=([^;]+);/){
 					my $function = $1;
 					$function =~s/'//g;
-					$functions{$current_gene} = $function;
+					$product_of_genes{$current_gene} = $function;
 				}
 			}
 		}
@@ -228,7 +233,18 @@ else{
 	close(LS);
 }
 
-
+my %product_of_clusters;
+foreach my $gene(keys(%product_of_genes)){
+	my $cluster = $cluster_of_gene{$gene};
+	my $product = $product_of_genes{$gene};
+	$product_of_clusters{$cluster} = $product; 
+}
+open(FUNC,">$function_clusters");
+foreach my $cluster(keys(%product_of_clusters)){
+	my $function = $product_of_clusters{$cluster};
+	print FUNC "$cluster	$function\n";
+}
+close(FUNC);
 
 
 my %letters_of_cog;
@@ -257,7 +273,7 @@ if (scalar keys(%cog_of_genes) > 1){
 		foreach my $cog(@cogs){
 			$cogs_of_cluster{$cluster}{$cog}++;
 		}
-		$functions{$cluster} = $function;	
+		$functions{$cluster} = $function;
 	}
 }
 if (scalar keys(%kegg_of_genes) > 1){
@@ -275,6 +291,7 @@ if (scalar keys(%kegg_of_genes) > 1){
                 }
 	}
 }
+
 
 open(KEGG,">$kegg");
 if (scalar keys(%keggs_of_cluster) > 1) {
