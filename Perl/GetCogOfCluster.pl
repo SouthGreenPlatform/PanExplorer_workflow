@@ -220,7 +220,7 @@ else{
 				$current_gene =~s/:/_/g;
 				if ($l=~/=(GO:\d+[^;]+);*/){
 					$current_GO = $1;
-					$cog_of_genes{$current_gene} .= ",$current_GO";
+					$cog_of_genes{$current_gene}{$current_GO} = 1;
 				}
 				if ($l=~/Note=([^;]+);/){
 					my $function = $1;
