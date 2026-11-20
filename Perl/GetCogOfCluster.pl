@@ -167,7 +167,7 @@ if ($use_func_files > 0){
 				$current_gene = "";
 				$current_kegg = "";
 			}
-			if ($l =~/protein_id=\"(.*)\"/){
+			if ($l =~/\/protein_id=\"(.*)\"/){
 				$current_gene = $1;
 				$current_gene =~s/://g;
 				if ($current_cog){
@@ -183,7 +183,8 @@ if ($use_func_files > 0){
 					$kegg_of_genes{$current_gene}{$current_kegg} = 1;
 				}
 			}
-			if ($l =~/locus_tag=\"(.*)\"/){
+			# anchored on "/locus_tag" so that /old_locus_tag does not override the current locus_tag
+			if ($l =~/\/locus_tag=\"(.*)\"/){
                         	$current_gene = $1;
 				$current_gene =~s/://g;
 				if ($current_cog){

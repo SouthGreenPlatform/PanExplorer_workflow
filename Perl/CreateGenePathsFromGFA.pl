@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 
 use strict;
+use FindBin;
+use lib $FindBin::Bin;
+use GeneId qw(gff_is_eukaryotic gene_key_from_attributes);
 
 
 
@@ -14,39 +17,41 @@ my %store_gene_paths;
 
 my %allgenes;
 my %coding_positions;
-open(LENGTH,">$out.gene_length.txt");
+my %gene_length;
+my @gene_order;
+
+# Gene identifier: locus_tag for prokaryotic annotations (unique per gene, keeps multi-copy
+# genes distinct), protein_id/Parent/ID for eukaryotic ones (see GeneId.pm).
+my $is_eukaryotic = gff_is_eukaryotic($gff3);
+
 open(F,$gff3);
 while(my $line = <F>){
 		chomp($line);
+		$line =~s/\r//g;
 		my @infos = split(/\t/,$line);
 		#if ($infos[2] eq "gene" && /CITME_006g014440/){
 		if ($infos[2] eq "CDS"){
-			my $chr;
-			# case eukaryotes
-			if ($line =~/Parent=([^;]+);*/){
-				$chr = $infos[0];
-			}
-			# case prokaryotes/prokka
-			elsif ($line =~/ID=([^;]+);*/){
-				$chr = $infos[0];
-			}
+			my $gene = gene_key_from_attributes($infos[8], $is_eukaryotic);
+			if (!defined $gene){next;}
+			my $chr = $infos[0];
 			my $start = $infos[3];
 			my $end = $infos[4];
-			my $gene = $1;
-			$gene =~s/\n//g;$gene =~s/\r//g;
-			if ($line =~/protein_id=([^;]+);/){
-				$gene = $1;
-			}
 			$coordinates{$chr}.= "$gene:$start-$end|";
 			for (my $i = $start; $i <= $end; $i++){
 				$allgenes{$gene}=1;
 				$coding_positions{$chr}{$i} = "$gene,";
 			}
-			my $genelength = $end-$start;
-			print LENGTH "$gene	$genelength\n";
+			# CDS split over several lines (join, frameshift) share the same identifier: sum their lengths
+			push(@gene_order, $gene) if (!exists $gene_length{$gene});
+			$gene_length{$gene} += $end-$start;
 		}
 }
 close(F);
+
+open(LENGTH,">$out.gene_length.txt");
+foreach my $gene(@gene_order){
+	print LENGTH "$gene	$gene_length{$gene}\n";
+}
 close(LENGTH);
 
 print "Start GFA parsing ($gfa)...\n";

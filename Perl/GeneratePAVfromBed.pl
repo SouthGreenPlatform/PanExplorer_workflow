@@ -3,6 +3,9 @@
 use strict;
 
 use Graph::Undirected;
+use FindBin;
+use lib $FindBin::Bin;
+use GeneId qw(gff_is_eukaryotic gene_key_from_attributes);
 
 my $strain_info = $ARGV[0];
 my $bed_directory = $ARGV[1];
@@ -22,36 +25,24 @@ my %gene_lengths;
 foreach my $id(keys(%strains)){
 
 	my $gff = `ls $bed_directory/$id*.gff`;
+	chomp($gff);
+	# same gene identifiers as in CreateGenePathsFromGFA.pl (see GeneId.pm)
+	my $is_eukaryotic = gff_is_eukaryotic($gff);
 	open(GFF,$gff);
 	my $current_gene_length;
 	while(my $line = <GFF>){
 		chomp($line);
 		my @infos = split(/\t/,$line);
-		if ($infos[2] eq "gene" && $line =~/ID=([^;]+);*/){
-			my $chr = $infos[0];
-			my $start = $infos[3];
-			my $end = $infos[4];
-			my $gene = $1;
-			my $genelength = $end-$start;
-			$current_gene_length = $genelength;
-			$gene_lengths{$id}{$gene} = $genelength;
-		}
+		# gene lengths are computed from CDS only (summed over CDS lines sharing the same identifier);
+		# "gene" features are not used anymore: with bp_genbank2gff3 their ID is the locus_tag,
+		# which would add the gene length to the CDS length of the same key.
 		if ($infos[2] eq "CDS"){
-			my $gene;
-			if ($line =~/Parent=([^;]+);*/){
-				$gene = $1;
-			}
-			elsif ($line =~/ID=([^;]+);*/){
-                                $gene = $1;
-                        }
+			my $gene = gene_key_from_attributes($infos[8], $is_eukaryotic);
+			if (!defined $gene){next;}
 			my $start = $infos[3];
 			my $end = $infos[4];
 			my $genelength = $end-$start;
 			$gene_lengths{$id}{$gene} += $genelength;
-			if ($line =~/protein_id=([^;]+);/){
-				$gene = $1;
-				$gene_lengths{$id}{$gene} += $genelength;
-			}
 		}
 	}
 	close(GFF);
@@ -104,6 +95,8 @@ foreach my $id(keys(%strains)){
 				my ($gene1,$gene2) = split(/;/,$pair);
 				my $gene1_length = $gene_lengths{$id}{$gene1};
 				my $gene2_length = $gene_lengths{$id2}{$gene2};
+				# safety: unknown or null length (identifier not found in the GFF) -> no link
+				if (!$gene1_length || !$gene2_length){next;}
 				my $size_match_gene = $cumul_match{"$gene1;$gene2"};
 				my $percentage_overlap_gene1 = ($size_match_gene/$gene1_length)*100;
 				my $percentage_overlap_gene2 = ($size_match_gene/$gene2_length)*100;

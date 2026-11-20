@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 
 use strict;
+use FindBin;
+use lib $FindBin::Bin;
+use GeneId qw(parse_gff_attributes);
 
 my $indir = $ARGV[0];
 my $matrix = $ARGV[1];
@@ -25,10 +28,15 @@ while(<D>){
 	open(F,"$file");
         while(<F>){
                 my @infos = split(/\t/,$_);
-                if ($infos[2] eq 'CDS' && /ID=([^;]*);.*protein_id=([^;]*);/){
-                        my $id = $1;
-                        my $protid = $2;
-                        $corr{$id} = $protid;
+                if ($infos[2] eq 'CDS'){
+                        # map the tool identifier (GFF ID) to the gene identifier used everywhere
+                        # else in PanExplorer: locus_tag if available, protein_id otherwise (see GeneId.pm)
+                        my $attr = parse_gff_attributes($infos[8]);
+                        my $id = $attr->{'ID'};
+                        my $gene = defined $attr->{'locus_tag'} ? $attr->{'locus_tag'} : $attr->{'protein_id'};
+                        if (defined $id && defined $gene){
+                                $corr{$id} = $gene;
+                        }
                 }
         }
         close(F);

@@ -205,18 +205,28 @@ while(my $line =<F>){
         open(G,"$outdir/$genbank.gb");
         my $current_gene;
 	my $current_chrom;
+	# gene identifier: locus_tag when available (unique per gene, keeps multi-copy genes distinct),
+	# protein_id otherwise. Must match the identifiers of the PAV matrices (see GeneId.pm).
+	my $current_locus_tag = "";
+	my $current_protein_id = "";
         while(<G>){
                 if (/^\s+ORGANISM\s+(.*)$/){
                 }
-		if (/protein_id=\"(.*)\"/){
-			$current_gene = $1;
+		if (/^\s{5}\S/){
+			# new feature: reset identifiers
+			$current_locus_tag = "";
+			$current_protein_id = "";
+		}
+		if (/\/protein_id=\"(.*)\"/){
+			$current_protein_id = $1;
 		}
 		if (/LOCUS       ([^\s]+)/){
 			$current_chrom = $1;
-		}        
-                if (/locus_tag=\"(.*)\"/){
-                        $current_gene = $1;
 		}
+                if (/\/locus_tag=\"(.*)\"/){
+                        $current_locus_tag = $1;
+		}
+		$current_gene = ($current_locus_tag ne "") ? $current_locus_tag : $current_protein_id;
                 if ($go == 1){
                         my $line = $_;
                         $line =~s/ //g;
