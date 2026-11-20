@@ -73,7 +73,7 @@ rule pggb:
         for f in outputs/genomes/*.fasta; do s=$(basename "$f" .fasta); awk -v s="$s" '/^>/{{print ">" s "#1#" substr($0,2); next}}1' "$f"; done > outputs/genomes/all_genomes.fa
         samtools faidx outputs/genomes/all_genomes.fa
         reference=$(head -1 outputs/genomes/strains.txt | awk '{{print $2}}')
-        pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out -V $reference -m -M
+        pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out -V $reference -m -M -p 80 -k 15 -s 3000
         mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output.gfa}
         mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
         mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
