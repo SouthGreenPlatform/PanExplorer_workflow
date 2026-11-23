@@ -1,4 +1,5 @@
 import glob
+import re
 import os
 import shutil
 
@@ -22,6 +23,7 @@ rule final:
   "outputs/genomes/strains.txt",
   "outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
   "outputs/pav_matrix.tsv",
+  expand("outputs/genomes/{sample}.gene_segments.bed", sample=SAMPLES),
   "outputs/defense_matrix.tsv",
   "outputs/rarefaction_curves.txt",
   "outputs/crispr_matrix.tsv",
@@ -41,7 +43,11 @@ rule get_data:
                 fasta_file = genome_info["fasta"]
                 name = genome_info["name"]
                 gff_file = genome_info["gff3"]
-                shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
+                # one transcript per gene (longest CDS), see Python/longest_isoform_gff.py (longest_isoform in config.yaml)
+                if config.get("longest_isoform", True):
+                    shell("python3 $PANEX_PATH/Python/longest_isoform_gff.py '{gff_file}' 'outputs/genomes/{name}.gff'")
+                else:
+                    shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
                 shutil.copy(fasta_file, "outputs/genomes/"+str(name)+".fasta.gz")
                 output_file.write(f"{name}\t{name}\n")
 
@@ -59,26 +65,242 @@ rule gffread:
         """
 
 
-rule pggb:
-    input:
-        expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
-        expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
-    output:
-        gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
-        png1="outputs/pggb_out/all_genomes.fa.lay.draw.png",
-        png2="outputs/pggb_out/all_genomes.fa.og.viz_multiqc.png",
-        vcf="outputs/all_genomes.vcf",
-    shell:
-        """
-        for f in outputs/genomes/*.fasta; do s=$(basename "$f" .fasta); awk -v s="$s" '/^>/{{print ">" s "#1#" substr($0,2); next}}1' "$f"; done > outputs/genomes/all_genomes.fa
-        samtools faidx outputs/genomes/all_genomes.fa
-        reference=$(head -1 outputs/genomes/strains.txt | awk '{{print $2}}')
-        pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out -V $reference -m -M -p 80 -k 15 -s 3000
-        mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output.gfa}
-        mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
-        mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
-        perl $PANEX_PATH/Perl/makeVCFdiploid.pl outputs/pggb_out/all_genomes.*vcf {output.vcf} $reference
-        """
+############################################################################################
+# PGGB graph(s)
+#
+# pggb_partition: True (default) - the chromosomes of the genomes are first grouped by homology
+#   (Python/partition_chromosomes.py: approximate wfmash mapping on the chromosomes of the reference genome,
+#   independent of the sequence names), then one PGGB graph is built per group (chr1 of all genomes, chr2...)
+#   and the gene PAV matrix is computed per graph. The graphs are merged (odgi squeeze) into
+#   outputs/pggb_out/all_genomes.fa.smooth.final.gfa and the PAV matrices are concatenated.
+# pggb_partition: False - a single PGGB graph with all the sequences (previous behaviour).
+############################################################################################
+PARTITION = str(config.get("pggb_partition", True)).lower() in ("true", "1", "yes")
+PGGB_PARAMS = config.get("pggb_params", "-p 80 -k 15 -s 3000")
+USER_N = re.search(r"(^|\s)-n\s", PGGB_PARAMS) is not None
+
+wildcard_constraints:
+    sample="|".join(re.escape(s) for s in SAMPLES),
+    group="[^/]+"
+
+if PARTITION:
+
+    checkpoint partition_chromosomes:
+        input:
+            fastas=expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+            strains="outputs/genomes/strains.txt",
+        output:
+            fa="outputs/genomes/all_genomes.fa",
+            sequences="outputs/partition/sequences.tsv",
+            groups="outputs/partition/groups.tsv",
+            report="outputs/partition/partition_report.txt",
+            fasta=directory("outputs/partition/fasta"),
+        params:
+            min_frac=config.get("partition_min_fraction", 0.2),
+            min_length=config.get("partition_min_reference_length", 1000000),
+        threads: 4
+        shell:
+            """
+            for f in {input.fastas}; do s=$(basename "$f" .fasta); awk -v s="$s" '/^>/{{print ">" s "#1#" substr($0,2); next}}1' "$f"; done > {output.fa}
+            samtools faidx {output.fa}
+            reference=$(head -1 {input.strains} | awk '{{print $2}}')
+            python3 $PANEX_PATH/Python/partition_chromosomes.py --fasta {output.fa} --reference "$reference" \
+                --outdir outputs/partition --threads {threads} --min-frac {params.min_frac} --min-ref-length {params.min_length}
+            """
+
+    def partition_groups(wildcards=None):
+        groups_file = checkpoints.partition_chromosomes.get().output.groups
+        with open(groups_file) as handle:
+            next(handle)
+            return [line.split("\t")[0] for line in handle if line.strip()]
+
+    rule pggb_group:
+        input:
+            fa="outputs/partition/fasta/{group}.fa",
+            groups="outputs/partition/groups.tsv",
+            strains="outputs/genomes/strains.txt",
+        output:
+            gfa="outputs/partition/graphs/{group}/{group}.smooth.final.gfa",
+            vcf="outputs/partition/graphs/{group}/{group}.vcf",
+        params:
+            pggb=PGGB_PARAMS,
+            user_n="yes" if USER_N else "no",
+            dir="outputs/partition/graphs/{group}",
+        shell:
+            """
+            ngen=$(awk -F'\t' -v g="{wildcards.group}" '$1==g{{print $2}}' {input.groups})
+            hasref=$(awk -F'\t' -v g="{wildcards.group}" '$1==g{{print $6}}' {input.groups})
+            reference=$(head -1 {input.strains} | awk '{{print $2}}')
+            if [ "$ngen" -ge 2 ]; then
+                samtools faidx {input.fa}
+                nopt=""; if [ "{params.user_n}" = "no" ]; then nopt="-n $ngen"; fi
+                vopt=""; if [ "$hasref" = "yes" ]; then vopt="-V $reference"; fi
+                pggb -i {input.fa} -o {params.dir} -m -M $vopt $nopt {params.pggb}
+                mv {params.dir}/{wildcards.group}.fa.*smooth.final.gfa {output.gfa}
+                for f in {params.dir}/*lay.draw.png; do if [ -e "$f" ]; then cp "$f" {params.dir}/{wildcards.group}.lay.draw.png; fi; done
+                for f in {params.dir}/*.og.viz_multiqc.png; do if [ -e "$f" ]; then cp "$f" {params.dir}/{wildcards.group}.og.viz_multiqc.png; fi; done
+                vcf=$(find {params.dir} -maxdepth 1 -name "*.final.*.vcf" | head -1)
+                if [ -n "$vcf" ]; then
+                    perl $PANEX_PATH/Perl/makeVCFdiploid.pl "$vcf" {output.vcf} $reference keepchrom
+                else
+                    : > {output.vcf}
+                fi
+            else
+                # a single genome in this group (unplaced scaffolds...): nothing to align
+                python3 $PANEX_PATH/Python/partition_utils.py fasta2gfa {input.fa} {output.gfa}
+                : > {output.vcf}
+            fi
+            """
+
+    rule merge_graphs:
+        input:
+            gfas=lambda wildcards: expand("outputs/partition/graphs/{group}/{group}.smooth.final.gfa", group=partition_groups()),
+            vcfs=lambda wildcards: expand("outputs/partition/graphs/{group}/{group}.vcf", group=partition_groups()),
+        output:
+            gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+            png1="outputs/pggb_out/all_genomes.fa.lay.draw.png",
+            png2="outputs/pggb_out/all_genomes.fa.og.viz_multiqc.png",
+            vcf="outputs/all_genomes.vcf",
+        shell:
+            """
+            mkdir -p outputs/pggb_out
+            : > outputs/partition/graphs/og_list.txt
+            for g in {input.gfas}; do
+                odgi build -g "$g" -o "${{g%.gfa}}.og"
+                echo "${{g%.gfa}}.og" >> outputs/partition/graphs/og_list.txt
+            done
+            odgi squeeze -f outputs/partition/graphs/og_list.txt -o outputs/partition/graphs/all_groups.og
+            odgi view -i outputs/partition/graphs/all_groups.og -g > {output.gfa}
+            python3 $PANEX_PATH/Python/partition_utils.py merge-vcf {output.vcf} {input.vcfs}
+            # images of the largest group (groups are sorted by decreasing length)
+            python3 $PANEX_PATH/Python/partition_utils.py png {output.png1}
+            python3 $PANEX_PATH/Python/partition_utils.py png {output.png2}
+            for g in {input.gfas}; do
+                d=$(dirname "$g"); n=$(basename "$d")
+                if [ -s "$d/$n.lay.draw.png" ]; then cp "$d/$n.lay.draw.png" {output.png1}; cp "$d/$n.og.viz_multiqc.png" {output.png2} 2>/dev/null || true; break; fi
+            done
+            """
+
+    rule create_gene_paths_group:
+        input:
+            gff="outputs/genomes/{sample}.gff",
+            gfa="outputs/partition/graphs/{group}/{group}.smooth.final.gfa",
+            sequences="outputs/partition/sequences.tsv",
+        output:
+            gff="outputs/partition/pav/{group}/{sample}.gff",
+            basename="outputs/partition/pav/{group}/{sample}.gene_segments",
+            gene_length="outputs/partition/pav/{group}/{sample}.gene_segments.gene_length.txt",
+            bed="outputs/partition/pav/{group}/{sample}.gene_segments.bed",
+        shell:
+            """
+            # annotation of the sequences of this genome that belong to this group
+            awk -F'\t' -v g="{wildcards.group}" -v s="{wildcards.sample}" 'NR>1 && $2==s && $5==g{{print $3}}' {input.sequences} > {output.gff}.seqids
+            awk -F'\t' 'NR==FNR{{k[$1]=1; next}} /^#/ || ($1 in k)' {output.gff}.seqids {input.gff} > {output.gff}
+            if awk -F'\t' '$3=="CDS"{{f=1; exit}} END{{exit !f}}' {output.gff}; then
+                perl $PANEX_PATH/Perl/CreateGenePathsFromGFA.pl {input.gfa} {output.gff} {output.basename} {wildcards.sample}
+            else
+                : > {output.basename}; : > {output.gene_length}; : > {output.bed}
+            fi
+            """
+
+    rule pav_group:
+        input:
+            strains="outputs/genomes/strains.txt",
+            beds=expand("outputs/partition/pav/{{group}}/{sample}.gene_segments.bed", sample=SAMPLES),
+        output:
+            "outputs/partition/pav/{group}/pav_matrix.tsv",
+        shell:
+            """
+            perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input.strains} outputs/partition/pav/{wildcards.group} {output} 20
+            """
+
+    def pav_of_groups(wildcards):
+        return expand("outputs/partition/pav/{group}/pav_matrix.tsv", group=partition_groups())
+
+    rule bedtools_intersect:
+        input:
+            pavs=pav_of_groups,
+        output:
+            pav="outputs/pav_matrix.tsv",
+            groups="outputs/partition/pav_cluster_groups.tsv",
+        run:
+            items = [f"{os.path.basename(os.path.dirname(p))}:{p}" for p in input.pavs]
+            shell("python3 $PANEX_PATH/Python/partition_utils.py merge-pav {output.pav} {output.groups} " + " ".join(items))
+            shell("cp {output.pav} outputs/pav_matrix.tsv.bkp")
+
+    rule create_gene_paths:
+        # same per-genome files as without partition (concatenation over the groups)
+        input:
+            beds=lambda wildcards: expand("outputs/partition/pav/{group}/{sample}.gene_segments.bed", group=partition_groups(), sample=wildcards.sample),
+        output:
+            basename="outputs/genomes/{sample}.gene_segments",
+            gene_length="outputs/genomes/{sample}.gene_segments.gene_length.txt",
+            bed="outputs/genomes/{sample}.gene_segments.bed",
+        run:
+            for suffix, out in (("", output.basename), (".gene_length.txt", output.gene_length), (".bed", output.bed)):
+                with open(out, "w") as fout:
+                    for bed in input.beds:
+                        part = bed[:-len(".bed")] + suffix
+                        if os.path.exists(part):
+                            with open(part) as fin:
+                                shutil.copyfileobj(fin, fout)
+
+else:
+
+    rule pggb:
+        input:
+            expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+            expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
+        output:
+            gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+            png1="outputs/pggb_out/all_genomes.fa.lay.draw.png",
+            png2="outputs/pggb_out/all_genomes.fa.og.viz_multiqc.png",
+            vcf="outputs/all_genomes.vcf",
+        params:
+            # PGGB options, configurable in config.yaml (pggb_params)
+            pggb=config.get("pggb_params", "-p 80 -k 15 -s 3000"),
+            # number of haplotypes: without it, recent pggb versions map each segment to a single other
+            # genome (wfmash -n 1), and homologous genes of most genome pairs are not merged in the graph
+            nhap=lambda wildcards: "" if re.search(r"(^|\s)-n\s", config.get("pggb_params", "")) else "-n " + str(len(SAMPLES)),
+        shell:
+            """
+            for f in outputs/genomes/*.fasta; do s=$(basename "$f" .fasta); awk -v s="$s" '/^>/{{print ">" s "#1#" substr($0,2); next}}1' "$f"; done > outputs/genomes/all_genomes.fa
+            samtools faidx outputs/genomes/all_genomes.fa
+            reference=$(head -1 outputs/genomes/strains.txt | awk '{{print $2}}')
+            pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out -V $reference -m -M {params.nhap} {params.pggb}
+            mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output.gfa}
+            mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
+            mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
+            perl $PANEX_PATH/Perl/makeVCFdiploid.pl outputs/pggb_out/all_genomes.*vcf {output.vcf} $reference
+            """
+
+    rule create_gene_paths:
+        input:
+            gff="outputs/genomes/{sample}.gff",
+            gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+        output:
+            basename="outputs/genomes/{sample}.gene_segments",
+            gene_length="outputs/genomes/{sample}.gene_segments.gene_length.txt",
+            bed="outputs/genomes/{sample}.gene_segments.bed",
+        shell:
+            """
+            perl $PANEX_PATH/Perl/CreateGenePathsFromGFA.pl {input.gfa} {input.gff} {output.basename} {wildcards.sample}
+            """
+
+    rule bedtools_intersect:
+        input:
+            strains="outputs/genomes/strains.txt",
+            bedfiles=expand("outputs/genomes/{sample}.gene_segments.bed", sample=SAMPLES)
+        params:
+            identity=config['identity']
+        output:
+            "outputs/pav_matrix.tsv",
+        shell:
+            """
+            perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input.strains} outputs/genomes {output} 20
+            cp outputs/pav_matrix.tsv outputs/pav_matrix.tsv.bkp
+            """
+
 
 rule odgi:
     input:
@@ -92,19 +314,6 @@ rule odgi:
         odgi similarity -i {output.og} -d >{output.distance}
         """
 
-
-rule create_gene_paths:
-    input:
-        gff="outputs/genomes/{sample}.gff",
-        gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
-    output:
-        basename="outputs/genomes/{sample}.gene_segments",
-        gene_length="outputs/genomes/{sample}.gene_segments.gene_length.txt",
-        bed="outputs/genomes/{sample}.gene_segments.bed",
-    shell:
-        """
-        perl $PANEX_PATH/Perl/CreateGenePathsFromGFA.pl {input.gfa} {input.gff} {output.basename}
-        """
 
 rule crispr:
     input:
@@ -120,20 +329,6 @@ rule crispr:
         """
 
 
-
-rule bedtools_intersect:
-    input:
-        strains="outputs/genomes/strains.txt",
-        bedfiles=expand("outputs/genomes/{sample}.gene_segments.bed", sample=SAMPLES)
-    params:
-        identity=config['identity']
-    output:
-        "outputs/pav_matrix.tsv",
-    shell:
-        """
-        perl $PANEX_PATH/Perl/GeneratePAVfromBed.pl {input.strains} outputs/genomes {output} 20
-        cp outputs/pav_matrix.tsv outputs/pav_matrix.tsv.bkp
-        """
 
 rule trf:
     input:

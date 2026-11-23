@@ -104,11 +104,14 @@ rule pggb:
         png1="outputs/pggb_out/all_genomes.fa.lay.draw.png",
         png2="outputs/pggb_out/all_genomes.fa.og.viz_multiqc.png",
         vcf="outputs/all_genomes.vcf",
+    params:
+        # PGGB options, configurable in config.yaml (pggb_params)
+        pggb=config.get("pggb_params", "-p 80 -k 15 -s 3000"),
     shell:
         """
         samtools faidx outputs/genomes/all_genomes.fa
         reference=$(head -1 outputs/genomes/strains.txt | awk '{{print $2}}')
-        pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out -V $reference -m -M -p 80 -k 15 -s 3000
+        pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out -V $reference -m -M {params.pggb}
         mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output.gfa}
         mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
         mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
@@ -132,13 +135,17 @@ rule create_gene_paths:
     input:
         gff="outputs/genomes/{sample}.gb.gff",
         gfa="outputs/pggb_out/all_genomes.fa.smooth.final.gfa",
+        strains="outputs/genomes/strains.txt",
     output:
         basename="outputs/genomes/{sample}.gene_segments",
         gene_length="outputs/genomes/{sample}.gene_segments.gene_length.txt",
         bed="outputs/genomes/{sample}.gene_segments.bed",
     shell:
         """
-        perl $PANEX_PATH/Perl/CreateGenePathsFromGFA.pl {input.gfa} {input.gff} {output.basename}
+        # PanSN prefix of this genome in the graph (strain name, column 2 of strains.txt): genes are only
+        # projected on the paths of their own genome, even if several genomes have the same contig names
+        prefix=$(awk -F'\t' -v s="{wildcards.sample}" '$1==s{{print $2; exit}}' {input.strains})
+        perl $PANEX_PATH/Perl/CreateGenePathsFromGFA.pl {input.gfa} {input.gff} {output.basename} "$prefix"
         """
 
 rule bedtools_intersect:

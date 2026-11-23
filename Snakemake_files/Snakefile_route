@@ -1,0 +1,205 @@
+# Snakefile_route - first step of the "auto" mode of PanExplorer2.
+#
+# Prepares the genomes exactly as the pangenome workflows do (same rules, same output files, so that the
+# workflow launched afterwards reuses them), computes the similarity between all genomes and chooses the
+# pangenome method:
+#   minimum ANI >= ani_threshold (same species)  -> graph-based workflow (PGGB)
+#   minimum ANI <  ani_threshold                 -> gene clustering (PanACoTA/Roary for prokaryotes,
+#                                                   OrthoFinder for eukaryotes)
+# ANI: FastANI for prokaryotes; Mash (ANI ~ 100 x (1 - distance)) for eukaryotes, FastANI if mash is absent.
+#
+# Config (config.yaml or --config):
+#   input_type: prokaryote | eukaryote
+#   ani_threshold: 95
+#   pangenome_method: auto | graph | clustering
+#   clustering_tool: panacota | roary | orthofinder
+# Outputs: outputs/route/method.txt (tool to run), decision.txt / decision.tsv, ani_pairs.tsv, ani_tree.nwk
+#
+# Usually launched by panexplorer_auto.sh, which then runs the chosen Snakefile.
+
+import glob
+import os
+import shutil
+import subprocess
+
+import yaml
+configfile: "config.yaml"
+
+INPUT_TYPE = config.get("input_type", "prokaryote")
+ANI_THRESHOLD = config.get("ani_threshold", 95)
+METHOD = config.get("pangenome_method", "auto")
+CLUSTERING_TOOL = config.get("clustering_tool", "orthofinder" if INPUT_TYPE == "eukaryote" else "panacota")
+if INPUT_TYPE == "eukaryote" and CLUSTERING_TOOL != "orthofinder":
+    CLUSTERING_TOOL = "orthofinder"   # only clustering workflow available from FASTA + GFF
+elif INPUT_TYPE != "eukaryote" and CLUSTERING_TOOL not in ("panacota", "roary"):
+    CLUSTERING_TOOL = "panacota"
+
+SAMPLES = []
+with open("config.yaml", "r") as yaml_file:
+    genome_data = yaml.safe_load(yaml_file)
+if INPUT_TYPE == "eukaryote":
+    for genome_name, genome_info in genome_data["input_genomes"].items():
+        SAMPLES.append(genome_info["name"])
+else:
+    if "ids" in genome_data.keys():
+        for id in genome_data["ids"]:
+            SAMPLES.append(id)
+    if "input_genbanks" in genome_data.keys():
+        for gb_path in genome_data["input_genbanks"]:
+            cmd = "grep 'ACCESSION' "+gb_path
+            returned_value = subprocess.getoutput(cmd)
+            words = returned_value.split()
+            name = words[1]
+            #words = returned_value.split()
+            #SAMPLES.append(words[1])
+            words = gb_path.split("/")
+            genbank_file_name = words[-1]
+            x = genbank_file_name.replace(".", "_")
+            cmd = "sed -i 's/ACCESSION   "+name+"/ACCESSION   "+x+"/g' "+gb_path
+            subprocess.getoutput(cmd)
+
+            cmd_locus = "grep 'LOCUS' "+gb_path
+            returned_value = subprocess.getoutput(cmd_locus)
+            words_locus = returned_value.split()
+            name_locus = words_locus[1]
+            cmd = "sed -i 's/LOCUS       "+name_locus+"/LOCUS       "+x+"/' "+gb_path
+            subprocess.getoutput(cmd)
+
+            cmd = "grep 'ACCESSION' "+gb_path
+            returned_value = subprocess.getoutput(cmd)
+            words = returned_value.split()
+            SAMPLES.append(words[1])
+
+
+
+
+rule final:
+    input:
+        "outputs/route/method.txt"
+
+
+# The two sets of preparation rules produce the same files (genomes/*.fasta, strains.txt):
+# only the set matching input_type is defined.
+if INPUT_TYPE != "eukaryote":
+    ############################ prokaryotes (same rules as Snakefile_wget_*) ############################
+    rule ncbi_datasets:
+        input:
+            "config.yaml"
+        output:
+            expand("outputs/genomes/{sample}.fasta", sample=SAMPLES),
+            expand("outputs/genomes/{sample}.gb", sample=SAMPLES),
+            expand("outputs/genomes/{sample}.prt", sample=SAMPLES),
+            expand("outputs/genomes/{sample}.nuc", sample=SAMPLES),
+            genomes="outputs/genomes/genomes.txt",
+            strains="outputs/genomes/strains.txt"
+        shell:
+            """
+            perl $PANEX_PATH/Perl/get_data.pl {input} outputs/genomes
+            """
+
+    rule fastani:
+        input:
+            "outputs/genomes/genomes.txt"
+        output:
+            out="outputs/fastani.out",
+            matrix="outputs/fastani.out.matrix",
+            completematrix="outputs/fastani.out.matrix.complete",
+            pdf="outputs/fastani.out.pdf",
+            svg="outputs/fastani.out.svg"
+        shell:
+            """
+            fastANI --rl {input} --ql {input} -o {output.out} -t 4 --matrix
+            perl $PANEX_PATH/Perl/convertANI.pl {output.matrix} outputs/genomes/genomes2.txt >{output.completematrix}
+            Rscript $PANEX_PATH/R/heatmap_ani.R -f {output.completematrix} -o {output.pdf}
+            pdf2svg {output.pdf} {output.svg}
+            """
+
+else:
+    ############################ eukaryotes (same rules as Snakefile_pggb/orthofinder) ############################
+    rule get_data:
+        input:
+            "config.yaml"
+        output:
+            "outputs/genomes/strains.txt",
+            expand("outputs/genomes/{sample}.fasta.gz", sample=SAMPLES),
+            expand("outputs/genomes/{sample}.gff", sample=SAMPLES),
+        run:
+            with open(input[0], "r") as yaml_file, open(output[0], "w") as output_file:
+                genome_data = yaml.safe_load(yaml_file)
+                for genome_name, genome_info in genome_data["input_genomes"].items():
+                    fasta_file = genome_info["fasta"]
+                    name = genome_info["name"]
+                    gff_file = genome_info["gff3"]
+                    # one transcript per gene (longest CDS), see Python/longest_isoform_gff.py (longest_isoform in config.yaml)
+                    if config.get("longest_isoform", True):
+                        shell("python3 $PANEX_PATH/Python/longest_isoform_gff.py '{gff_file}' 'outputs/genomes/{name}.gff'")
+                    else:
+                        shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
+                    shutil.copy(fasta_file, "outputs/genomes/"+str(name)+".fasta.gz")
+                    output_file.write(f"{name}\t{name}\n")
+
+    rule gffread:
+        input:
+            fastagz = "outputs/genomes/{sample}.fasta.gz",
+            gff = "outputs/genomes/{sample}.gff"
+        output:
+            fasta = "outputs/genomes/{sample}.fasta",
+            pep = "outputs/genomes/{sample}.pep"
+        shell:
+            """
+            # gunzip -c keeps the .fasta.gz, so that the pangenome workflow launched afterwards does not redo get_data
+            gunzip -c {input.fastagz} >{output.fasta}
+            gffread -y {output.pep} -g {output.fasta} {input.gff}
+            """
+
+
+    rule mash_eukaryotes:
+        input:
+            expand("outputs/genomes/{sample}.fasta", sample=SAMPLES)
+        output:
+            ani="outputs/route/ani_input.txt",
+            fmt="outputs/route/ani_format.txt"
+        threads: 4
+        shell:
+            """
+            mkdir -p outputs/route
+            if command -v mash >/dev/null 2>&1; then
+                mash sketch -p {threads} -s 10000 -o outputs/route/genomes {input}
+                mash triangle -p {threads} outputs/route/genomes.msh >{output.ani}
+                echo mash >{output.fmt}
+            else
+                ls {input} >outputs/route/genomes_list.txt
+                fastANI --rl outputs/route/genomes_list.txt --ql outputs/route/genomes_list.txt -o {output.ani} -t {threads}
+                echo fastani >{output.fmt}
+            fi
+            """
+
+
+############################ decision ############################
+def ani_input(wildcards):
+    if INPUT_TYPE == "eukaryote":
+        return {"ani": "outputs/route/ani_input.txt", "fmt": "outputs/route/ani_format.txt"}
+    return {"ani": "outputs/fastani.out"}
+
+rule choose_method:
+    input:
+        unpack(ani_input),
+        strains="outputs/genomes/strains.txt"
+    output:
+        method="outputs/route/method.txt",
+        decision="outputs/route/decision.txt",
+        tree="outputs/route/ani_tree.nwk",
+        pairs="outputs/route/ani_pairs.tsv"
+    params:
+        threshold=ANI_THRESHOLD,
+        force=METHOD,
+        clustering=CLUSTERING_TOOL,
+        fmt_file="outputs/route/ani_format.txt" if INPUT_TYPE == "eukaryote" else ""
+    shell:
+        """
+        fmt=fastani
+        if [ -f "{params.fmt_file}" ]; then fmt=$(cat {params.fmt_file}); fi
+        python3 $PANEX_PATH/Python/choose_pangenome_method.py --$fmt {input.ani} --strains {input.strains} \
+            --threshold {params.threshold} --force {params.force} --graph-tool pggb \
+            --clustering-tool {params.clustering} --outdir outputs/route
+        """

@@ -38,7 +38,11 @@ rule get_data:
                 fasta_file = genome_info["fasta"]
                 name = genome_info["name"]
                 gff_file = genome_info["gff3"]
-                shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
+                # one transcript per gene (longest CDS), see Python/longest_isoform_gff.py (longest_isoform in config.yaml)
+                if config.get("longest_isoform", True):
+                    shell("python3 $PANEX_PATH/Python/longest_isoform_gff.py '{gff_file}' 'outputs/genomes/{name}.gff'")
+                else:
+                    shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
                 shutil.copy(fasta_file, "outputs/genomes/"+str(name)+".fasta.gz")
                 output_file.write(f"{name}\t{name}\n")
 

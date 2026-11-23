@@ -1,4 +1,5 @@
 import glob
+import re
 import os
 import shutil
 
@@ -40,7 +41,11 @@ rule get_data:
                 cmd = "sed 's/>/>"+str(name)+"#1#/g' "+fasta_file+" >outputs/genomes/"+str(name)+".fasta"
                 os.system(cmd)
                 gff_file = genome_info["gff3"]
-                shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
+                # one transcript per gene (longest CDS), see Python/longest_isoform_gff.py (longest_isoform in config.yaml)
+                if config.get("longest_isoform", True):
+                    shell("python3 $PANEX_PATH/Python/longest_isoform_gff.py '{gff_file}' 'outputs/genomes/{name}.gff'")
+                else:
+                    shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
 
 rule pggb:
     input:
@@ -51,12 +56,18 @@ rule pggb:
         png1="outputs/pggb_out/all_genomes.fa.lay.draw.png",
         png2="outputs/pggb_out/all_genomes.fa.og.viz_multiqc.png",
         vcf="outputs/all_genomes.vcf"
+    params:
+        # PGGB options, configurable in config.yaml (pggb_params)
+        pggb=config.get("pggb_params", "-p 80 -k 15 -s 3000"),
+        # number of haplotypes: without it, recent pggb versions map each segment to a single other
+        # genome (wfmash -n 1), and homologous genes of most genome pairs are not merged in the graph
+        nhap=lambda wildcards: "" if re.search(r"(^|\s)-n\s", config.get("pggb_params", "")) else "-n " + str(len(SAMPLES)),
     shell:
         """
         cat outputs/genomes/*fasta >outputs/genomes/all_genomes.fa
         samtools faidx outputs/genomes/all_genomes.fa
         reference=$(head -1 outputs/genomes/all_genomes.fa | awk -F '#' '{{print $1}}' | sed "s/>//g")
-        pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out -V $reference -m -p 80 -k 15 -s 3000
+        pggb -i outputs/genomes/all_genomes.fa -o outputs/pggb_out -V $reference -m {params.nhap} {params.pggb}
         mv outputs/pggb_out/all_genomes.*smooth.final.gfa {output.gfa}
         mv outputs/pggb_out/all_genomes.*lay.draw.png {output.png1}
         mv outputs/pggb_out/all_genomes.fa.*.og.viz_multiqc.png {output.png2}
@@ -73,7 +84,7 @@ rule create_gene_paths:
         bed="outputs/genomes/{sample}.gene_segments.bed",
     shell:
         """
-        perl $PANEX_PATH/Perl/CreateGenePathsFromGFA.pl {input.gfa} {input.gff} {output.basename}
+        perl $PANEX_PATH/Perl/CreateGenePathsFromGFA.pl {input.gfa} {input.gff} {output.basename} {wildcards.sample}
         """
 
 rule bedtools_intersect:
