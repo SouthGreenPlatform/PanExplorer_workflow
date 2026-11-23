@@ -26,7 +26,24 @@ touch $coregenes_alignment;
 
 cat config.yaml >>$logfile;
 
-#if $software=="pgap"
+#if $software=="auto"
+    ## ANI-based choice: PGGB if the minimum pairwise ANI >= threshold, otherwise gene clustering
+    #if str($mode.mode) == "fasta"
+        #set $input_type = "eukaryote"
+        #set $clustering_tool = "orthofinder"
+    #else
+        #set $input_type = "prokaryote"
+        #set $clustering_tool = "panacota"
+    #end if
+    #if str($generate_core_genes_alignment) == "true"
+        #set $core_aln = "True"
+    #else
+        #set $core_aln = "False"
+    #end if
+    /usr/local/bioinfo/singularity-4.0.1/bin/singularity exec ${__tool_directory__}/panexplorer_workflow_v2.sif bash \$PANEX_PATH/panexplorer_auto.sh --input-type $input_type --threshold $ani_threshold --force $ani_force --clustering-tool $clustering_tool --cores 1 --config identity=$min_identity generate_core_genes_alignment=$core_aln >>$logfile 2>&1;
+    cp outputs/route/decision.txt $route_decision;
+    cp outputs/route/ani_tree.nwk $route_tree;
+#else if $software=="pgap"
     /usr/local/bioinfo/singularity-4.0.1/bin/singularity exec ${__tool_directory__}/panexplorer_workflow_v2.sif snakemake --cores 1 --config identity=$min_identity -s \$PANEX_PATH/Snakemake_files/Snakefile_wget_PGAP_heatmap_upset_COG >>$logfile 2>&1;
 #else if $software=="roary" and $generate_core_genes_alignment=="true"
     /usr/local/bioinfo/singularity-4.0.1/bin/singularity exec ${__tool_directory__}/panexplorer_workflow_v2.sif snakemake --cores 1 --config identity=$min_identity generate_core_genes_alignment=True -s \$PANEX_PATH/Snakemake_files/Snakefile_wget_roary_heatmap_upset_COG >>$logfile 2>&1;
@@ -64,6 +81,7 @@ cat config.yaml >>$logfile;
                 <when value="accessions">
 			<param name="input" type="text" multiple="true" label="List of genbank identifiers" help="Coma separated list (ex: GCA_000007385.1,GCA_000010025.1,GCA_000019585.2)"/>
 			<param type="select" name="software" label="Choose the pan-genome software">
+				<option value="auto">Automatic: PGGB if minimum ANI &gt;= threshold, otherwise PanACoTA</option>
 				<option value="roary">Roary</option>
 				<option value="panacota">PanACoTA</option>
 				<option value="pggb">PanGenome Graph Builder (PGGB)</option>
@@ -72,6 +90,7 @@ cat config.yaml >>$logfile;
                 <when value="genbanks">
 			<param name="private_genomes" type="data" format="zip" label="Zip of genbank files" optional="true"/>
 			<param type="select" name="software" label="Choose the pan-genome software">
+				<option value="auto">Automatic: PGGB if minimum ANI &gt;= threshold, otherwise PanACoTA</option>
                                 <option value="roary">Roary</option>
                                 <option value="panacota">PanACoTA</option>
                                 <option value="pggb">PanGenome Graph Builder (PGGB)</option>
@@ -81,6 +100,7 @@ cat config.yaml >>$logfile;
 			<param name="private_genomes_fasta" type="data" format="zip" label="Zip of Fasta files" optional="true"/>
 			<param name="private_genomes" type="data" format="zip" label="Zip of GFF files" optional="true"/>
 			<param type="select" name="software" label="Choose the pan-genome software">
+				<option value="auto">Automatic: PGGB if minimum ANI &gt;= threshold, otherwise OrthoFinder</option>
 				<option value="orthofinder">OrthoFinder</option>
 				<option value="cactus">Minigraph-Cactus</option>
 				<option value="pggb">PanGenome Graph Builder (PGGB)</option>
@@ -89,6 +109,12 @@ cat config.yaml >>$logfile;
 	</conditional>
 
 	<param name="min_identity" type="text" value="80" label="Minimum percentage identity for BlastP" />
+	<param name="ani_threshold" type="float" value="95" min="70" max="100" label="Minimum ANI (%) to use the graph approach (PGGB)" help="Automatic mode only. If the lowest pairwise ANI between genomes is below this value (genomes from different species), a gene clustering approach is used instead (PanACoTA for prokaryotes, OrthoFinder for eukaryotes)."/>
+	<param name="ani_force" type="select" label="Automatic mode: decision" help="Automatic mode only. Keep 'Decide from ANI' or force one approach while still computing the ANI report.">
+		<option value="auto" selected="true">Decide from ANI</option>
+		<option value="graph">Force graph approach (PGGB)</option>
+		<option value="clustering">Force gene clustering</option>
+	</param>
 	<param name="generate_core_genes_alignment" type="boolean" label="Generate an alignment of core-genes" help="This option is active for roary only" />
  </inputs>
 
@@ -113,6 +139,12 @@ cat config.yaml >>$logfile;
  <data from_work_dir="outputs/all_genomes.vcf" format="vcf" name="vcf" label="VCF file"/>
  <data from_work_dir="outputs/pggb_out/all_genomes.fa.smooth.final.gfa" format="gfa1" name="gfa_file" label="GFA file"/>
  <data from_work_dir="outputs/roary_outdir/core_gene_alignment.aln" format="fasta" name="coregenes_alignment" label="Coregenes FASTA alignment"/>
+ <data format="txt" name="route_decision" label="Pangenome method decision (ANI)">
+     <filter>mode['software'] == 'auto'</filter>
+ </data>
+ <data format="newick" name="route_tree" label="ANI-based NJ tree of genomes">
+     <filter>mode['software'] == 'auto'</filter>
+ </data>
  <data format="txt" name="logfile" label="Logfile"/>
  <data format="txt" name="roary_log" label="Roary Logfile"/>
 </outputs>

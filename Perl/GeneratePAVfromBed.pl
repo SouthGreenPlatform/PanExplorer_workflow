@@ -21,11 +21,25 @@ while (my $line = <S>) {
 }
 close(S);
 
+# BED of the genes projected on the graph for a genome (exact name first, see above)
+sub bed_of {
+	my ($genome) = @_;
+	my $bed = "$bed_directory/$genome.gene_segments.bed";
+	if (-e $bed){return $bed;}
+	my @candidates = glob("$bed_directory/$genome.*.bed");
+	return $candidates[0];
+}
+
 my %gene_lengths;
 foreach my $id(keys(%strains)){
 
-	my $gff = `ls $bed_directory/$id*.gff`;
-	chomp($gff);
+	# exact file name first: "ls $id*.gff" also matches other genomes whose name starts with $id
+	my $gff = "$bed_directory/$id.gb.gff";    # prokaryotes (same file as in create_gene_paths)
+	if (!-e $gff){$gff = "$bed_directory/$id.gff";}  # eukaryotes
+	if (!-e $gff){
+		my @candidates = glob("$bed_directory/$id*.gff");
+		$gff = $candidates[0];
+	}
 	# same gene identifiers as in CreateGenePathsFromGFA.pl (see GeneId.pm)
 	my $is_eukaryotic = gff_is_eukaryotic($gff);
 	open(GFF,$gff);
@@ -56,8 +70,7 @@ my $graph = Graph::Undirected->new;
 my $num = 0;
 foreach my $id(keys(%strains)){
 
-	my $file = `ls $bed_directory/$id.*.bed`;
-	chomp($file);
+	my $file = bed_of($id);
 	open(B,$file);
 	while(my $line = <B>){
 		chomp($line);
@@ -68,8 +81,7 @@ foreach my $id(keys(%strains)){
 	close(B);
 
 	foreach my $id2(keys(%strains)){
-		my $file2 = `ls $bed_directory/$id2.*.bed`;
-		chomp($file2);
+		my $file2 = bed_of($id2);
 		if (-e $file && -e $file2 && $file ne $file2){
 			$num++;
 

@@ -10,6 +10,11 @@ use GeneId qw(gff_is_eukaryotic gene_key_from_attributes);
 my $gfa = $ARGV[0];
 my $gff3 = $ARGV[1];
 my $out = $ARGV[2];
+# optional: name of the genome in the graph (PanSN prefix "sample#hap#chrom").
+# When given, the genes of this GFF are only projected on the paths of this genome. This is required
+# when several genomes share the same chromosome names (Chr1, Chr2... in eukaryotes): otherwise the
+# coordinates of the genes would also be applied to the homonymous chromosomes of the other genomes.
+my $sample_filter = $ARGV[3];
 
 my %segment_is_covered_by_genes;
 my %coordinates;
@@ -37,9 +42,16 @@ while(my $line = <F>){
 			my $start = $infos[3];
 			my $end = $infos[4];
 			$coordinates{$chr}.= "$gene:$start-$end|";
+			$allgenes{$gene}=1;
 			for (my $i = $start; $i <= $end; $i++){
-				$allgenes{$gene}=1;
-				$coding_positions{$chr}{$i} = "$gene,";
+				# several genes can share a position (overlapping genes, isoforms): keep all of them
+				my $current = $coding_positions{$chr}{$i};
+				if (!defined $current){
+					$coding_positions{$chr}{$i} = "$gene,";
+				}
+				elsif (index(",$current", ",$gene,") < 0){
+					$coding_positions{$chr}{$i} .= "$gene,";
+				}
 			}
 			# CDS split over several lines (join, frameshift) share the same identifier: sum their lengths
 			push(@gene_order, $gene) if (!exists $gene_length{$gene});
@@ -53,6 +65,15 @@ foreach my $gene(@gene_order){
 	print LENGTH "$gene	$gene_length{$gene}\n";
 }
 close(LENGTH);
+
+# chromosome names of the paths may lack the version suffix (".1") of the GFF seqids, or the reverse
+my %chr_alias;
+foreach my $chr(keys(%coordinates)){
+	my $short = $chr;
+	$short =~s/\.\d+$//;
+	$chr_alias{$short} = $chr if (!exists $chr_alias{$short});
+}
+my %chr_projected;
 
 print "Start GFA parsing ($gfa)...\n";
 
@@ -71,23 +92,32 @@ while(my $line = <GFA>){
 
 		my $path;
 		my $chrom;
+		my $path_sample;
 		my @segments;
 		if ($line =~/^W/){
 	                my ($type,$sample,$strand,$chromW,$start,$length,$pathW) = split(/\t/,$line);
 			$path = $pathW;
 			$chrom = $chromW;
+			$path_sample = $sample;
 			@segments = split(/[\>\<]/,$path);
 		}
 		elsif ($line =~/^P/){
 			my ($type,$strain_chrom,$pathP) = split(/\t/,$line);
 			my ($stra,$haplo,$chromP) = split(/#/,$strain_chrom);
+			if (!defined $chromP){$chromP = $strain_chrom;}  # path name without PanSN prefix
 			$path = $pathP;
 			$chrom = $chromP;
+			$path_sample = $stra;
 			@segments = split(/,/,$path);
 		}
-		$chrom =~s/\.\d+$//g;
-		my @genes = split(/\|/,$coordinates{$chrom});
+		if (defined $sample_filter && $sample_filter ne "" && $path_sample ne $sample_filter){next;}
+		my $short_chrom = $chrom;
+		$short_chrom =~s/\.\d+$//g;
+		if (exists $coordinates{$chrom}){}
+		elsif (exists $chr_alias{$short_chrom}){$chrom = $chr_alias{$short_chrom};}
+		else {$chrom = $short_chrom;}
 		if ($coordinates{$chrom}){
+			$chr_projected{$chrom}++;
 			my $end_segment = 0;
 			my $start_segment = 0;
 			my $nb_gene = 0;
@@ -144,6 +174,19 @@ while(my $line = <GFA>){
 	}
 }
 close(GFA);
+
+# summary: genes of the GFF that could not be projected on the graph
+my $nb_genes = scalar keys(%allgenes);
+my $nb_projected = scalar keys(%segments_of_gene);
+print STDERR "[CreateGenePathsFromGFA] ".($sample_filter ? "$sample_filter: " : "")."$nb_projected / $nb_genes genes projected on the graph\n";
+foreach my $chr(sort keys(%coordinates)){
+	if (!$chr_projected{$chr}){
+		print STDERR "[CreateGenePathsFromGFA] WARNING: no graph path found for GFF sequence '$chr'".($sample_filter ? " of $sample_filter" : "")."\n";
+	}
+	elsif ($chr_projected{$chr} > 1){
+		print STDERR "[CreateGenePathsFromGFA] WARNING: GFF sequence '$chr' matches $chr_projected{$chr} graph paths: give the genome name as 4th argument\n";
+	}
+}
 
 open(O,">$out");
 open(BED,">$out.bed");
