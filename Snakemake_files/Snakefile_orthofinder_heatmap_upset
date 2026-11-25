@@ -38,11 +38,7 @@ rule get_data:
                 fasta_file = genome_info["fasta"]
                 name = genome_info["name"]
                 gff_file = genome_info["gff3"]
-                # one transcript per gene (longest CDS), see Python/longest_isoform_gff.py (longest_isoform in config.yaml)
-                if config.get("longest_isoform", True):
-                    shell("python3 $PANEX_PATH/Python/longest_isoform_gff.py '{gff_file}' 'outputs/genomes/{name}.gff'")
-                else:
-                    shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
+                shutil.copy(gff_file, "outputs/genomes/"+str(name)+".gff")
                 shutil.copy(fasta_file, "outputs/genomes/"+str(name)+".fasta.gz")
                 output_file.write(f"{name}\t{name}\n")
 
@@ -65,14 +61,29 @@ rule orthofinder:
     params:
         identity=config['identity']
     output:
-        pav="outputs/Orthogroups.tsv"
+        pav="outputs/Orthogroups.tsv",
+        assigned="outputs/Orthogroups_assigned.tsv",
+        unassigned="outputs/Orthogroups_UnassignedGenes.tsv"
     shell:
         """
         mkdir -p outputs/proteomes
         sed -i '/^>/! s/\./N/g' outputs/genomes/*.pep
         cp -rf outputs/genomes/*.pep outputs/proteomes
         orthofinder -f outputs/proteomes
-        mv outputs/proteomes/OrthoFinder/R*/Orthogroups/Orthogroups.tsv outputs/Orthogroups.tsv
+        RESDIR=$(ls -d outputs/proteomes/OrthoFinder/R*/ | tail -n 1)
+        mv $RESDIR/Orthogroups/Orthogroups.tsv {output.assigned}
+        mv $RESDIR/Orthogroups/Orthogroups_UnassignedGenes.tsv {output.unassigned}
+        # OrthoFinder does not report single-copy genes that remain unassigned (singletons)
+        # in Orthogroups.tsv: append them (one gene per line) so that every gene ends up in the PAV matrix.
+        # Columns of the unassigned file are re-ordered by header name to match Orthogroups.tsv.
+        awk -F'\\t' -v OFS='\\t' '
+            {{ sub(/\\r$/, "") }}
+            NR==1 {{ n=NF; for (i=1; i<=NF; i++) col[$i]=i; print; next }}
+            NR==FNR {{ print; next }}
+            FNR==1 {{ for (i=1; i<=NF; i++) map[i]=col[$i]; next }}
+            {{ delete row; for (i=1; i<=NF; i++) row[map[i]]=$i;
+               line=row[1]; for (j=2; j<=n; j++) line=line OFS row[j]; print line }}
+        ' {output.assigned} {output.unassigned} > {output.pav}
         """
 
 rule cog:
@@ -80,13 +91,12 @@ rule cog:
         pav="outputs/pav_matrix.tsv"
     output:
         cog="outputs/cog_output.txt",
-        keggofclusters="outputs/kegg_of_clusters.txt",
+        cogstat="outputs/cog_stats.txt",
         cogstat2="outputs/cog_stats2.txt",
-        cogofclusters="outputs/cog_of_clusters.txt",
-        productofclusters="outputs/products_of_clusters.txt"
+        cogofclusters="outputs/cog_of_clusters.txt"
     shell:
         """
-        perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.keggofclusters} {output.cogstat2} {output.cogofclusters} {output.productofclusters} outputs/genomes/strains.txt
+        perl $PANEX_PATH/Perl/GetCogOfCluster.pl {input} outputs/genomes {output.cog} {output.cogstat} {output.cogstat2} {output.cogofclusters} outputs/genomes/strains.txt
         """
 
 rule convert_matrix:
