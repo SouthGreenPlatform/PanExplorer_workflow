@@ -208,41 +208,106 @@ else{
 	######################################
         # for eucaryotes, use GFF files
         ######################################
+	# GO terms can be found in any attribute (Ontology_term=, Dbxref=, go=...) and at any level
+	# (gene, mRNA, CDS). Functions are taken from Note= (or product= if no Note), on any line.
+	# Both are collected per feature ID, then propagated to the identifiers used in the PAV matrix:
+	#   - OrthoFinder: transcript (mRNA) ID written by gffread
+	#   - PGGB: CDS protein_id > Parent > ID (Perl/GeneId.pm), or locus_tag for annotations without mRNA
+	my %go_of_id;
+	my %function_of_id;
+	my %parents_of_id;
+	my %children_of_id;
 	open(LS,"ls $prot_dir/*gff |");
 	while(my $file = <LS>){
 		chomp($file);
 		open(GFF,$file);
-		my $current_GO;
-		my $current_gene;
 		while(my $l=<GFF>){
 			$l =~s/\n//g;$l =~s/\r//g;
-			if ($l =~/ID=([^;]+);.*=(GO:[^;]+);*/){
-				$current_gene = $1;
-				$current_gene =~s/:/_/g;
-				if ($l=~/=(GO:\d+[^;]+);*/){
-					$current_GO = $1;
-					$cog_of_genes{$current_gene}{$current_GO} = 1;
+			if ($l =~/^##FASTA/){last;}
+			if ($l =~/^#/){next;}
+			my @cols = split(/\t/,$l);
+			if (scalar @cols < 9){next;}
+			my $attributes = $cols[8];
+			my $id;
+			if ($attributes =~/(?:^|;)\s*ID=([^;]+)/){$id = $1;}
+			my @parents;
+			if ($attributes =~/(?:^|;)\s*Parent=([^;]+)/){@parents = split(/,/,$1);}
+			if (!$id && @parents){$id = $parents[0];}
+			if (!$id){next;}
+			foreach my $parent(@parents){
+				$parents_of_id{$id}{$parent} = 1;
+				$children_of_id{$parent}{$id} = 1;
+			}
+			# protein_id / locus_tag may be the gene name used in the PAV matrix: link them to this feature
+			foreach my $alias_key("protein_id","locus_tag"){
+				if ($attributes =~/(?:^|;)\s*$alias_key=([^;]+)/){
+					my $alias = $1;
+					if ($alias ne $id){
+						$parents_of_id{$alias}{$id} = 1;
+						foreach my $parent(@parents){$parents_of_id{$alias}{$parent} = 1;}
+					}
 				}
-				if ($l=~/Note=([^;]+);/){
-					my $function = $1;
-					$function =~s/'//g;
-					$product_of_genes{$current_gene} = $function;
-				}
+			}
+			while ($attributes =~/(GO:\d{7})/g){
+				$go_of_id{$id}{$1} = 1;
+			}
+			my $function;
+			if ($attributes =~/(?:^|;)\s*Note=([^;]+)/){$function = $1;}
+			elsif ($attributes =~/(?:^|;)\s*product=([^;]+)/){$function = $1;}
+			if ($function){
+				$function =~s/'//g;
+				$function =~s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
+				if (!$function_of_id{$id}){$function_of_id{$id} = $function;}
 			}
 		}
 		close(GFF);
 	}
 	close(LS);
+
+	# for each gene of the PAV matrix: own annotation, then parents (mRNA, gene), then children (CDS)
+	foreach my $gene(keys(%cluster_of_gene)){
+		my @related = ($gene);
+		my %seen = ($gene => 1);
+		my @queue = ($gene);
+		while (my $current = shift(@queue)){
+			if ($parents_of_id{$current}){
+				foreach my $parent(keys(%{$parents_of_id{$current}})){
+					if (!$seen{$parent}++){push(@related,$parent);push(@queue,$parent);}
+				}
+			}
+		}
+		if ($children_of_id{$gene}){
+			foreach my $child(keys(%{$children_of_id{$gene}})){
+				if (!$seen{$child}++){push(@related,$child);}
+			}
+		}
+		foreach my $rel(@related){
+			if ($go_of_id{$rel}){
+				foreach my $go(keys(%{$go_of_id{$rel}})){
+					$cog_of_genes{$gene}{$go} = 1;
+				}
+			}
+			if (!$product_of_genes{$gene} && $function_of_id{$rel}){
+				$product_of_genes{$gene} = $function_of_id{$rel};
+			}
+		}
+		# function of the cluster (cog_of_clusters.txt.2) = first function found among its genes
+		my $cluster = $cluster_of_gene{$gene};
+		if ($product_of_genes{$gene} && !$functions{$cluster}){
+			$functions{$cluster} = $product_of_genes{$gene};
+		}
+	}
 }
 
 my %product_of_clusters;
 foreach my $gene(keys(%product_of_genes)){
 	my $cluster = $cluster_of_gene{$gene};
+	if (!defined $cluster){next;}
 	my $product = $product_of_genes{$gene};
-	$product_of_clusters{$cluster} = $product; 
+	$product_of_clusters{$cluster} = $product;
 }
 open(FUNC,">$function_clusters");
-foreach my $cluster(keys(%product_of_clusters)){
+foreach my $cluster(sort {$a<=>$b} keys(%product_of_clusters)){
 	my $function = $product_of_clusters{$cluster};
 	print FUNC "$cluster	$function\n";
 }
@@ -251,7 +316,7 @@ close(FUNC);
 
 my %letters_of_cog;
 my %count_letter;
-if (scalar keys(%cog_of_genes) > 1){
+if (scalar keys(%cog_of_genes) > 0){
 	open(WHOG,"$dirname/../COG/whog");
 	while(my $l=<WHOG>){
 		if ($l=~/\[(\w+)\] (COG\d+) /){
@@ -264,6 +329,7 @@ if (scalar keys(%cog_of_genes) > 1){
 
 	foreach my $gene(keys(%cog_of_genes)){
 		my $cluster = $cluster_of_gene{$gene};
+		if (!defined $cluster){next;}
 		my @cogs;
 		if ($cog_of_genes{$gene}){
 			my $ref_hash = $cog_of_genes{$gene};
@@ -275,10 +341,10 @@ if (scalar keys(%cog_of_genes) > 1){
 		foreach my $cog(@cogs){
 			$cogs_of_cluster{$cluster}{$cog}++;
 		}
-		$functions{$cluster} = $function;
+		if ($function && !$functions{$cluster}){$functions{$cluster} = $function;}
 	}
 }
-if (scalar keys(%kegg_of_genes) > 1){
+if (scalar keys(%kegg_of_genes) > 0){
 	foreach my $gene(keys(%kegg_of_genes)){
 		my $cluster = $cluster_of_gene{$gene};
                 my @keggs;
@@ -296,7 +362,7 @@ if (scalar keys(%kegg_of_genes) > 1){
 
 
 open(KEGG,">$kegg");
-if (scalar keys(%keggs_of_cluster) > 1) {
+if (scalar keys(%keggs_of_cluster) > 0) {
 
 	my $DIR_KEGG = "/usr/local/bin/PanExplorer_workflow/KEGG";
 	my %pathways;
@@ -387,7 +453,7 @@ if (scalar keys(%keggs_of_cluster) > 1) {
 }
 close(KEGG);
 
-if (scalar keys(%cogs_of_cluster) > 1) {
+if (scalar keys(%cogs_of_cluster) > 0) {
 	open(COG_CLUST,">$cog_clusters");	
 	foreach my $cluster(sort {$a<=>$b} keys(%genes_of_cluster)){
 		if ($cogs_of_cluster{$cluster}){
@@ -488,8 +554,8 @@ open(CC,">$cog_clusters.2");
 foreach my $cluster(sort{$a<=>$b} keys(%genes_of_cluster)){
         my $cog_category = "Unknown";
         my $cog_list = "Unknown";
-        if ($cogcats_of_clusters{$cluster}){
-                $cog_category = $cogcats_of_clusters{$cluster};
+        if ($cogs_of_clusters{$cluster}){
+                if ($cogcats_of_clusters{$cluster}){$cog_category = $cogcats_of_clusters{$cluster};}
                 my $ref_cogs_of_clusters = $cogs_of_clusters{$cluster};
                 $cog_list = join(",",keys(%$ref_cogs_of_clusters));
         }
